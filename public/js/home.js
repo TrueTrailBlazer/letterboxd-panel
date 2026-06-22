@@ -49,9 +49,9 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   var roleta = document.getElementById('roleta-container');
   if (!window.appUseMeta) {
     document.getElementById('app-container').innerHTML = 
-      '<div style="text-align:center; padding: 20px 0 10px 0;">' +
-        '<h1 style="color:#fff; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 6px 0;">🎬 Roleta Letterboxd</h1>' +
-        '<p style="color:#89a; font-size: 14px; margin: 0;">Seu próximo filme está a um toque de distância.</p>' +
+      '<div style="text-align:center; padding: 10px 0 20px 0;">' +
+        '<h2 style="margin:0; font-size: 16px; color: #fff; text-transform: uppercase; letter-spacing: 0.1em;">Roleta Letterboxd</h2>' +
+        '<div style="width: 30px; height: 3px; background: #00e054; margin: 12px auto 0 auto; border-radius: 2px;"></div>' +
       '</div>';
     document.getElementById('config-meta-section').style.display = 'none';
     if (roleta) {
@@ -158,15 +158,12 @@ function saveState(state) {
 
 function renderRouletteUI() {
   document.getElementById('roleta-container').innerHTML =
-    '<div id="roulette-empty-state" style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; width: 100%;">' +
-      '<span class="roulette-source-text" style="color: #678;">AGUARDANDO SORTEIO...</span>' +
-      '<div class="roulette-poster-wrap" style="background: #1c2228; border: 2px dashed #2c3440; display: flex; align-items: center; justify-content: center; height: 330px; width: 220px; box-shadow: none;">' +
-        '<div style="display:flex; flex-direction:column; align-items:center; gap: 12px;">' +
-          '<span style="font-size: 36px; filter: grayscale(1) opacity(0.3);">🎞️</span>' +
-          '<span style="color:#678; font-size: 14px; font-weight: bold; letter-spacing: 0.1em; line-height: 1.4;">SEU FILME<br>AQUI</span>' +
-        '</div>' +
+    '<div id="roulette-empty-state" class="roulette-result-box" style="display:flex;">' +
+      '<span class="roulette-source-text">PREPARANDO O SORTEIO</span>' +
+      '<div style="margin: 0 auto 16px auto; width: 220px; height: 330px; border-radius: 8px; border: 2px dashed #2c3440; background: rgba(28,34,40,0.5); display: flex; align-items: center; justify-content: center;">' +
+        '<span style="color: #678; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">Seu filme aqui</span>' +
       '</div>' +
-      '<span class="roulette-link-text" style="color: #678; font-size: 20px; margin-top: 8px;">Título Oculto</span>' +
+      '<span class="roulette-link-text" style="color: #fff; cursor: default;">Pronto para rodar</span>' +
     '</div>' +
     '<div id="roulette-result" class="roulette-result-box">' +
       '<span id="roulette-source" class="roulette-source-text"></span>' +
