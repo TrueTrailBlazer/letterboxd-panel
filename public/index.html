@@ -32,6 +32,43 @@
       margin-top: 6px;
     }
 
+    /* ===== ONBOARDING ===== */
+    #onboarding-container {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #14181c;
+      z-index: 500;
+      padding: 30px 20px;
+      text-align: center;
+      overflow-y: auto;
+    }
+    .ob-step {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .ob-step.active { display: flex; }
+    .ob-title { color: #fff; font-size: 24px; margin-bottom: 10px; }
+    .ob-desc { color: #9ab; font-size: 14px; margin-bottom: 30px; line-height: 1.5; }
+    .ob-input {
+      background: #1c2228; border: 1px solid #2c3440; color: #fff;
+      padding: 14px; border-radius: 6px; font-size: 16px; width: 100%; text-align: center;
+      margin-bottom: 20px; outline: none;
+    }
+    .ob-btn {
+      background: #00e054; color: #14181c; border: none; padding: 14px 24px;
+      border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 10px;
+    }
+    .ob-btn-sec {
+      background: #2c3440; color: #fff; border: none; padding: 14px 24px;
+      border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; width: 100%;
+    }
+
     /* ===== META TRACKER ===== */
     .section-heading {
       color: #9ab;
@@ -215,8 +252,8 @@
 
     /* ===== CONFIG OVERLAY ===== */
     #config-overlay {
-      display: none;
       position: fixed;
+      pointer-events: none;
       top: 0;
       left: 0;
       right: 0;
@@ -294,6 +331,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 6px;
+      word-break: break-all;
     }
 
     .config-delete-btn {
@@ -337,7 +375,6 @@
 
     .config-min-label { color: #89a; font-size: 12px; margin-left: 6px; }
 
-    /* Close button at bottom of config */
     .config-footer {
       padding: 12px 16px 24px 16px;
       max-width: 440px;
@@ -357,71 +394,223 @@
       cursor: pointer;
       letter-spacing: 0.02em;
     }
+
+    #reset-profile-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px solid #ff4e00;
+      color: #ff4e00;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    /* ===== ANIMATIONS E MICRO-INTERAÇÕES ===== */
+    @keyframes slideUpFade {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideDownFade {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes pulseFade {
+      0% { opacity: 0.7; }
+      50% { opacity: 0.3; }
+      100% { opacity: 0.7; }
+    }
+    
+    button { transition: transform 0.1s ease, filter 0.2s ease, opacity 0.2s ease; }
+    button:active { transform: scale(0.97); filter: brightness(0.9); }
+    #roulette-btn:disabled { animation: pulseFade 1.5s infinite ease-in-out; cursor: not-allowed; transform: none; }
+
+    /* ===== TOAST NOTIFICATIONS ===== */
+    #toast-container {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 9999; display: flex; flex-direction: column; align-items: center; gap: 10px;
+      pointer-events: none; width: 90%; max-width: 350px;
+    }
+    .toast-msg {
+      background: #1c2228; color: #fff; padding: 12px 16px; border-radius: 8px;
+      font-size: 13px; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      border-left: 4px solid #00e054; text-align: center; width: 100%;
+      animation: slideDownFade 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    .toast-msg.error { border-left-color: #ff4e00; }
+    .toast-msg.fade-out { animation: fadeOutUp 0.3s forwards; }
+    @keyframes fadeOutUp { to { opacity: 0; transform: translateY(-20px); } }
+
+    /* ===== CUSTOM CONFIRM MODAL ===== */
+    #custom-confirm-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(20, 24, 28, 0.85); backdrop-filter: blur(4px);
+      z-index: 3000; align-items: center; justify-content: center;
+      animation: fadeIn 0.2s ease;
+    }
+    .confirm-box {
+      background: #1c2228; border: 1px solid #2c3440; border-radius: 12px; padding: 24px;
+      width: 90%; max-width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      animation: slideUpFade 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    .confirm-title { color: #fff; font-size: 16px; font-weight: bold; margin-bottom: 10px; margin-top: 0; }
+    .confirm-desc { color: #9ab; font-size: 13px; margin-bottom: 24px; line-height: 1.4; }
+    .confirm-actions { display: flex; gap: 10px; }
+    .confirm-btn { flex: 1; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 13px; border: none; cursor: pointer; }
+    .confirm-btn-cancel { background: #2c3440; color: #9ab; }
+    .confirm-btn-danger { background: transparent; border: 1px solid #ff4e00; color: #ff4e00; }
+
+    /* Config Overlay Transição */
+    #config-overlay {
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1), opacity 0.3s ease;
+      transform: translateY(100%); opacity: 0;
+    }
+    #config-overlay.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    #offset-help.expanded { max-height: 200px; opacity: 1; padding: 8px; margin-bottom: 12px; }
   </style>
 </head>
 <body>
 
-  <div id="app-container"></div>
-  <div id="roleta-container"></div>
+  <!-- ONBOARDING -->
+  <div id="onboarding-container">
+    
+    <!-- Passo 1: Boas-vindas -->
+    <div class="ob-step active" id="ob-step-1">
+      <img src="https://a.ltrbxd.com/logos/letterboxd-mac-icon.png" width="80" style="margin-bottom:20px; border-radius:10px;">
+      <h1 class="ob-title">Painel Letterboxd</h1>
+      <p class="ob-desc">Acompanhe sua meta anual de filmes e use a nossa Roleta Inteligente para decidir o que assistir hoje. Ideal também para quem faz rewatches!</p>
+      <button class="ob-btn" onclick="nextObStep(2)">Começar</button>
+    </div>
 
-  <div id="bottom-bar">
-    <div id="bottom-bar-inner">
-      <button id="roulette-btn">O QUE ASSISTIR HOJE?</button>
-      <button id="open-config-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-      </button>
+    <!-- Passo 2: Username -->
+    <div class="ob-step" id="ob-step-2">
+      <h1 class="ob-title">Qual é o seu usuário?</h1>
+      <p class="ob-desc">Digite seu username do Letterboxd para sincronizarmos sua Watchlist e filmes vistos.</p>
+      <input type="text" id="ob-user-input" class="ob-input" placeholder="ex: spklf" autocapitalize="none" autocomplete="off">
+      <button class="ob-btn" onclick="saveUserAndNext()">Avançar</button>
+      <button class="ob-btn-sec" onclick="nextObStep(1)">Voltar</button>
+    </div>
+
+    <!-- Passo 3: Meta Sim ou Não -->
+    <div class="ob-step" id="ob-step-3">
+      <h1 class="ob-title">Acompanhar Meta?</h1>
+      <p class="ob-desc">Você quer acompanhar um objetivo anual de filmes ou prefere usar apenas a Roleta?</p>
+      <button class="ob-btn" onclick="nextObStep(4)">Sim, definir meta</button>
+      <button class="ob-btn-sec" onclick="finishOnboarding(false)">Não, só a roleta</button>
+      <button class="ob-btn-sec" style="margin-top:10px;" onclick="nextObStep(2)">Voltar</button>
+    </div>
+
+    <!-- Passo 4: Definir Meta -->
+    <div class="ob-step" id="ob-step-4">
+      <h1 class="ob-title">Sua Meta</h1>
+      <p class="ob-desc">Quantos filmes você quer assistir este ano?</p>
+      <input type="number" id="ob-target-input" class="ob-input" value="365">
+      <button class="ob-btn" onclick="finishOnboarding(true)">Finalizar</button>
+      <button class="ob-btn-sec" onclick="nextObStep(3)">Voltar</button>
+    </div>
+
+  </div>
+
+  <!-- APP PRINCIPAL -->
+  <div id="app-wrapper" style="display:none; width:100%; display:flex; flex-direction:column; align-items:center;">
+    <div id="app-container"></div>
+    <div id="roleta-container"></div>
+
+    <div id="bottom-bar">
+      <div id="bottom-bar-inner">
+        <button id="roulette-btn">O QUE ASSISTIR HOJE?</button>
+        <button id="open-config-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- OVERLAY CONFIG -->
+    <div id="config-overlay">
+      <div class="config-header">
+        <h2>Configurações</h2>
+      </div>
+      <div class="config-body">
+        
+        <div id="config-meta-section" class="config-section">
+          <div class="config-section-title" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>Filmes Repetidos (Rewatches)</span>
+            <span onclick="document.getElementById('offset-help').classList.toggle('expanded')" style="cursor:pointer; background:#2c3440; color:#89a; border-radius:50%; width:16px; height:16px; text-align:center; line-height:16px; font-weight:bold; font-size:10px;">?</span>
+          </div>
+          <div id="offset-help" style="max-height: 0; opacity: 0; overflow: hidden; transition: all 0.3s ease; font-size: 11px; color: #89a; line-height: 1.4; background: #14181c; border-radius: 4px; padding: 0 8px; margin-bottom: 0;">
+            O site principal do Letterboxd só contabiliza filmes únicos no seu perfil. Se você costuma reassistir a filmes e quer que eles contem para a sua meta (como no seu Diário), digite a quantidade de filmes repetidos no campo abaixo para corrigir a barra de progresso.
+          </div>
+          <div class="config-row">
+            <span class="config-label">Adicionar ao total</span>
+            <input type="number" id="num-offset" value="2" class="config-input-number">
+          </div>
+        </div>
+
+        <div class="config-section">
+          <div class="config-section-title">Fontes do Sorteio</div>
+          <label class="config-checkbox-label">
+            <input type="checkbox" id="chk-watchlist">
+            <span>Sua Watchlist</span>
+          </label>
+          <div id="custom-lists-container"></div>
+        </div>
+
+        <div class="config-section">
+          <div class="config-section-title">Adicionar Lista</div>
+          <div class="config-add-row">
+            <input type="text" id="new-list-url" placeholder="Cole o link do Letterboxd ou boxd.it...">
+            <button id="add-list-btn">ADD</button>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <div class="config-section-title">Filtro de Tempo</div>
+          <div class="config-time-row">
+            <label class="config-checkbox-label" style="margin-bottom:0;">
+              <input type="checkbox" id="chk-short-only">
+              <span>Tempo máximo</span>
+            </label>
+            <div style="display:flex; align-items:center;">
+              <input type="number" id="num-max-minutes" value="100" class="config-input-number" style="width:55px;">
+              <span class="config-min-label">min</span>
+            </div>
+          </div>
+        </div>
+        
+        <button id="reset-profile-btn">Limpar Perfil (Sair)</button>
+      </div>
+      <div class="config-footer">
+        <button id="close-config-btn">FECHAR</button>
+      </div>
     </div>
   </div>
 
-  <div id="config-overlay">
-    <div class="config-header">
-      <h2>Configurações</h2>
-    </div>
-    <div class="config-body">
-      <div class="config-section">
-        <div class="config-section-title">Ajuste da Meta (Rewatches)</div>
-        <div class="config-row">
-          <span class="config-label">Filmes repetidos (+ Offset)</span>
-          <input type="number" id="num-offset" value="2" class="config-input-number">
-        </div>
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container"></div>
+
+  <!-- CUSTOM CONFIRM MODAL -->
+  <div id="custom-confirm-overlay">
+    <div class="confirm-box">
+      <h3 class="confirm-title" id="confirm-title">Tem certeza?</h3>
+      <p class="confirm-desc" id="confirm-desc">Esta ação não pode ser desfeita.</p>
+      <div class="confirm-actions">
+        <button class="confirm-btn confirm-btn-cancel" id="confirm-btn-cancel">Cancelar</button>
+        <button class="confirm-btn confirm-btn-danger" id="confirm-btn-danger">Confirmar</button>
       </div>
-      <div class="config-section">
-        <div class="config-section-title">Fontes do Sorteio</div>
-        <label class="config-checkbox-label">
-          <input type="checkbox" id="chk-watchlist">
-          <span>Sua Watchlist</span>
-        </label>
-        <div id="custom-lists-container"></div>
-      </div>
-      <div class="config-section">
-        <div class="config-section-title">Adicionar Lista</div>
-        <div class="config-add-row">
-          <input type="text" id="new-list-url" placeholder="Cole o link da lista do Letterboxd...">
-          <button id="add-list-btn">ADD</button>
-        </div>
-      </div>
-      <div class="config-section">
-        <div class="config-section-title">Filtro de Tempo</div>
-        <div class="config-time-row">
-          <label class="config-checkbox-label" style="margin-bottom:0;">
-            <input type="checkbox" id="chk-short-only">
-            <span>Tempo máximo</span>
-          </label>
-          <div style="display:flex; align-items:center;">
-            <input type="number" id="num-max-minutes" value="100" class="config-input-number" style="width:55px;">
-            <span class="config-min-label">min</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="config-footer">
-      <button id="close-config-btn">FECHAR</button>
     </div>
   </div>
 
   <script>
-    var USER = 'spklf';
-    var YEAR = 2026;
+    // ===== VARIÁVEIS GLOBAIS DINÂMICAS =====
+    var appUser = '';
+    var appUseMeta = false;
+    var appMetaTarget = 365;
+    var appMetaYear = new Date().getFullYear();
 
     window.lastScrapedCount = 182;
 
@@ -436,7 +625,6 @@
       'A Força é forte neste aqui. — Star Wars',
       'Eu sou inevitável. — Vingadores: Ultimato'
     ];
-
     var quotesOnTrack = [
       'Perfeitamente equilibrado, como todas as coisas devem ser. — Vingadores: Guerra Infinita',
       'Um mago nunca se atrasa. Ele chega exatamente quando pretende. — O Senhor dos Anéis',
@@ -445,7 +633,6 @@
       'Hakuna Matata. Os seus problemas você deve esquecer. — O Rei Leão',
       'A vida é como uma caixa de chocolates. — Forrest Gump'
     ];
-
     var quotesBehind = [
       'Corra, Forrest, corra! — Forrest Gump',
       'Houston, temos um problema. — Apollo 13',
@@ -457,69 +644,148 @@
       'Chegou a hora de acelerar ou morrer. — Velozes e Furiosos'
     ];
 
-    // ===== PROXY FETCH (agora via servidor Express) =====
+    // ===== PROXY FETCH =====
     function proxyFetch(url) {
       return fetch('/api/proxy?url=' + encodeURIComponent(url))
         .then(function(res) { return res.text(); });
     }
 
+    // ===== MODALS & TOASTS =====
+    function showToast(msg, isError) {
+      var container = document.getElementById('toast-container');
+      var toast = document.createElement('div');
+      toast.className = 'toast-msg' + (isError ? ' error' : '');
+      toast.innerText = msg;
+      container.appendChild(toast);
+      setTimeout(function() {
+        toast.classList.add('fade-out');
+        setTimeout(function() { toast.remove(); }, 300);
+      }, 3000);
+    }
+
+    function showConfirm(title, desc, confirmText, onConfirm) {
+      var overlay = document.getElementById('custom-confirm-overlay');
+      document.getElementById('confirm-title').innerText = title;
+      document.getElementById('confirm-desc').innerText = desc;
+      var btnConfirm = document.getElementById('confirm-btn-danger');
+      btnConfirm.innerText = confirmText;
+      
+      overlay.style.display = 'flex';
+      
+      document.getElementById('confirm-btn-cancel').onclick = function() {
+        overlay.style.display = 'none';
+      };
+      btnConfirm.onclick = function() {
+        overlay.style.display = 'none';
+        onConfirm();
+      };
+    }
+
+    // ===== ONBOARDING LOGIC =====
+    function nextObStep(stepNum) {
+      document.querySelectorAll('.ob-step').forEach(function(el) { el.classList.remove('active'); });
+      document.getElementById('ob-step-' + stepNum).classList.add('active');
+    }
+
+    function saveUserAndNext() {
+      var val = document.getElementById('ob-user-input').value.trim().toLowerCase();
+      if (!val) { showToast('Digite seu nome de usuário!', true); return; }
+      appUser = val;
+      nextObStep(3);
+    }
+
+    function finishOnboarding(useMeta) {
+      appUseMeta = useMeta;
+      if (useMeta) {
+        var tgt = parseInt(document.getElementById('ob-target-input').value);
+        if (!tgt || tgt < 1) { showToast('Digite uma meta válida', true); return; }
+        appMetaTarget = tgt;
+      }
+
+      localStorage.setItem('lbxd_user', appUser);
+      localStorage.setItem('lbxd_use_meta', appUseMeta ? 'true' : 'false');
+      localStorage.setItem('lbxd_meta_target', appMetaTarget);
+      localStorage.setItem('lbxd_meta_year', appMetaYear);
+
+      document.getElementById('onboarding-container').style.opacity = '0';
+      setTimeout(function() {
+        document.getElementById('onboarding-container').style.display = 'none';
+        startApp();
+      }, 300);
+    }
+
+    function resetProfile() {
+      showConfirm('Sair e Limpar Perfil?', 'Isso apagará seu username e meta salvos neste dispositivo.', 'Sair', function() {
+        localStorage.removeItem('lbxd_user');
+        localStorage.removeItem('lbxd_use_meta');
+        localStorage.removeItem('lbxd_meta_target');
+        location.reload();
+      });
+    }
+
+    // ===== TRACKER LOGIC =====
     function renderTracker(scrapedCount, statusText, statusColor) {
+      if (!appUseMeta) {
+        document.getElementById('app-container').innerHTML = '';
+        document.getElementById('config-meta-section').style.display = 'none';
+        return;
+      }
+      
+      document.getElementById('config-meta-section').style.display = 'block';
+
       try {
         if (scrapedCount && !isNaN(scrapedCount)) {
           window.lastScrapedCount = parseInt(scrapedCount);
-          localStorage.setItem('meta365_last_scraped', window.lastScrapedCount);
+          localStorage.setItem('meta365_last_scraped_' + appUser, window.lastScrapedCount);
         }
 
         var labelStatus = statusText || '• Sincronizando...';
         var corStatus = statusColor || '#678';
 
         var offset = localStorage.getItem('meta365_offset');
-        if (offset === null) {
-          offset = 2;
-          localStorage.setItem('meta365_offset', 2);
-        } else {
-          offset = parseInt(offset) || 0;
-        }
+        if (offset === null) { offset = 2; localStorage.setItem('meta365_offset', 2); } 
+        else { offset = parseInt(offset) || 0; }
 
         var watched = window.lastScrapedCount + offset;
         var now = new Date();
-        var target = Math.floor((now - new Date(YEAR, 0, 0)) / (1000 * 60 * 60 * 24));
-        var saldo = watched - target;
-        var percent = ((watched / 365) * 100).toFixed(1);
-        var projection = Math.round((watched / target) * 365) || 0;
+        // Target proporcional aos dias que se passaram no ano
+        var currentDay = Math.floor((now - new Date(appMetaYear, 0, 0)) / (1000 * 60 * 60 * 24));
+        var daysInYear = 365; // Simplificado para não lidar com bissexto por enquanto
+        var expectedToday = Math.round((appMetaTarget / daysInYear) * currentDay);
+        
+        var saldo = watched - expectedToday;
+        var percent = ((watched / appMetaTarget) * 100).toFixed(1);
+        var projection = Math.round((watched / currentDay) * daysInYear) || 0;
 
         var color, msg, quoteText;
         if (saldo > 0) {
-          color = '#00e054';
-          msg = 'Com folga de ' + saldo + ' filme(s)';
+          color = '#00e054'; msg = 'Com folga de ' + saldo + ' filme(s)';
           quoteText = quotesAhead[Math.floor(Math.random() * quotesAhead.length)];
         } else if (saldo === 0) {
-          color = '#40bcf4';
-          msg = 'Meta cravada no dia';
+          color = '#40bcf4'; msg = 'Meta cravada no dia';
           quoteText = quotesOnTrack[Math.floor(Math.random() * quotesOnTrack.length)];
         } else {
-          color = '#ff4e00';
-          msg = 'Faltando ' + Math.abs(saldo) + ' filme(s) hoje';
+          color = '#ff4e00'; msg = 'Faltando ' + Math.abs(saldo) + ' filme(s) hoje';
           quoteText = quotesBehind[Math.floor(Math.random() * quotesBehind.length)];
         }
 
         document.getElementById('app-container').innerHTML =
           '<h2 class="section-heading">' +
-            'Meta 365 Filmes ' +
+            'Meta ' + appMetaTarget + ' Filmes ' +
             '<span id="sync-status" style="color:' + corStatus + '; font-size:10px; text-transform:none; margin-left:8px;">' + labelStatus + '</span>' +
-            '<span style="float: right; color: #678;">DIA ' + target + '/365</span>' +
+            '<span style="float: right; color: #678;">DIA ' + currentDay + '/' + daysInYear + '</span>' +
           '</h2>' +
           '<div class="meta-stats-row">' +
             '<div class="meta-stat-item"><span class="meta-stat-val">' + watched + '</span><span class="meta-stat-lbl">Vistos</span></div>' +
             '<div class="meta-stat-item"><span class="meta-stat-val" style="color:' + color + '">' + (saldo > 0 ? '+' + saldo : saldo) + '</span><span class="meta-stat-lbl">Saldo</span></div>' +
-            '<div class="meta-stat-item"><span class="meta-stat-val">' + (365 - watched) + '</span><span class="meta-stat-lbl">Restam</span></div>' +
+            '<div class="meta-stat-item"><span class="meta-stat-val">' + Math.max(0, appMetaTarget - watched) + '</span><span class="meta-stat-lbl">Restam</span></div>' +
             '<div class="meta-stat-item"><span class="meta-stat-val" style="color:#40bcf4">' + projection + '</span><span class="meta-stat-lbl">Projeção</span></div>' +
           '</div>' +
           '<div class="meta-progress-header">' +
             '<span>Progresso Anual</span>' +
             '<span class="meta-progress-pct">' + percent + '%</span>' +
           '</div>' +
-          '<div class="meta-bar-bg"><div class="meta-bar-fill" style="width: ' + percent + '%"></div></div>' +
+          '<div class="meta-bar-bg"><div class="meta-bar-fill" style="width: ' + Math.min(100, percent) + '%"></div></div>' +
           '<div class="meta-msg-box">' +
             '<div class="meta-msg-main">' +
               '<div class="meta-msg-dot" style="background:' + color + '; box-shadow: 0 0 5px ' + color + '"></div>' +
@@ -537,7 +803,6 @@
       if (saved) return JSON.parse(saved);
       return { watchlist: true, lists: [], shortOnly: false, maxMinutes: 100 };
     }
-
     function saveState(state) {
       localStorage.setItem('rouletteState_PWA', JSON.stringify(state));
     }
@@ -565,11 +830,11 @@
       document.getElementById('num-max-minutes').value = state.maxMinutes;
       renderConfigLists();
 
-      document.getElementById('config-overlay').style.display = 'block';
+      document.getElementById('config-overlay').classList.add('open');
     }
 
     function closeConfig() {
-      document.getElementById('config-overlay').style.display = 'none';
+      document.getElementById('config-overlay').classList.remove('open');
     }
 
     function renderConfigLists() {
@@ -578,14 +843,31 @@
       lc.innerHTML = '';
       for (var i = 0; i < state.lists.length; i++) {
         var list = state.lists[i];
-        var parts = list.path.split('/').filter(function(p) { return p; });
-        var name = parts.length >= 3 ? parts[2].replace(/-/g, ' ') : 'Lista Customizada';
+        
+        // Determina um nome bonitinho pra lista baseado na URL
+        var name = 'Lista Customizada';
+        if (list.url) {
+            try { 
+                var pathParts = new URL(list.url).pathname.split('/').filter(Boolean);
+                // ex: /spklf/list/nome-da-lista/ -> parts: spklf, list, nome-da-lista
+                if (pathParts.length >= 3 && pathParts[1] === 'list') {
+                    name = pathParts[2].replace(/-/g, ' ');
+                } else if (list.url.indexOf('boxd.it') !== -1) {
+                    name = 'Link Curto (boxd.it)';
+                }
+            } catch(e) {}
+        } else if (list.path) {
+            // Legado
+            var parts = list.path.split('/').filter(Boolean);
+            name = parts.length >= 3 ? parts[2].replace(/-/g, ' ') : 'Lista Customizada';
+        }
+
         var div = document.createElement('div');
         div.className = 'config-list-item';
         div.innerHTML =
-          '<label class="config-checkbox-label" style="margin-bottom:0; flex-grow:1;">' +
+          '<label class="config-checkbox-label" style="margin-bottom:0; flex-grow:1; max-width:85%;">' +
             '<input type="checkbox" class="chk-ext" data-idx="' + i + '"' + (list.checked ? ' checked' : '') + '>' +
-            '<span>' + name + '</span>' +
+            '<span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + name + '</span>' +
           '</label>' +
           '<button class="config-delete-btn" data-idx="' + i + '">✖</button>';
         lc.appendChild(div);
@@ -601,14 +883,9 @@
 
     // ===== BIND EVENTS =====
     function bindEvents() {
-      document.getElementById('open-config-btn').onclick = function(e) {
-        e.preventDefault();
-        openConfig();
-      };
-
-      document.getElementById('close-config-btn').onclick = function() {
-        closeConfig();
-      };
+      document.getElementById('open-config-btn').onclick = function(e) { e.preventDefault(); openConfig(); };
+      document.getElementById('close-config-btn').onclick = function() { closeConfig(); };
+      document.getElementById('reset-profile-btn').onclick = resetProfile;
 
       document.getElementById('num-offset').oninput = function(e) {
         localStorage.setItem('meta365_offset', parseInt(e.target.value) || 0);
@@ -619,29 +896,19 @@
       };
 
       document.getElementById('chk-watchlist').onchange = function(e) {
-        var state = loadState();
-        state.watchlist = e.target.checked;
-        saveState(state);
+        var state = loadState(); state.watchlist = e.target.checked; saveState(state);
       };
-
       document.getElementById('chk-short-only').onchange = function(e) {
-        var state = loadState();
-        state.shortOnly = e.target.checked;
-        saveState(state);
+        var state = loadState(); state.shortOnly = e.target.checked; saveState(state);
       };
-
       document.getElementById('num-max-minutes').oninput = function(e) {
-        var state = loadState();
-        state.maxMinutes = parseInt(e.target.value) || 100;
-        saveState(state);
+        var state = loadState(); state.maxMinutes = parseInt(e.target.value) || 100; saveState(state);
       };
 
       document.getElementById('custom-lists-container').onclick = function(e) {
         var delBtn = e.target.closest ? e.target.closest('.config-delete-btn') : null;
         if (!delBtn && e.target.classList.contains('config-delete-btn')) delBtn = e.target;
-        if (delBtn) {
-          removeList(parseInt(delBtn.getAttribute('data-idx')));
-        }
+        if (delBtn) removeList(parseInt(delBtn.getAttribute('data-idx')));
       };
 
       document.getElementById('custom-lists-container').onchange = function(e) {
@@ -653,16 +920,25 @@
         }
       };
 
+      // ADD LIST: Aceitar letterboxd.com e boxd.it, salvando a URL completa
       document.getElementById('add-list-btn').onclick = function() {
         var val = document.getElementById('new-list-url').value.trim();
-        if (val.indexOf('letterboxd.com/') === -1) { alert('Use um link do Letterboxd'); return; }
-        var path;
-        try { path = new URL(val).pathname; } catch(err) { alert('Link inválido'); return; }
-        var state = loadState();
-        for (var i = 0; i < state.lists.length; i++) {
-          if (state.lists[i].path === path) { alert('Lista já existe'); return; }
+        if (val.indexOf('letterboxd.com/') === -1 && val.indexOf('boxd.it/') === -1) { 
+          showToast('Use um link do Letterboxd ou boxd.it', true); return; 
         }
-        state.lists.push({ path: path, checked: true });
+        
+        // Tenta parsear pra garantir que é url válida
+        try { new URL(val); } catch(err) { showToast('Link inválido', true); return; }
+        
+        var state = loadState();
+        // Evita duplicação comparando as URLs
+        for (var i = 0; i < state.lists.length; i++) {
+          if (state.lists[i].url === val || state.lists[i].path === new URL(val).pathname) { 
+            showToast('Lista já existe', true); return; 
+          }
+        }
+        
+        state.lists.push({ url: val, checked: true });
         saveState(state);
         document.getElementById('new-list-url').value = '';
         renderConfigLists();
@@ -677,9 +953,13 @@
 
         var state = loadState();
         var sources = [];
-        if (state.watchlist) sources.push({ type: 'watchlist', url: 'https://letterboxd.com/' + USER + '/watchlist/' });
+        if (state.watchlist) sources.push({ type: 'watchlist', url: 'https://letterboxd.com/' + appUser + '/watchlist/' });
         state.lists.forEach(function(l) {
-          if (l.checked) sources.push({ type: 'list', url: 'https://letterboxd.com' + l.path });
+          if (l.checked) {
+              // Suporte a listas migradas antigas (que só tinham 'path') ou novas (com 'url')
+              var url = l.url ? l.url : 'https://letterboxd.com' + l.path;
+              sources.push({ type: 'list', url: url });
+          }
         });
 
         if (!sources.length) {
@@ -693,12 +973,21 @@
         try {
           var html = await proxyFetch(source.url);
           var doc = new DOMParser().parseFromString(html, 'text/html');
+          
           var pagLinks = doc.querySelectorAll('.paginate-pages li a');
           var maxPage = pagLinks.length ? parseInt(pagLinks[pagLinks.length - 1].innerText) : 1;
           var randomPage = Math.floor(Math.random() * maxPage) + 1;
 
           if (randomPage > 1) {
-            html = await proxyFetch(source.url + 'page/' + randomPage + '/');
+            // Note: Se for um boxd.it redirecionado, pode ser que adicionar /page/ dê problema se a URL do proxy não resolver antes. 
+            // Mas o nosso server.js fetch segue redirects. Se seguirmos um redirect no server, ele retorna HTML, mas perdemos a URL final.
+            // Contorno: usar o proxy, ver onde cai, etc. 
+            // O ideal para Letterboxd lists é que o proxy resolva o HTML e as páginas de paginação continuam na URL base que o cara colou,
+            // letterboxd redireciona `/page/` sem problemas.
+            
+            // Para garantir em boxd.it:
+            var targetUrl = source.url.replace(/\/$/, '') + '/page/' + randomPage + '/';
+            html = await proxyFetch(targetUrl);
             doc = new DOMParser().parseFromString(html, 'text/html');
           }
 
@@ -715,13 +1004,9 @@
           var targetMatch = containerHtml.match(/data-target-link=["']([^"']+)["']/);
           var aMatch = containerHtml.match(/href=["']\/film\/([^"']+)["']/);
 
-          if (slugMatch && slugMatch[1] && slugMatch[1] !== 'null') {
-            slug = slugMatch[1];
-          } else if (targetMatch && targetMatch[1] && targetMatch[1] !== 'null') {
-            slug = targetMatch[1].replace(/\/film\/|\//g, '');
-          } else if (aMatch && aMatch[1]) {
-            slug = aMatch[1].replace(/\//g, '');
-          }
+          if (slugMatch && slugMatch[1] && slugMatch[1] !== 'null') { slug = slugMatch[1]; } 
+          else if (targetMatch && targetMatch[1] && targetMatch[1] !== 'null') { slug = targetMatch[1].replace(/\/film\/|\//g, ''); } 
+          else if (aMatch && aMatch[1]) { slug = aMatch[1].replace(/\//g, ''); }
 
           if (!slug || slug === 'null') {
             slug = displayTitle.replace(/\s*\(\d{4}\)$/, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s-]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
@@ -772,36 +1057,61 @@
     }
 
     // ===== INIT (Local-First) =====
-    window.onload = function() {
+    function startApp() {
+      document.getElementById('app-wrapper').style.display = 'flex';
+      
       try {
-        var savedCount = localStorage.getItem('meta365_last_scraped');
-        if (savedCount !== null) {
-          window.lastScrapedCount = parseInt(savedCount) || 182;
-        } else {
-          window.lastScrapedCount = 182;
-        }
+        var savedCount = localStorage.getItem('meta365_last_scraped_' + appUser);
+        if (savedCount !== null) { window.lastScrapedCount = parseInt(savedCount) || 0; } 
+        else { window.lastScrapedCount = 0; }
 
         renderTracker(window.lastScrapedCount, '• Sincronizando...', '#678');
         renderRouletteUI();
         bindEvents();
 
-        // Busca contagem real via API do servidor Express
-        fetch('/api/watched-count')
-          .then(function(res) { return res.json(); })
-          .then(function(data) {
-            if (data && data.count && !isNaN(data.count)) {
-              renderTracker(data.count, '• Sincronizado', '#00e054');
-            } else {
+        if (appUseMeta) {
+          // Busca contagem real via API passando os dados dinâmicos
+          fetch('/api/watched-count?user=' + encodeURIComponent(appUser) + '&year=' + appMetaYear)
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+              if (data && data.count !== undefined && !isNaN(data.count)) {
+                // Cálculo automático do Offset baseado no Diary
+                if (data.diaryCount && data.diaryCount > data.count) {
+                  var autoOffset = data.diaryCount - data.count;
+                  localStorage.setItem('meta365_offset', autoOffset);
+                  var offsetInput = document.getElementById('num-offset');
+                  if (offsetInput) offsetInput.value = autoOffset;
+                }
+                
+                renderTracker(data.count, '• Sincronizado', '#00e054');
+              } else {
+                renderTracker(window.lastScrapedCount, '• Offline', '#ff4e00');
+              }
+            })
+            .catch(function(err) {
+              console.warn('Falha silenciosa:', err);
               renderTracker(window.lastScrapedCount, '• Offline', '#ff4e00');
-            }
-          })
-          .catch(function(err) {
-            console.warn('Falha silenciosa:', err);
-            renderTracker(window.lastScrapedCount, '• Offline', '#ff4e00');
-          });
+            });
+        }
       } catch (e) {
         console.error('Init error:', e);
-        renderTracker(182, '• Erro', '#ff4e00');
+        if(appUseMeta) renderTracker(182, '• Erro', '#ff4e00');
+      }
+    }
+
+    window.onload = function() {
+      // Checa se usuário já configurou
+      var savedUser = localStorage.getItem('lbxd_user');
+      if (savedUser) {
+        appUser = savedUser;
+        appUseMeta = localStorage.getItem('lbxd_use_meta') === 'true';
+        appMetaTarget = parseInt(localStorage.getItem('lbxd_meta_target')) || 365;
+        appMetaYear = parseInt(localStorage.getItem('lbxd_meta_year')) || new Date().getFullYear();
+        startApp();
+      } else {
+        // Mostra onboarding
+        document.getElementById('onboarding-container').style.display = 'block';
+        document.getElementById('app-wrapper').style.display = 'none';
       }
     };
   </script>

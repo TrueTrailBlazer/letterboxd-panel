@@ -4,9 +4,6 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const USER = 'spklf';
-const YEAR = 2026;
-
 const FETCH_HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -18,30 +15,46 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // API: Contagem de filmes assistidos
 app.get('/api/watched-count', async function(req, res) {
-  var url = 'https://letterboxd.com/' + USER + '/?tz=' + Date.now();
+  var user = req.query.user;
+  var year = req.query.year || new Date().getFullYear();
+
+  if (!user) {
+    return res.status(400).json({ error: 'Usuário não fornecido' });
+  }
+
+  var url = 'https://letterboxd.com/' + user + '/?tz=' + Date.now();
   try {
     var response = await fetch(url, { headers: FETCH_HEADERS });
     var html = await response.text();
 
-    // Captura o valor de filmes assistidos no ano
-    var regexFilms = new RegExp('href="/' + USER + '/films/for/' + YEAR + '/"[^>]*>.*?<span class="value">([\\d,]+)</span>', 'is');
+    var result = { count: 0, diaryCount: 0 };
+
+    // Captura FILMS (Unique)
+    var regexFilms = new RegExp('href="/' + user + '/films/for/' + year + '/"[^>]*>.*?<span class="value">([\\d,]+)</span>', 'is');
     var matchFilms = html.match(regexFilms);
 
     if (matchFilms && matchFilms[1]) {
-      return res.json({ count: parseInt(matchFilms[1].replace(/,/g, '')) });
+      result.count = parseInt(matchFilms[1].replace(/,/g, ''));
+    } else {
+      // Fallback
+      var regexGeneric = new RegExp('for/' + year + '/"[^>]*>.*?<span class="value">([\\d,]+)</span>', 'is');
+      var matchGeneric = html.match(regexGeneric);
+      if (matchGeneric && matchGeneric[1]) {
+        result.count = parseInt(matchGeneric[1].replace(/,/g, ''));
+      }
     }
 
-    // Fallback
-    var regexGeneric = new RegExp('for/' + YEAR + '/"[^>]*>.*?<span class="value">([\\d,]+)</span>', 'is');
-    var matchGeneric = html.match(regexGeneric);
-    if (matchGeneric && matchGeneric[1]) {
-      return res.json({ count: parseInt(matchGeneric[1].replace(/,/g, '')) });
+    // Captura DIARY (Total incluindo rewatches)
+    var regexDiary = new RegExp('href="/' + user + '/diary/for/' + year + '/"[^>]*>.*?<span class="value">([\\d,]+)</span>', 'is');
+    var matchDiary = html.match(regexDiary);
+    if (matchDiary && matchDiary[1]) {
+      result.diaryCount = parseInt(matchDiary[1].replace(/,/g, ''));
     }
 
-    res.json({ count: 182 });
+    res.json(result);
   } catch (e) {
     console.error('getWatchedCount error:', e.message);
-    res.json({ count: 182 });
+    res.status(500).json({ error: 'Falha ao buscar dados' });
   }
 });
 
