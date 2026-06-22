@@ -63,8 +63,6 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     if (paneTitle) paneTitle.innerText = 'Sua Conta';
     if (roleta) {
       roleta.style.borderTop = 'none';
-      roleta.style.marginTop = '0';
-      roleta.style.paddingTop = '0';
     }
     return;
   }
@@ -78,11 +76,7 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   if (menuTitle) menuTitle.innerText = 'Conta e Metas';
   var paneTitle = document.getElementById('pane-title-meta');
   if (paneTitle) paneTitle.innerText = 'Sua Meta';
-  if (roleta) {
-    roleta.style.borderTop = '1px solid #2c3440';
-    roleta.style.marginTop = '6px';
-    roleta.style.paddingTop = '6px';
-  }
+
 
   try {
     if (scrapedCount && !isNaN(scrapedCount)) {
@@ -176,7 +170,7 @@ function renderRouletteUI() {
     '<div id="roulette-result" class="roulette-result-box">' +
       '<div style="margin: auto 0; width: 100%;">' +
         '<span id="roulette-source" class="roulette-source-text"></span>' +
-        '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none; box-shadow: 0 12px 24px rgba(0,0,0,0.5);">' +
+        '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none;">' +
           '<a id="roulette-poster-link" href="#" target="_blank"><img id="roulette-poster-img" src="" alt="Poster"></a>' +
         '</div>' +
         '<a id="roulette-link" class="roulette-link-text" href="#" target="_blank"></a>' +
