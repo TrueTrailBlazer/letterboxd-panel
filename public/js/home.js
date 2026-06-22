@@ -173,15 +173,6 @@ function saveState(state) {
 
 function renderRouletteUI() {
   document.getElementById('roleta-container').innerHTML =
-    '<div id="roulette-empty-state" class="roulette-result-box" style="display:flex;">' +
-      '<div style="margin: auto 0; width: 100%;">' +
-        '<span class="roulette-source-text">PREPARANDO O SORTEIO</span>' +
-        '<div class="roulette-poster-wrap" style="height: 300px; border: 2px dashed #2c3440; background: rgba(28,34,40,0.5); display: flex; align-items: center; justify-content: center; box-shadow: none;">' +
-          '<span style="color: #678; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; text-align: center;">Seu filme<br>aqui</span>' +
-        '</div>' +
-        '<span class="roulette-link-text" style="color: #fff; cursor: default;">Pronto para rodar</span>' +
-      '</div>' +
-    '</div>' +
     '<div id="roulette-result" class="roulette-result-box">' +
       '<div style="margin: auto 0; width: 100%;">' +
         '<span id="roulette-source" class="roulette-source-text"></span>' +
@@ -268,9 +259,6 @@ function bindEvents() {
     btn.innerText = 'EMBARALHANDO...';
     btn.disabled = true;
     document.getElementById('roulette-result').style.display = 'none';
-    
-    var emptyState = document.getElementById('roulette-empty-state');
-    if (emptyState) emptyState.style.display = 'none';
 
     var state = loadState();
     var sources = [];
