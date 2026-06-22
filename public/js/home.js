@@ -5,35 +5,7 @@ window.appMetaTarget = 365;
 window.appMetaYear = new Date().getFullYear();
 window.lastScrapedCount = 182;
 
-// Bancos de frases de filmes
-var quotesAhead = [
-  'A vida passa muito rápido. Se não parar e olhar em volta, pode perdê-la. — Curtindo a Vida Adoidado',
-  'Eu sinto a necessidade... a necessidade de velocidade! — Top Gun',
-  'Ao infinito e além! — Toy Story',
-  'Para onde vamos, não precisamos de estradas. — De Volta Para o Futuro',
-  'Eu sou o rei do mundo! — Titanic',
-  'Eu posso fazer isso o dia todo. — Capitão América',
-  'A Força é forte neste aqui. — Star Wars',
-  'Eu sou inevitável. — Vingadores: Ultimato'
-];
-var quotesOnTrack = [
-  'Perfeitamente equilibrado, como todas as coisas devem ser. — Vingadores: Guerra Infinita',
-  'Um mago nunca se atrasa. Ele chega exatamente quando pretende. — O Senhor dos Anéis',
-  'Adoro quando um plano dá certo. — Esquadrão Classe A',
-  'Tudo o que temos de decidir é o que fazer com o tempo que nos é dado. — O Senhor dos Anéis',
-  'Hakuna Matata. Os seus problemas você deve esquecer. — O Rei Leão',
-  'A vida é como uma caixa de chocolates. — Forrest Gump'
-];
-var quotesBehind = [
-  'Corra, Forrest, corra! — Forrest Gump',
-  'Houston, temos um problema. — Apollo 13',
-  'Continue a nadar, continue a nadar... — Procurando Nemo',
-  'Por que caímos? Para aprendermos a nos levantar. — Batman Begins',
-  'Não acabou até que acabe. — Rocky Balboa',
-  'Nós estamos no ultimato agora. — Vingadores: Guerra Infinita',
-  'Eu voltarei. — O Exterminador do Futuro',
-  'Chegou a hora de acelerar ou morrer. — Velozes e Furiosos'
-];
+// Citações movidas para public/js/quotes.js
 
 // ===== PROXY FETCH =====
 function proxyFetch(url) {
@@ -106,17 +78,18 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     var percent = ((watched / window.appMetaTarget) * 100).toFixed(1);
     var projection = Math.round((watched / currentDay) * daysInYear) || 0;
 
-    var color, msg, quoteText;
+    var color, msg, quoteObj, quoteText;
     if (saldo > 0) {
       color = '#00e054'; msg = 'Com folga de ' + saldo + ' filme(s)';
-      quoteText = quotesAhead[Math.floor(Math.random() * quotesAhead.length)];
+      quoteObj = window.appQuotes.acima_da_meta[Math.floor(Math.random() * window.appQuotes.acima_da_meta.length)];
     } else if (saldo === 0) {
       color = '#40bcf4'; msg = 'Meta cravada no dia';
-      quoteText = quotesOnTrack[Math.floor(Math.random() * quotesOnTrack.length)];
+      quoteObj = window.appQuotes.na_meta_exata[Math.floor(Math.random() * window.appQuotes.na_meta_exata.length)];
     } else {
       color = '#ff4e00'; msg = 'Faltando ' + Math.abs(saldo) + ' filme(s) hoje';
-      quoteText = quotesBehind[Math.floor(Math.random() * quotesBehind.length)];
+      quoteObj = window.appQuotes.abaixo_da_meta[Math.floor(Math.random() * window.appQuotes.abaixo_da_meta.length)];
     }
+    quoteText = quoteObj.quote + ' — ' + quoteObj.movie;
 
     document.getElementById('app-container').innerHTML =
       '<h2 class="section-heading">' +
