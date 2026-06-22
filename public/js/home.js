@@ -46,13 +46,24 @@ function showConfirm(title, desc, confirmText, onConfirm) {
 
 // ===== TRACKER LOGIC =====
 function renderTracker(scrapedCount, statusText, statusColor) {
+  var roleta = document.getElementById('roleta-container');
   if (!window.appUseMeta) {
     document.getElementById('app-container').innerHTML = '';
     document.getElementById('config-meta-section').style.display = 'none';
+    if (roleta) {
+      roleta.style.borderTop = 'none';
+      roleta.style.marginTop = '0';
+      roleta.style.paddingTop = '0';
+    }
     return;
   }
   
   document.getElementById('config-meta-section').style.display = 'block';
+  if (roleta) {
+    roleta.style.borderTop = '1px solid #2c3440';
+    roleta.style.marginTop = '10px';
+    roleta.style.paddingTop = '10px';
+  }
 
   try {
     if (scrapedCount && !isNaN(scrapedCount)) {
@@ -143,6 +154,11 @@ function saveState(state) {
 
 function renderRouletteUI() {
   document.getElementById('roleta-container').innerHTML =
+    '<div id="roulette-empty-state" style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 20px;">' +
+      '<div style="width: 72px; height: 72px; border-radius: 50%; background: #1c2228; display:flex; align-items:center; justify-content:center; font-size: 32px; margin-bottom: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.4); border: 1px solid #2c3440;"><span style="transform: translateX(2px);">🎲</span></div>' +
+      '<h3 style="color:#fff; font-size: 18px; font-weight:bold; margin:0 0 8px 0; letter-spacing: 0.02em;">O que vamos assistir?</h3>' +
+      '<p style="color:#89a; font-size: 14px; margin:0; line-height:1.5; max-width: 260px;">Toque no botão abaixo para sortear um filme das suas listas.</p>' +
+    '</div>' +
     '<div id="roulette-result" class="roulette-result-box">' +
       '<span id="roulette-source" class="roulette-source-text"></span>' +
       '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none;">' +
@@ -227,6 +243,9 @@ function bindEvents() {
     btn.innerText = 'EMBARALHANDO...';
     btn.disabled = true;
     document.getElementById('roulette-result').style.display = 'none';
+    
+    var emptyState = document.getElementById('roulette-empty-state');
+    if (emptyState) emptyState.style.display = 'none';
 
     var state = loadState();
     var sources = [];
