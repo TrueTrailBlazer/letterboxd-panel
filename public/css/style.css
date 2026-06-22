@@ -173,7 +173,9 @@ body {
 
 .roulette-poster-wrap {
   margin: 0 auto 16px auto;
-  width: 220px;
+  width: 100%;
+  max-width: 180px;
+  aspect-ratio: 2 / 3;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(64,188,244,0.2);

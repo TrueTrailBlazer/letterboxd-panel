@@ -80,8 +80,8 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   if (paneTitle) paneTitle.innerText = 'Sua Meta';
   if (roleta) {
     roleta.style.borderTop = '1px solid #2c3440';
-    roleta.style.marginTop = '10px';
-    roleta.style.paddingTop = '10px';
+    roleta.style.marginTop = '6px';
+    roleta.style.paddingTop = '6px';
   }
 
   try {
@@ -175,8 +175,8 @@ function renderRouletteUI() {
   document.getElementById('roleta-container').innerHTML =
     '<div id="roulette-empty-state" class="roulette-result-box" style="display:flex;">' +
       '<span class="roulette-source-text">PREPARANDO O SORTEIO</span>' +
-      '<div style="margin: 0 auto 16px auto; width: 220px; height: 330px; border-radius: 8px; border: 2px dashed #2c3440; background: rgba(28,34,40,0.5); display: flex; align-items: center; justify-content: center;">' +
-        '<span style="color: #678; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">Seu filme aqui</span>' +
+      '<div style="margin: 0 auto 16px auto; width: 100%; max-width: 180px; aspect-ratio: 2/3; border-radius: 8px; border: 2px dashed #2c3440; background: rgba(28,34,40,0.5); display: flex; align-items: center; justify-content: center;">' +
+        '<span style="color: #678; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; text-align: center;">Seu filme<br>aqui</span>' +
       '</div>' +
       '<span class="roulette-link-text" style="color: #fff; cursor: default;">Pronto para rodar</span>' +
     '</div>' +
