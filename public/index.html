@@ -80,7 +80,7 @@
         <div id="pane-menu" class="config-pane active">
           <div class="config-section" style="padding: 0;">
             <div class="pane-menu-item" onclick="openPane('pane-meta')">
-              <span>Conta e Metas</span>
+              <span id="menu-title-meta">Conta e Metas</span>
               <span class="pane-menu-arrow">›</span>
             </div>
             <div class="pane-menu-item" onclick="openPane('pane-sources')">
@@ -97,13 +97,13 @@
         <!-- PANE 1: CONTA E META -->
         <div id="pane-meta" class="config-pane">
           <div class="config-pane-header">
-            <span class="config-pane-title">Sua Meta</span>
+            <span class="config-pane-title" id="pane-title-meta">Sua Meta</span>
           </div>
           <div id="offset-help" style="font-size: 12px; color: #89a; line-height: 1.4; background: transparent; padding: 0 16px; margin-bottom: 12px; text-align: center;">
             O Letterboxd conta filmes únicos. Para que filmes reassistidos contem, adicione-os no campo abaixo.
           </div>
           <div id="config-meta-section" class="config-section">
-            <div class="config-row">
+            <div class="config-row" id="row-offset">
               <span class="config-label">Adicionar ao saldo total</span>
               <input type="number" id="num-offset" value="2" class="config-input-number">
             </div>

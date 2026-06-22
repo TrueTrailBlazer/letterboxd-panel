@@ -53,7 +53,14 @@ function renderTracker(scrapedCount, statusText, statusColor) {
         '<h2 style="margin:0; font-size: 16px; color: #fff; text-transform: uppercase; letter-spacing: 0.1em;">Roleta Letterboxd</h2>' +
         '<div style="width: 30px; height: 3px; background: #00e054; margin: 12px auto 0 auto; border-radius: 2px;"></div>' +
       '</div>';
-    document.getElementById('config-meta-section').style.display = 'none';
+    var offsetHelp = document.getElementById('offset-help');
+    if (offsetHelp) offsetHelp.style.display = 'none';
+    var rowOffset = document.getElementById('row-offset');
+    if (rowOffset) rowOffset.style.display = 'none';
+    var menuTitle = document.getElementById('menu-title-meta');
+    if (menuTitle) menuTitle.innerText = 'Sua Conta';
+    var paneTitle = document.getElementById('pane-title-meta');
+    if (paneTitle) paneTitle.innerText = 'Sua Conta';
     if (roleta) {
       roleta.style.borderTop = 'none';
       roleta.style.marginTop = '0';
@@ -63,6 +70,14 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   }
   
   document.getElementById('config-meta-section').style.display = 'block';
+  var offsetHelp = document.getElementById('offset-help');
+  if (offsetHelp) offsetHelp.style.display = 'block';
+  var rowOffset = document.getElementById('row-offset');
+  if (rowOffset) rowOffset.style.display = 'flex';
+  var menuTitle = document.getElementById('menu-title-meta');
+  if (menuTitle) menuTitle.innerText = 'Conta e Metas';
+  var paneTitle = document.getElementById('pane-title-meta');
+  if (paneTitle) paneTitle.innerText = 'Sua Meta';
   if (roleta) {
     roleta.style.borderTop = '1px solid #2c3440';
     roleta.style.marginTop = '10px';
