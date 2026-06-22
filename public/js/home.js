@@ -48,7 +48,11 @@ function showConfirm(title, desc, confirmText, onConfirm) {
 function renderTracker(scrapedCount, statusText, statusColor) {
   var roleta = document.getElementById('roleta-container');
   if (!window.appUseMeta) {
-    document.getElementById('app-container').innerHTML = '';
+    document.getElementById('app-container').innerHTML = 
+      '<div style="text-align:center; padding: 20px 0 10px 0;">' +
+        '<h1 style="color:#fff; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 6px 0;">🎬 Roleta Letterboxd</h1>' +
+        '<p style="color:#89a; font-size: 14px; margin: 0;">Seu próximo filme está a um toque de distância.</p>' +
+      '</div>';
     document.getElementById('config-meta-section').style.display = 'none';
     if (roleta) {
       roleta.style.borderTop = 'none';
@@ -154,10 +158,15 @@ function saveState(state) {
 
 function renderRouletteUI() {
   document.getElementById('roleta-container').innerHTML =
-    '<div id="roulette-empty-state" style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 20px;">' +
-      '<div style="width: 72px; height: 72px; border-radius: 50%; background: #1c2228; display:flex; align-items:center; justify-content:center; font-size: 32px; margin-bottom: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.4); border: 1px solid #2c3440;"><span style="transform: translateX(2px);">🎲</span></div>' +
-      '<h3 style="color:#fff; font-size: 18px; font-weight:bold; margin:0 0 8px 0; letter-spacing: 0.02em;">O que vamos assistir?</h3>' +
-      '<p style="color:#89a; font-size: 14px; margin:0; line-height:1.5; max-width: 260px;">Toque no botão abaixo para sortear um filme das suas listas.</p>' +
+    '<div id="roulette-empty-state" style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; width: 100%;">' +
+      '<span class="roulette-source-text" style="color: #678;">AGUARDANDO SORTEIO...</span>' +
+      '<div class="roulette-poster-wrap" style="background: #1c2228; border: 2px dashed #2c3440; display: flex; align-items: center; justify-content: center; height: 330px; width: 220px; box-shadow: none;">' +
+        '<div style="display:flex; flex-direction:column; align-items:center; gap: 12px;">' +
+          '<span style="font-size: 36px; filter: grayscale(1) opacity(0.3);">🎞️</span>' +
+          '<span style="color:#678; font-size: 14px; font-weight: bold; letter-spacing: 0.1em; line-height: 1.4;">SEU FILME<br>AQUI</span>' +
+        '</div>' +
+      '</div>' +
+      '<span class="roulette-link-text" style="color: #678; font-size: 20px; margin-top: 8px;">Título Oculto</span>' +
     '</div>' +
     '<div id="roulette-result" class="roulette-result-box">' +
       '<span id="roulette-source" class="roulette-source-text"></span>' +
