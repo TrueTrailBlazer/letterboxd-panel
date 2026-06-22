@@ -10,7 +10,16 @@ function openConfig() {
   document.getElementById('num-max-minutes').value = state.maxMinutes;
   renderConfigLists();
 
+  openPane('pane-menu'); // Reset to main menu whenever config opens
   document.getElementById('config-overlay').classList.add('open');
+}
+
+function openPane(paneId) {
+  var panes = document.querySelectorAll('.config-pane');
+  for (var i = 0; i < panes.length; i++) {
+    panes[i].classList.remove('active');
+  }
+  document.getElementById(paneId).classList.add('active');
 }
 
 function closeConfig() {
