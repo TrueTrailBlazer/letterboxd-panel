@@ -6,8 +6,14 @@ function openConfig() {
 
   var state = loadState();
   document.getElementById('chk-watchlist').checked = state.watchlist;
-  document.getElementById('chk-short-only').checked = state.shortOnly;
-  document.getElementById('num-max-minutes').value = state.maxMinutes;
+  
+  var chkShort = document.getElementById('chk-short-only');
+  chkShort.checked = state.shortOnly;
+  document.getElementById('time-filter-settings').style.display = state.shortOnly ? 'flex' : 'none';
+  
+  document.getElementById('num-max-time').value = state.maxTime || 100;
+  document.getElementById('sel-time-unit').value = state.timeUnit || 'min';
+  
   renderConfigLists();
 
   openPane('pane-menu'); // Reset to main menu whenever config opens
@@ -53,12 +59,12 @@ function renderConfigLists() {
     var div = document.createElement('div');
     div.className = 'config-list-item';
     div.innerHTML =
-      '<label class="config-checkbox-label" style="margin-bottom:0; flex-grow:1; max-width:85%;">' +
-        '<input type="checkbox" class="chk-ext" data-idx="' + i + '"' + (list.checked ? ' checked' : '') + '>' +
-        '<span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + name + '</span>' +
-      '</label>' +
-      '<button class="config-delete-btn" data-idx="' + i + '">✖</button>';
-    lc.appendChild(div);
+      '<span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; font-size: 15px; color: #fff;">' + name + '</span>' +
+      '<div style="display: flex; align-items: center; gap: 12px;">' +
+        '<label class="switch"><input type="checkbox" class="chk-ext" data-idx="' + i + '"' + (list.checked ? ' checked' : '') + '><span class="slider"></span></label>' +
+        '<button class="config-delete-btn" data-idx="' + i + '">✖</button>' +
+      '</div>';
+    container.appendChild(div);
   }
 }
 

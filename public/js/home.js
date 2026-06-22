@@ -148,9 +148,17 @@ function renderTracker(scrapedCount, statusText, statusColor) {
 }
 
 function loadState() {
-  var saved = localStorage.getItem('rouletteState_PWA');
-  if (saved) return JSON.parse(saved);
-  return { watchlist: true, lists: [], shortOnly: false, maxMinutes: 100 };
+  var raw = localStorage.getItem('rouletteState_PWA');
+  if (raw) {
+    try { return JSON.parse(raw); } catch (e) {}
+  }
+  return {
+    watchlist: true,
+    customLists: [],
+    shortOnly: false,
+    maxTime: 100,
+    timeUnit: 'min'
+  };
 }
 function saveState(state) {
   localStorage.setItem('rouletteState_PWA', JSON.stringify(state));
@@ -185,10 +193,23 @@ function bindEvents() {
     var state = loadState(); state.watchlist = e.target.checked; saveState(state);
   };
   document.getElementById('chk-short-only').onchange = function(e) {
-    var state = loadState(); state.shortOnly = e.target.checked; saveState(state);
+    var state = loadState();
+    state.shortOnly = e.target.checked;
+    saveState(state);
+    document.getElementById('time-filter-settings').style.display = e.target.checked ? 'flex' : 'none';
   };
-  document.getElementById('num-max-minutes').oninput = function(e) {
-    var state = loadState(); state.maxMinutes = parseInt(e.target.value) || 100; saveState(state);
+  document.getElementById('num-max-time').oninput = function(e) {
+    var val = parseInt(e.target.value);
+    if (!isNaN(val)) {
+      var state = loadState();
+      state.maxTime = val;
+      saveState(state);
+    }
+  };
+  document.getElementById('sel-time-unit').onchange = function(e) {
+    var state = loadState();
+    state.timeUnit = e.target.value;
+    saveState(state);
   };
 
   document.getElementById('custom-lists-container').onclick = function(e) {
@@ -294,8 +315,11 @@ function bindEvents() {
 
       if (state.shortOnly) {
         var footer = filmDoc.querySelector('.text-link.text-footer');
-        var duration = footer ? parseInt(footer.innerText.match(/\d+/)[0]) : 0;
-        if (duration > state.maxMinutes) {
+        var durationMinutes = footer ? parseInt(footer.innerText.match(/\d+/)[0]) : 0;
+        
+        var maxLimitMinutes = state.timeUnit === 'hr' ? (state.maxTime * 60) : state.maxTime;
+        
+        if (durationMinutes > maxLimitMinutes) {
           btn.innerText = 'LONGO... TROCANDO';
           return setTimeout(function() { btn.onclick(); }, 500);
         }
@@ -319,7 +343,7 @@ function bindEvents() {
       document.getElementById('roulette-link').href = link;
       document.getElementById('roulette-poster-link').href = link;
       document.getElementById('roulette-source').innerText = source.type === 'watchlist' ? 'DA SUA WATCHLIST:' : 'DE UMA LISTA CUSTOMIZADA:';
-      document.getElementById('roulette-result').style.display = 'block';
+      document.getElementById('roulette-result').style.display = 'flex';
 
       btn.innerText = 'O QUE ASSISTIR HOJE?';
       btn.disabled = false;

@@ -122,16 +122,17 @@
           </div>
           <div class="config-section">
             <div class="config-row">
-              <label class="config-checkbox-label">
-                <span>Sua Watchlist</span>
+              <span class="config-label">Sua Watchlist</span>
+              <label class="switch">
                 <input type="checkbox" id="chk-watchlist">
+                <span class="slider"></span>
               </label>
             </div>
             <div id="custom-lists-container"></div>
-            <div class="config-row" style="background: #14181c; border-top: 1px solid #2c3440; padding: 10px 16px;">
-              <div class="config-add-row" style="width: 100%; margin: 0; display: flex; gap: 8px;">
-                <input type="text" id="new-list-url" placeholder="Link de lista (Letterboxd/boxd.it)..." style="flex-grow: 1; min-width: 0;">
-                <button id="add-list-btn" style="flex-shrink: 0;">ADD</button>
+            <div class="config-row" style="padding: 12px 16px;">
+              <div style="display: flex; gap: 8px; width: 100%; background: #14181c; border: 1px solid #2c3440; border-radius: 8px; padding: 4px;">
+                <input type="text" id="new-list-url" placeholder="Link de lista..." style="flex-grow: 1; background: transparent; border: none; color: #fff; outline: none; padding: 0 8px; font-size: 14px; min-width: 0;">
+                <button id="add-list-btn" style="background: #00e054; border: none; color: #14181c; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 13px; flex-shrink: 0;">ADD</button>
               </div>
             </div>
           </div>
@@ -144,12 +145,21 @@
             <span class="config-pane-title">Filtros</span>
           </div>
           <div class="config-section" style="margin-bottom:0;">
-            <div class="config-row" style="justify-content: flex-start; gap: 16px;">
-              <input type="checkbox" id="chk-short-only" style="width: 20px; height: 20px; accent-color: #00e054;">
-              <span style="color: #fff; font-size: 15px;">Limitar duração a:</span>
-              <div style="display:flex; align-items:center; margin-left: auto;">
-                <input type="number" id="num-max-minutes" value="100" class="config-input-number" style="width:65px;">
-                <span class="config-min-label">min</span>
+            <div class="config-row">
+              <span class="config-label">Ativar filtro de duração</span>
+              <label class="switch">
+                <input type="checkbox" id="chk-short-only">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="config-row" id="time-filter-settings" style="display: none; background: rgba(20,24,28,0.3);">
+              <span class="config-label">Duração máxima</span>
+              <div style="display:flex; align-items:center; gap: 8px;">
+                <input type="number" id="num-max-time" value="100" class="config-input-number" style="width:60px;">
+                <select id="sel-time-unit" style="background: #14181c; color: #fff; border: 1px solid #2c3440; border-radius: 6px; padding: 8px; outline: none; font-size: 14px;">
+                  <option value="min">Minutos</option>
+                  <option value="hr">Horas</option>
+                </select>
               </div>
             </div>
           </div>
