@@ -64,7 +64,7 @@ function renderConfigLists() {
         '<label class="switch"><input type="checkbox" class="chk-ext" data-idx="' + i + '"' + (list.checked ? ' checked' : '') + '><span class="slider"></span></label>' +
         '<button class="config-delete-btn" data-idx="' + i + '">✖</button>' +
       '</div>';
-    container.appendChild(div);
+    lc.appendChild(div);
   }
 }
 
