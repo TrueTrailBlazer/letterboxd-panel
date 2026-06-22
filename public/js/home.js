@@ -174,20 +174,22 @@ function saveState(state) {
 function renderRouletteUI() {
   document.getElementById('roleta-container').innerHTML =
     '<div id="roulette-empty-state" class="roulette-result-box" style="display:flex;">' +
-      '<span class="roulette-source-text">PREPARANDO O SORTEIO</span>' +
-      '<div class="roulette-poster-wrap">' +
-        '<div style="height: 300px; max-height: 100%; max-width: 100%; aspect-ratio: 2/3; border-radius: 8px; border: 2px dashed #2c3440; background: rgba(28,34,40,0.5); display: flex; align-items: center; justify-content: center; flex-shrink: 1;">' +
+      '<div style="margin: auto 0; width: 100%;">' +
+        '<span class="roulette-source-text">PREPARANDO O SORTEIO</span>' +
+        '<div class="roulette-poster-wrap" style="height: 300px; border: 2px dashed #2c3440; background: rgba(28,34,40,0.5); display: flex; align-items: center; justify-content: center; box-shadow: none;">' +
           '<span style="color: #678; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; text-align: center;">Seu filme<br>aqui</span>' +
         '</div>' +
+        '<span class="roulette-link-text" style="color: #fff; cursor: default;">Pronto para rodar</span>' +
       '</div>' +
-      '<span class="roulette-link-text" style="color: #fff; cursor: default;">Pronto para rodar</span>' +
     '</div>' +
     '<div id="roulette-result" class="roulette-result-box">' +
-      '<span id="roulette-source" class="roulette-source-text"></span>' +
-      '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none;">' +
-        '<a id="roulette-poster-link" href="#" target="_blank"><img id="roulette-poster-img" src="" alt="Poster"></a>' +
+      '<div style="margin: auto 0; width: 100%;">' +
+        '<span id="roulette-source" class="roulette-source-text"></span>' +
+        '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none; box-shadow: 0 12px 24px rgba(0,0,0,0.5);">' +
+          '<a id="roulette-poster-link" href="#" target="_blank"><img id="roulette-poster-img" src="" alt="Poster"></a>' +
+        '</div>' +
+        '<a id="roulette-link" class="roulette-link-text" href="#" target="_blank"></a>' +
       '</div>' +
-      '<a id="roulette-link" class="roulette-link-text" href="#" target="_blank"></a>' +
     '</div>';
 }
 
