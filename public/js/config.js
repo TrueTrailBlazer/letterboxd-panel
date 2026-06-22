@@ -11,8 +11,8 @@ function openConfig() {
   chkShort.checked = state.shortOnly;
   document.getElementById('time-filter-settings').style.display = state.shortOnly ? 'flex' : 'none';
   
-  document.getElementById('num-max-time').value = state.maxTime || 100;
-  document.getElementById('sel-time-unit').value = state.timeUnit || 'min';
+  document.getElementById('num-max-hr').value = state.maxTimeHr !== undefined ? state.maxTimeHr : 1;
+  document.getElementById('num-max-min').value = state.maxTimeMin !== undefined ? state.maxTimeMin : 40;
   
   renderConfigLists();
 

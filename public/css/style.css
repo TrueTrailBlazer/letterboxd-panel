@@ -22,7 +22,9 @@ body {
 #roleta-container {
   width: 100%;
   max-width: 400px;
-  margin-top: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #2c3440;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -155,15 +157,11 @@ body {
 /* ===== RESULT BOX ===== */
 .roulette-result-box {
   display: none;
-  padding-top: 14px;
-  margin-top: 10px;
-  border-top: 1px solid #2c3440;
   text-align: center;
   width: 100%;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 .roulette-source-text {

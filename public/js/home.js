@@ -78,18 +78,22 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     var percent = ((watched / window.appMetaTarget) * 100).toFixed(1);
     var projection = Math.round((watched / currentDay) * daysInYear) || 0;
 
-    var color, msg, quoteObj, quoteText;
-    if (saldo > 0) {
-      color = '#00e054'; msg = 'Com folga de ' + saldo + ' filme(s)';
-      quoteObj = window.appQuotes.acima_da_meta[Math.floor(Math.random() * window.appQuotes.acima_da_meta.length)];
-    } else if (saldo === 0) {
-      color = '#40bcf4'; msg = 'Meta cravada no dia';
-      quoteObj = window.appQuotes.na_meta_exata[Math.floor(Math.random() * window.appQuotes.na_meta_exata.length)];
-    } else {
-      color = '#ff4e00'; msg = 'Faltando ' + Math.abs(saldo) + ' filme(s) hoje';
-      quoteObj = window.appQuotes.abaixo_da_meta[Math.floor(Math.random() * window.appQuotes.abaixo_da_meta.length)];
+    var currentStatus = saldo > 0 ? 'ahead' : (saldo === 0 ? 'on_track' : 'behind');
+    if (!window.currentSessionQuote || window.currentSessionQuote.status !== currentStatus) {
+      var arr = saldo > 0 ? window.appQuotes.acima_da_meta : (saldo === 0 ? window.appQuotes.na_meta_exata : window.appQuotes.abaixo_da_meta);
+      window.currentSessionQuote = {
+        status: currentStatus,
+        quote: arr[Math.floor(Math.random() * arr.length)]
+      };
     }
-    quoteText = quoteObj.quote + ' — ' + quoteObj.movie;
+
+    var color, msg;
+    if (saldo > 0) { color = '#00e054'; msg = 'Com folga de ' + saldo + ' filme(s)'; }
+    else if (saldo === 0) { color = '#40bcf4'; msg = 'Meta cravada no dia'; }
+    else { color = '#ff4e00'; msg = 'Faltando ' + Math.abs(saldo) + ' filme(s) hoje'; }
+    
+    var quoteObj = window.currentSessionQuote.quote;
+    var quoteText = quoteObj.quote + ' — ' + quoteObj.movie;
 
     document.getElementById('app-container').innerHTML =
       '<h2 class="section-heading">' +
@@ -129,8 +133,8 @@ function loadState() {
     watchlist: true,
     customLists: [],
     shortOnly: false,
-    maxTime: 100,
-    timeUnit: 'min'
+    maxTimeHr: 1,
+    maxTimeMin: 40
   };
 }
 function saveState(state) {
@@ -140,11 +144,13 @@ function saveState(state) {
 function renderRouletteUI() {
   document.getElementById('roleta-container').innerHTML =
     '<div id="roulette-result" class="roulette-result-box">' +
-      '<span id="roulette-source" class="roulette-source-text"></span>' +
-      '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none;">' +
-        '<a id="roulette-poster-link" href="#" target="_blank"><img id="roulette-poster-img" src="" alt="Poster"></a>' +
+      '<div style="margin: auto 0; width: 100%;">' +
+        '<span id="roulette-source" class="roulette-source-text"></span>' +
+        '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none;">' +
+          '<a id="roulette-poster-link" href="#" target="_blank"><img id="roulette-poster-img" src="" alt="Poster"></a>' +
+        '</div>' +
+        '<a id="roulette-link" class="roulette-link-text" href="#" target="_blank"></a>' +
       '</div>' +
-      '<a id="roulette-link" class="roulette-link-text" href="#" target="_blank"></a>' +
     '</div>';
 }
 
@@ -171,18 +177,13 @@ function bindEvents() {
     saveState(state);
     document.getElementById('time-filter-settings').style.display = e.target.checked ? 'flex' : 'none';
   };
-  document.getElementById('num-max-time').oninput = function(e) {
-    var val = parseInt(e.target.value);
-    if (!isNaN(val)) {
-      var state = loadState();
-      state.maxTime = val;
-      saveState(state);
-    }
+  document.getElementById('num-max-hr').oninput = function(e) {
+    var val = parseInt(e.target.value) || 0;
+    var state = loadState(); state.maxTimeHr = val; saveState(state);
   };
-  document.getElementById('sel-time-unit').onchange = function(e) {
-    var state = loadState();
-    state.timeUnit = e.target.value;
-    saveState(state);
+  document.getElementById('num-max-min').oninput = function(e) {
+    var val = parseInt(e.target.value) || 0;
+    var state = loadState(); state.maxTimeMin = val; saveState(state);
   };
 
   document.getElementById('custom-lists-container').onclick = function(e) {
@@ -235,7 +236,13 @@ function bindEvents() {
     state.lists.forEach(function(l) {
       if (l.checked) {
           var url = l.url ? l.url : 'https://letterboxd.com' + l.path;
-          sources.push({ type: 'list', url: url });
+          var name = 'UMA LISTA CUSTOMIZADA';
+          try { 
+              var pathParts = new URL(url).pathname.split('/').filter(Boolean);
+              if (pathParts.length >= 3 && pathParts[1] === 'list') name = "A LISTA: " + pathParts[2].replace(/-/g, ' ').toUpperCase();
+              else if (url.indexOf('boxd.it') !== -1) name = 'UM LINK CURTO (BOXD.IT)';
+          } catch(e) {}
+          sources.push({ type: 'list', url: url, name: name });
       }
     });
 
@@ -290,7 +297,7 @@ function bindEvents() {
         var footer = filmDoc.querySelector('.text-link.text-footer');
         var durationMinutes = footer ? parseInt(footer.innerText.match(/\d+/)[0]) : 0;
         
-        var maxLimitMinutes = state.timeUnit === 'hr' ? (state.maxTime * 60) : state.maxTime;
+        var maxLimitMinutes = (state.maxTimeHr * 60) + state.maxTimeMin;
         
         if (durationMinutes > maxLimitMinutes) {
           btn.innerText = 'LONGO... TROCANDO';
@@ -315,7 +322,7 @@ function bindEvents() {
       document.getElementById('roulette-link').innerText = displayTitle;
       document.getElementById('roulette-link').href = link;
       document.getElementById('roulette-poster-link').href = link;
-      document.getElementById('roulette-source').innerText = source.type === 'watchlist' ? 'DA SUA WATCHLIST:' : 'DE UMA LISTA CUSTOMIZADA:';
+      document.getElementById('roulette-source').innerText = source.type === 'watchlist' ? 'DA SUA WATCHLIST:' : 'DE ' + source.name;
       document.getElementById('roulette-result').style.display = 'flex';
 
       btn.innerText = 'O QUE ASSISTIR HOJE?';
