@@ -144,13 +144,11 @@ function saveState(state) {
 function renderRouletteUI() {
   document.getElementById('roleta-container').innerHTML =
     '<div id="roulette-result" class="roulette-result-box">' +
-      '<div style="margin: auto 0; width: 100%;">' +
-        '<span id="roulette-source" class="roulette-source-text"></span>' +
-        '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none;">' +
-          '<a id="roulette-poster-link" href="#" target="_blank"><img id="roulette-poster-img" src="" alt="Poster"></a>' +
-        '</div>' +
-        '<a id="roulette-link" class="roulette-link-text" href="#" target="_blank"></a>' +
+      '<span id="roulette-source" class="roulette-source-text"></span>' +
+      '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none;">' +
+        '<a id="roulette-poster-link" href="#" target="_blank"><img id="roulette-poster-img" src="" alt="Poster"></a>' +
       '</div>' +
+      '<a id="roulette-link" class="roulette-link-text" href="#" target="_blank"></a>' +
     '</div>';
 }
 
@@ -236,11 +234,11 @@ function bindEvents() {
     state.lists.forEach(function(l) {
       if (l.checked) {
           var url = l.url ? l.url : 'https://letterboxd.com' + l.path;
-          var name = 'UMA LISTA CUSTOMIZADA';
+          var name = 'DE UMA LISTA CUSTOMIZADA:';
           try { 
               var pathParts = new URL(url).pathname.split('/').filter(Boolean);
-              if (pathParts.length >= 3 && pathParts[1] === 'list') name = "A LISTA: " + pathParts[2].replace(/-/g, ' ').toUpperCase();
-              else if (url.indexOf('boxd.it') !== -1) name = 'UM LINK CURTO (BOXD.IT)';
+              if (pathParts.length >= 3 && pathParts[1] === 'list') name = "DA LISTA: " + pathParts[2].replace(/-/g, ' ').toUpperCase();
+              else if (url.indexOf('boxd.it') !== -1) name = 'DE UM LINK CURTO (BOXD.IT):';
           } catch(e) {}
           sources.push({ type: 'list', url: url, name: name });
       }
@@ -322,7 +320,7 @@ function bindEvents() {
       document.getElementById('roulette-link').innerText = displayTitle;
       document.getElementById('roulette-link').href = link;
       document.getElementById('roulette-poster-link').href = link;
-      document.getElementById('roulette-source').innerText = source.type === 'watchlist' ? 'DA SUA WATCHLIST:' : 'DE ' + source.name;
+      document.getElementById('roulette-source').innerText = source.type === 'watchlist' ? 'DA SUA WATCHLIST:' : source.name;
       document.getElementById('roulette-result').style.display = 'flex';
 
       btn.innerText = 'O QUE ASSISTIR HOJE?';
