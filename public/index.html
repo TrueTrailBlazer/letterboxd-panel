@@ -77,41 +77,46 @@
       <div class="config-body">
         
         <!-- SETOR 1: Perfil e Meta -->
+        <div class="config-section-title">
+          <span>Conta e Metas</span>
+          <span onclick="document.getElementById('offset-help').classList.toggle('expanded')" style="cursor:pointer; background:#2c3440; color:#89a; border-radius:50%; width:18px; height:18px; text-align:center; line-height:18px; font-weight:bold; font-size:11px; display:inline-block; margin-left:8px;">?</span>
+        </div>
+        <div id="offset-help" style="max-height: 0; opacity: 0; overflow: hidden; transition: all 0.3s ease; font-size: 12px; color: #89a; line-height: 1.4; background: transparent; padding: 0 16px; margin-bottom: 0;">
+          O Letterboxd conta filmes únicos. Para que filmes reassistidos contem, digite a diferença abaixo.
+        </div>
         <div id="config-meta-section" class="config-section">
-          <div class="config-section-title">
-            <span>Conta e Metas</span>
-            <span onclick="document.getElementById('offset-help').classList.toggle('expanded')" style="cursor:pointer; background:#2c3440; color:#89a; border-radius:50%; width:18px; height:18px; text-align:center; line-height:18px; font-weight:bold; font-size:11px;">?</span>
-          </div>
-          <div id="offset-help" style="max-height: 0; opacity: 0; overflow: hidden; transition: all 0.3s ease; font-size: 11px; color: #89a; line-height: 1.4; background: #14181c; border-radius: 4px; padding: 0 8px; margin-bottom: 0;">
-            O site principal do Letterboxd só contabiliza filmes únicos no seu perfil. Se você costuma reassistir a filmes e quer que eles contem para a sua meta (como no seu Diário), digite a quantidade de filmes repetidos no campo abaixo para corrigir a barra de progresso.
-          </div>
           <div class="config-row">
             <span class="config-label">Adicionar ao saldo total</span>
             <input type="number" id="num-offset" value="2" class="config-input-number">
           </div>
-          <button id="reset-profile-btn">Limpar Perfil (Sair)</button>
+          <div class="config-row" style="padding: 0;">
+            <button id="reset-profile-btn">Limpar Perfil (Sair)</button>
+          </div>
         </div>
 
         <!-- SETOR 2: Fontes da Roleta -->
+        <div class="config-section-title">Fontes de Sorteio</div>
         <div class="config-section">
-          <div class="config-section-title">Fontes de Sorteio</div>
-          <label class="config-checkbox-label">
-            <input type="checkbox" id="chk-watchlist">
-            <span>Sua Watchlist</span>
-          </label>
+          <div class="config-row">
+            <label class="config-checkbox-label">
+              <span>Sua Watchlist</span>
+              <input type="checkbox" id="chk-watchlist">
+            </label>
+          </div>
           <div id="custom-lists-container"></div>
-          
-          <div class="config-add-row">
-            <input type="text" id="new-list-url" placeholder="Link de nova lista (Letterboxd/boxd.it)...">
-            <button id="add-list-btn">ADD</button>
+          <div class="config-row" style="background: #14181c; border-top: 1px solid #2c3440; padding: 10px 16px;">
+            <div class="config-add-row" style="width: 100%; margin: 0;">
+              <input type="text" id="new-list-url" placeholder="Link de lista (Letterboxd/boxd.it)...">
+              <button id="add-list-btn">ADD</button>
+            </div>
           </div>
         </div>
 
         <!-- SETOR 3: Filtros da Roleta -->
+        <div class="config-section-title">Filtros</div>
         <div class="config-section" style="margin-bottom:0;">
-          <div class="config-section-title">Filtros</div>
-          <div class="config-time-row">
-            <label class="config-checkbox-label" style="margin-bottom:0;">
+          <div class="config-row">
+            <label class="config-checkbox-label" style="justify-content: flex-start; gap: 12px;">
               <input type="checkbox" id="chk-short-only">
               <span>Limitar duração a:</span>
             </label>
