@@ -1,0 +1,17 @@
+{
+  "name": "Painel Letterboxd",
+  "short_name": "Letterboxd",
+  "description": "Meta 365 filmes + Roleta de filmes",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#14181c",
+  "theme_color": "#14181c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://a.ltrbxd.com/logos/letterboxd-mac-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

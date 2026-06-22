@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#14181c">
+  <title>Painel Letterboxd</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="https://a.ltrbxd.com/logos/letterboxd-mac-icon.png">
+  <link rel="apple-touch-icon" href="https://a.ltrbxd.com/logos/letterboxd-mac-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: #14181c;
+      color: #9ab;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 16px;
+      padding-bottom: 84px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #app-container, #roleta-container {
+      width: 100%;
+      max-width: 400px;
+      margin-top: 6px;
+    }
+
+    /* ===== META TRACKER ===== */
+    .section-heading {
+      color: #9ab;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.075em;
+      border-bottom: 1px solid #2c3440;
+      padding-bottom: 7px;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+
+    .meta-stats-row {
+      display: flex;
+      justify-content: space-between;
+      text-align: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #2c3440;
+      padding-bottom: 12px;
+    }
+
+    .meta-stat-item { display: flex; flex-direction: column; }
+    .meta-stat-val { font-size: 22px; font-weight: 700; color: #fff; line-height: 1; margin-bottom: 3px; }
+    .meta-stat-lbl { font-size: 9px; color: #89a; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .meta-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #89a;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 5px;
+    }
+
+    .meta-progress-pct { color: #40bcf4; font-weight: bold; }
+
+    .meta-bar-bg {
+      background: #2c3440;
+      height: 4px;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .meta-bar-fill {
+      background: linear-gradient(90deg, #40bcf4 0%, #00e054 100%);
+      height: 100%;
+      transition: width 0.5s ease;
+    }
+
+    /* Status message box */
+    .meta-msg-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #9ab;
+      background: #1c2228;
+      padding: 10px 12px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .meta-msg-main {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .meta-msg-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+
+    .meta-quote {
+      font-size: 10px;
+      font-style: italic;
+      color: #678;
+      line-height: 1.3;
+    }
+
+    /* ===== RESULT BOX ===== */
+    .roulette-result-box {
+      display: none;
+      padding-top: 14px;
+      margin-top: 10px;
+      border-top: 1px solid #2c3440;
+      text-align: center;
+      width: 100%;
+    }
+
+    .roulette-source-text {
+      display: block;
+      color: #89a;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .roulette-poster-wrap {
+      margin: 0 auto 10px auto;
+      width: 180px;
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid rgba(64,188,244,0.2);
+      min-height: 270px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 8px rgba(64,188,244,0.08);
+    }
+
+    .roulette-poster-wrap img { width: 100%; display: block; height: auto; object-fit: cover; }
+
+    .roulette-link-text {
+      color: #fff;
+      font-weight: bold;
+      font-size: 17px;
+      text-decoration: none;
+      display: block;
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    /* ===== FIXED BOTTOM BAR ===== */
+    #bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #14181c;
+      border-top: 1px solid #2c3440;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    #bottom-bar-inner {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      gap: 8px;
+    }
+
+    #roulette-btn {
+      flex-grow: 1;
+      text-align: center;
+      font-weight: bold;
+      background: #00e054;
+      color: #14181c;
+      padding: 13px 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+    }
+
+    #roulette-btn:disabled { background: #445566; color: #9ab; }
+
+    #open-config-btn {
+      width: 48px;
+      background: #1c2228;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #89a;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* ===== CONFIG OVERLAY ===== */
+    #config-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #14181c;
+      z-index: 200;
+      overflow-y: auto;
+    }
+
+    .config-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid #2c3440;
+    }
+
+    .config-header h2 { margin: 0; color: #fff; font-size: 16px; font-weight: 600; }
+
+    .config-body { padding: 12px 16px 20px 16px; max-width: 440px; width: 100%; margin: 0 auto; }
+
+    .config-section {
+      background: #1c2228;
+      border-radius: 8px;
+      padding: 14px 14px 10px 14px;
+      margin-bottom: 10px;
+    }
+
+    .config-section-title {
+      font-size: 10px;
+      color: #678;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .config-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .config-label { font-size: 13px; color: #ccd; }
+
+    .config-input-number {
+      width: 58px;
+      background: #14181c;
+      color: #fff;
+      border: 1px solid #2c3440;
+      padding: 8px;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .config-checkbox-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 8px;
+      gap: 10px;
+    }
+
+    .config-checkbox-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #00e054;
+    }
+
+    .config-checkbox-label span { color: #ccd; font-size: 13px; }
+
+    .config-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .config-delete-btn {
+      background: none;
+      border: none;
+      color: #678;
+      cursor: pointer;
+      padding: 4px 8px;
+      font-size: 14px;
+    }
+
+    .config-add-row { display: flex; gap: 8px; }
+
+    #new-list-url {
+      flex-grow: 1;
+      background: #14181c;
+      border: 1px solid #2c3440;
+      color: #fff;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    #add-list-btn {
+      background: #2c3440;
+      border: none;
+      color: #fff;
+      padding: 0 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .config-time-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .config-min-label { color: #89a; font-size: 12px; margin-left: 6px; }
+
+    /* Close button at bottom of config */
+    .config-footer {
+      padding: 12px 16px 24px 16px;
+      max-width: 440px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    #close-config-btn {
+      width: 100%;
+      background: #2c3440;
+      border: none;
+      color: #fff;
+      padding: 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-container"></div>
+  <div id="roleta-container"></div>
+
+  <div id="bottom-bar">
+    <div id="bottom-bar-inner">
+      <button id="roulette-btn">O QUE ASSISTIR HOJE?</button>
+      <button id="open-config-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="config-overlay">
+    <div class="config-header">
+      <h2>Configurações</h2>
+    </div>
+    <div class="config-body">
+      <div class="config-section">
+        <div class="config-section-title">Ajuste da Meta (Rewatches)</div>
+        <div class="config-row">
+          <span class="config-label">Filmes repetidos (+ Offset)</span>
+          <input type="number" id="num-offset" value="2" class="config-input-number">
+        </div>
+      </div>
+      <div class="config-section">
+        <div class="config-section-title">Fontes do Sorteio</div>
+        <label class="config-checkbox-label">
+          <input type="checkbox" id="chk-watchlist">
+          <span>Sua Watchlist</span>
+        </label>
+        <div id="custom-lists-container"></div>
+      </div>
+      <div class="config-section">
+        <div class="config-section-title">Adicionar Lista</div>
+        <div class="config-add-row">
+          <input type="text" id="new-list-url" placeholder="Cole o link da lista do Letterboxd...">
+          <button id="add-list-btn">ADD</button>
+        </div>
+      </div>
+      <div class="config-section">
+        <div class="config-section-title">Filtro de Tempo</div>
+        <div class="config-time-row">
+          <label class="config-checkbox-label" style="margin-bottom:0;">
+            <input type="checkbox" id="chk-short-only">
+            <span>Tempo máximo</span>
+          </label>
+          <div style="display:flex; align-items:center;">
+            <input type="number" id="num-max-minutes" value="100" class="config-input-number" style="width:55px;">
+            <span class="config-min-label">min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="config-footer">
+      <button id="close-config-btn">FECHAR</button>
+    </div>
+  </div>
+
+  <script>
+    var USER = 'spklf';
+    var YEAR = 2026;
+
+    window.lastScrapedCount = 182;
+
+    // Bancos de frases de filmes
+    var quotesAhead = [
+      'A vida passa muito rápido. Se não parar e olhar em volta, pode perdê-la. — Curtindo a Vida Adoidado',
+      'Eu sinto a necessidade... a necessidade de velocidade! — Top Gun',
+      'Ao infinito e além! — Toy Story',
+      'Para onde vamos, não precisamos de estradas. — De Volta Para o Futuro',
+      'Eu sou o rei do mundo! — Titanic',
+      'Eu posso fazer isso o dia todo. — Capitão América',
+      'A Força é forte neste aqui. — Star Wars',
+      'Eu sou inevitável. — Vingadores: Ultimato'
+    ];
+
+    var quotesOnTrack = [
+      'Perfeitamente equilibrado, como todas as coisas devem ser. — Vingadores: Guerra Infinita',
+      'Um mago nunca se atrasa. Ele chega exatamente quando pretende. — O Senhor dos Anéis',
+      'Adoro quando um plano dá certo. — Esquadrão Classe A',
+      'Tudo o que temos de decidir é o que fazer com o tempo que nos é dado. — O Senhor dos Anéis',
+      'Hakuna Matata. Os seus problemas você deve esquecer. — O Rei Leão',
+      'A vida é como uma caixa de chocolates. — Forrest Gump'
+    ];
+
+    var quotesBehind = [
+      'Corra, Forrest, corra! — Forrest Gump',
+      'Houston, temos um problema. — Apollo 13',
+      'Continue a nadar, continue a nadar... — Procurando Nemo',
+      'Por que caímos? Para aprendermos a nos levantar. — Batman Begins',
+      'Não acabou até que acabe. — Rocky Balboa',
+      'Nós estamos no ultimato agora. — Vingadores: Guerra Infinita',
+      'Eu voltarei. — O Exterminador do Futuro',
+      'Chegou a hora de acelerar ou morrer. — Velozes e Furiosos'
+    ];
+
+    // ===== PROXY FETCH (agora via servidor Express) =====
+    function proxyFetch(url) {
+      return fetch('/api/proxy?url=' + encodeURIComponent(url))
+        .then(function(res) { return res.text(); });
+    }
+
+    function renderTracker(scrapedCount, statusText, statusColor) {
+      try {
+        if (scrapedCount && !isNaN(scrapedCount)) {
+          window.lastScrapedCount = parseInt(scrapedCount);
+          localStorage.setItem('meta365_last_scraped', window.lastScrapedCount);
+        }
+
+        var labelStatus = statusText || '• Sincronizando...';
+        var corStatus = statusColor || '#678';
+
+        var offset = localStorage.getItem('meta365_offset');
+        if (offset === null) {
+          offset = 2;
+          localStorage.setItem('meta365_offset', 2);
+        } else {
+          offset = parseInt(offset) || 0;
+        }
+
+        var watched = window.lastScrapedCount + offset;
+        var now = new Date();
+        var target = Math.floor((now - new Date(YEAR, 0, 0)) / (1000 * 60 * 60 * 24));
+        var saldo = watched - target;
+        var percent = ((watched / 365) * 100).toFixed(1);
+        var projection = Math.round((watched / target) * 365) || 0;
+
+        var color, msg, quoteText;
+        if (saldo > 0) {
+          color = '#00e054';
+          msg = 'Com folga de ' + saldo + ' filme(s)';
+          quoteText = quotesAhead[Math.floor(Math.random() * quotesAhead.length)];
+        } else if (saldo === 0) {
+          color = '#40bcf4';
+          msg = 'Meta cravada no dia';
+          quoteText = quotesOnTrack[Math.floor(Math.random() * quotesOnTrack.length)];
+        } else {
+          color = '#ff4e00';
+          msg = 'Faltando ' + Math.abs(saldo) + ' filme(s) hoje';
+          quoteText = quotesBehind[Math.floor(Math.random() * quotesBehind.length)];
+        }
+
+        document.getElementById('app-container').innerHTML =
+          '<h2 class="section-heading">' +
+            'Meta 365 Filmes ' +
+            '<span id="sync-status" style="color:' + corStatus + '; font-size:10px; text-transform:none; margin-left:8px;">' + labelStatus + '</span>' +
+            '<span style="float: right; color: #678;">DIA ' + target + '/365</span>' +
+          '</h2>' +
+          '<div class="meta-stats-row">' +
+            '<div class="meta-stat-item"><span class="meta-stat-val">' + watched + '</span><span class="meta-stat-lbl">Vistos</span></div>' +
+            '<div class="meta-stat-item"><span class="meta-stat-val" style="color:' + color + '">' + (saldo > 0 ? '+' + saldo : saldo) + '</span><span class="meta-stat-lbl">Saldo</span></div>' +
+            '<div class="meta-stat-item"><span class="meta-stat-val">' + (365 - watched) + '</span><span class="meta-stat-lbl">Restam</span></div>' +
+            '<div class="meta-stat-item"><span class="meta-stat-val" style="color:#40bcf4">' + projection + '</span><span class="meta-stat-lbl">Projeção</span></div>' +
+          '</div>' +
+          '<div class="meta-progress-header">' +
+            '<span>Progresso Anual</span>' +
+            '<span class="meta-progress-pct">' + percent + '%</span>' +
+          '</div>' +
+          '<div class="meta-bar-bg"><div class="meta-bar-fill" style="width: ' + percent + '%"></div></div>' +
+          '<div class="meta-msg-box">' +
+            '<div class="meta-msg-main">' +
+              '<div class="meta-msg-dot" style="background:' + color + '; box-shadow: 0 0 5px ' + color + '"></div>' +
+              '<span style="color:#fff">' + msg + '</span>' +
+            '</div>' +
+            '<div class="meta-quote">"' + quoteText + '"</div>' +
+          '</div>';
+      } catch (e) {
+        console.error('renderTracker error:', e);
+      }
+    }
+
+    function loadState() {
+      var saved = localStorage.getItem('rouletteState_PWA');
+      if (saved) return JSON.parse(saved);
+      return { watchlist: true, lists: [], shortOnly: false, maxMinutes: 100 };
+    }
+
+    function saveState(state) {
+      localStorage.setItem('rouletteState_PWA', JSON.stringify(state));
+    }
+
+    function renderRouletteUI() {
+      document.getElementById('roleta-container').innerHTML =
+        '<div id="roulette-result" class="roulette-result-box">' +
+          '<span id="roulette-source" class="roulette-source-text"></span>' +
+          '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none;">' +
+            '<a id="roulette-poster-link" href="#" target="_blank"><img id="roulette-poster-img" src="" alt="Poster"></a>' +
+          '</div>' +
+          '<a id="roulette-link" class="roulette-link-text" href="#" target="_blank"></a>' +
+        '</div>';
+    }
+
+    // ===== CONFIG OVERLAY =====
+    function openConfig() {
+      var currentOffset = localStorage.getItem('meta365_offset');
+      if (currentOffset === null) currentOffset = 2;
+      document.getElementById('num-offset').value = currentOffset;
+
+      var state = loadState();
+      document.getElementById('chk-watchlist').checked = state.watchlist;
+      document.getElementById('chk-short-only').checked = state.shortOnly;
+      document.getElementById('num-max-minutes').value = state.maxMinutes;
+      renderConfigLists();
+
+      document.getElementById('config-overlay').style.display = 'block';
+    }
+
+    function closeConfig() {
+      document.getElementById('config-overlay').style.display = 'none';
+    }
+
+    function renderConfigLists() {
+      var state = loadState();
+      var lc = document.getElementById('custom-lists-container');
+      lc.innerHTML = '';
+      for (var i = 0; i < state.lists.length; i++) {
+        var list = state.lists[i];
+        var parts = list.path.split('/').filter(function(p) { return p; });
+        var name = parts.length >= 3 ? parts[2].replace(/-/g, ' ') : 'Lista Customizada';
+        var div = document.createElement('div');
+        div.className = 'config-list-item';
+        div.innerHTML =
+          '<label class="config-checkbox-label" style="margin-bottom:0; flex-grow:1;">' +
+            '<input type="checkbox" class="chk-ext" data-idx="' + i + '"' + (list.checked ? ' checked' : '') + '>' +
+            '<span>' + name + '</span>' +
+          '</label>' +
+          '<button class="config-delete-btn" data-idx="' + i + '">✖</button>';
+        lc.appendChild(div);
+      }
+    }
+
+    function removeList(idx) {
+      var state = loadState();
+      state.lists.splice(idx, 1);
+      saveState(state);
+      renderConfigLists();
+    }
+
+    // ===== BIND EVENTS =====
+    function bindEvents() {
+      document.getElementById('open-config-btn').onclick = function(e) {
+        e.preventDefault();
+        openConfig();
+      };
+
+      document.getElementById('close-config-btn').onclick = function() {
+        closeConfig();
+      };
+
+      document.getElementById('num-offset').oninput = function(e) {
+        localStorage.setItem('meta365_offset', parseInt(e.target.value) || 0);
+        var syncEl = document.getElementById('sync-status');
+        var st = syncEl ? syncEl.innerText : '• Sincronizado';
+        var sc = syncEl ? syncEl.style.color : '#00e054';
+        renderTracker(window.lastScrapedCount, st, sc);
+      };
+
+      document.getElementById('chk-watchlist').onchange = function(e) {
+        var state = loadState();
+        state.watchlist = e.target.checked;
+        saveState(state);
+      };
+
+      document.getElementById('chk-short-only').onchange = function(e) {
+        var state = loadState();
+        state.shortOnly = e.target.checked;
+        saveState(state);
+      };
+
+      document.getElementById('num-max-minutes').oninput = function(e) {
+        var state = loadState();
+        state.maxMinutes = parseInt(e.target.value) || 100;
+        saveState(state);
+      };
+
+      document.getElementById('custom-lists-container').onclick = function(e) {
+        var delBtn = e.target.closest ? e.target.closest('.config-delete-btn') : null;
+        if (!delBtn && e.target.classList.contains('config-delete-btn')) delBtn = e.target;
+        if (delBtn) {
+          removeList(parseInt(delBtn.getAttribute('data-idx')));
+        }
+      };
+
+      document.getElementById('custom-lists-container').onchange = function(e) {
+        if (e.target.classList.contains('chk-ext')) {
+          var state = loadState();
+          var idx = parseInt(e.target.getAttribute('data-idx'));
+          state.lists[idx].checked = e.target.checked;
+          saveState(state);
+        }
+      };
+
+      document.getElementById('add-list-btn').onclick = function() {
+        var val = document.getElementById('new-list-url').value.trim();
+        if (val.indexOf('letterboxd.com/') === -1) { alert('Use um link do Letterboxd'); return; }
+        var path;
+        try { path = new URL(val).pathname; } catch(err) { alert('Link inválido'); return; }
+        var state = loadState();
+        for (var i = 0; i < state.lists.length; i++) {
+          if (state.lists[i].path === path) { alert('Lista já existe'); return; }
+        }
+        state.lists.push({ path: path, checked: true });
+        saveState(state);
+        document.getElementById('new-list-url').value = '';
+        renderConfigLists();
+      };
+
+      // ===== SPIN ROULETTE =====
+      document.getElementById('roulette-btn').onclick = async function() {
+        var btn = this;
+        btn.innerText = 'EMBARALHANDO...';
+        btn.disabled = true;
+        document.getElementById('roulette-result').style.display = 'none';
+
+        var state = loadState();
+        var sources = [];
+        if (state.watchlist) sources.push({ type: 'watchlist', url: 'https://letterboxd.com/' + USER + '/watchlist/' });
+        state.lists.forEach(function(l) {
+          if (l.checked) sources.push({ type: 'list', url: 'https://letterboxd.com' + l.path });
+        });
+
+        if (!sources.length) {
+          btn.innerText = 'ESCOLHA UMA FONTE';
+          btn.disabled = false;
+          return;
+        }
+
+        var source = sources[Math.floor(Math.random() * sources.length)];
+
+        try {
+          var html = await proxyFetch(source.url);
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var pagLinks = doc.querySelectorAll('.paginate-pages li a');
+          var maxPage = pagLinks.length ? parseInt(pagLinks[pagLinks.length - 1].innerText) : 1;
+          var randomPage = Math.floor(Math.random() * maxPage) + 1;
+
+          if (randomPage > 1) {
+            html = await proxyFetch(source.url + 'page/' + randomPage + '/');
+            doc = new DOMParser().parseFromString(html, 'text/html');
+          }
+
+          var posters = Array.from(doc.querySelectorAll('.film-poster'));
+          if (!posters.length) throw new Error('Vazio');
+
+          var randomPoster = posters[Math.floor(Math.random() * posters.length)];
+          var containerHtml = (randomPoster.closest('li') || randomPoster.parentNode || randomPoster).outerHTML;
+          var imgNode = randomPoster.querySelector('img');
+          var displayTitle = imgNode && imgNode.alt ? imgNode.alt.replace(/^Poster for /i, '').trim() : 'Filme Sorteado';
+
+          var slug = '';
+          var slugMatch = containerHtml.match(/data-film-slug=["']([^"']+)["']/);
+          var targetMatch = containerHtml.match(/data-target-link=["']([^"']+)["']/);
+          var aMatch = containerHtml.match(/href=["']\/film\/([^"']+)["']/);
+
+          if (slugMatch && slugMatch[1] && slugMatch[1] !== 'null') {
+            slug = slugMatch[1];
+          } else if (targetMatch && targetMatch[1] && targetMatch[1] !== 'null') {
+            slug = targetMatch[1].replace(/\/film\/|\//g, '');
+          } else if (aMatch && aMatch[1]) {
+            slug = aMatch[1].replace(/\//g, '');
+          }
+
+          if (!slug || slug === 'null') {
+            slug = displayTitle.replace(/\s*\(\d{4}\)$/, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s-]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
+          }
+
+          var link = 'https://letterboxd.com/film/' + slug + '/';
+          var filmHtml = await proxyFetch(link);
+          var filmDoc = new DOMParser().parseFromString(filmHtml, 'text/html');
+
+          if (state.shortOnly) {
+            var footer = filmDoc.querySelector('.text-link.text-footer');
+            var duration = footer ? parseInt(footer.innerText.match(/\d+/)[0]) : 0;
+            if (duration > state.maxMinutes) {
+              btn.innerText = 'LONGO... TROCANDO';
+              return setTimeout(function() { btn.onclick(); }, 500);
+            }
+          }
+
+          var imgSrc = imgNode ? (imgNode.getAttribute('src') || imgNode.getAttribute('data-image')) : '';
+          var jsonLd = filmDoc.querySelector('script[type="application/ld+json"]');
+          if (jsonLd) {
+            var data = JSON.parse(jsonLd.innerText.replace(/\/\*.*?\*\//g, ''));
+            if (Array.isArray(data)) {
+              var found = data.find(function(i) { return i.image; });
+              if (found) imgSrc = found.image;
+            } else if (data.image) {
+              imgSrc = data.image;
+            }
+          }
+
+          document.getElementById('roulette-poster-img').src = imgSrc;
+          document.getElementById('roulette-poster-wrap').style.display = 'flex';
+          document.getElementById('roulette-link').innerText = displayTitle;
+          document.getElementById('roulette-link').href = link;
+          document.getElementById('roulette-poster-link').href = link;
+          document.getElementById('roulette-source').innerText = source.type === 'watchlist' ? 'DA SUA WATCHLIST:' : 'DE UMA LISTA CUSTOMIZADA:';
+          document.getElementById('roulette-result').style.display = 'block';
+
+          btn.innerText = 'O QUE ASSISTIR HOJE?';
+          btn.disabled = false;
+
+        } catch (err) {
+          console.error('Roulette error:', err);
+          btn.innerText = 'ERRO. TENTAR DE NOVO';
+          btn.disabled = false;
+        }
+      };
+    }
+
+    // ===== INIT (Local-First) =====
+    window.onload = function() {
+      try {
+        var savedCount = localStorage.getItem('meta365_last_scraped');
+        if (savedCount !== null) {
+          window.lastScrapedCount = parseInt(savedCount) || 182;
+        } else {
+          window.lastScrapedCount = 182;
+        }
+
+        renderTracker(window.lastScrapedCount, '• Sincronizando...', '#678');
+        renderRouletteUI();
+        bindEvents();
+
+        // Busca contagem real via API do servidor Express
+        fetch('/api/watched-count')
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            if (data && data.count && !isNaN(data.count)) {
+              renderTracker(data.count, '• Sincronizado', '#00e054');
+            } else {
+              renderTracker(window.lastScrapedCount, '• Offline', '#ff4e00');
+            }
+          })
+          .catch(function(err) {
+            console.warn('Falha silenciosa:', err);
+            renderTracker(window.lastScrapedCount, '• Offline', '#ff4e00');
+          });
+      } catch (e) {
+        console.error('Init error:', e);
+        renderTracker(182, '• Erro', '#ff4e00');
+      }
+    };
+  </script>
+</body>
+</html>
