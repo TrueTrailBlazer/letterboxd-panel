@@ -26,6 +26,11 @@ function openPane(paneId) {
     panes[i].classList.remove('active');
   }
   document.getElementById(paneId).classList.add('active');
+  
+  var backBtn = document.getElementById('footer-back-btn');
+  if (backBtn) {
+    backBtn.style.display = (paneId === 'pane-menu') ? 'none' : 'block';
+  }
 }
 
 function closeConfig() {

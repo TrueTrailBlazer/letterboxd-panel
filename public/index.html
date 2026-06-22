@@ -97,8 +97,7 @@
         <!-- PANE 1: CONTA E META -->
         <div id="pane-meta" class="config-pane">
           <div class="config-pane-header">
-            <button class="config-back-btn" onclick="openPane('pane-menu')">‹ Voltar</button>
-            <span class="config-pane-title">Conta e Metas</span>
+            <span class="config-pane-title">Sua Meta</span>
           </div>
           <div id="offset-help" style="font-size: 12px; color: #89a; line-height: 1.4; background: transparent; padding: 0 16px; margin-bottom: 12px; text-align: center;">
             O Letterboxd conta filmes únicos. Para que filmes reassistidos contem, adicione-os no campo abaixo.
@@ -117,7 +116,6 @@
         <!-- PANE 2: FONTES DE SORTEIO -->
         <div id="pane-sources" class="config-pane">
           <div class="config-pane-header">
-            <button class="config-back-btn" onclick="openPane('pane-menu')">‹ Voltar</button>
             <span class="config-pane-title">Fontes de Sorteio</span>
           </div>
           <div class="config-section">
@@ -141,7 +139,6 @@
         <!-- PANE 3: FILTROS -->
         <div id="pane-filters" class="config-pane">
           <div class="config-pane-header">
-            <button class="config-back-btn" onclick="openPane('pane-menu')">‹ Voltar</button>
             <span class="config-pane-title">Filtros</span>
           </div>
           <div class="config-section" style="margin-bottom:0;">
@@ -165,9 +162,11 @@
         </div>
         
       </div>
-      <div class="config-footer">
-        <button id="close-config-btn">FECHAR</button>
-      </div>
+      <!-- BOTTOM FOOTER (VOLTAR & FECHAR) -->
+    <div class="config-footer">
+      <button id="footer-back-btn" onclick="openPane('pane-menu')">‹ Voltar</button>
+      <button id="close-config-btn">✕</button>
+    </div>
     </div>
   </div>
 

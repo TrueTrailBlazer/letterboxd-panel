@@ -296,26 +296,15 @@ body {
 .config-pane-header {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-bottom: 16px;
   position: relative;
-}
-.config-back-btn {
-  background: none;
-  border: none;
-  color: #40bcf4;
-  font-size: 15px;
-  cursor: pointer;
-  padding: 8px 0;
-  display: flex;
-  align-items: center;
+  height: 32px;
 }
 .config-pane-title {
   color: #fff;
   font-size: 16px;
   font-weight: bold;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 /* MENU ITEMS */
@@ -412,19 +401,36 @@ input:checked + .slider:before { transform: translateX(20px); }
   width: 100%;
   margin: 0 auto;
   flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#footer-back-btn {
+  background: transparent;
+  border: none;
+  color: #40bcf4;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 12px 8px 0;
+  cursor: pointer;
+  display: none;
 }
 
 #close-config-btn {
-  width: 100%;
   background: #2c3440;
   border: none;
   color: #fff;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
-  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
 }
 
 #reset-profile-btn {
