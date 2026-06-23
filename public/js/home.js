@@ -168,7 +168,7 @@ function saveState(state) {
 function renderRouletteUI() {
   document.getElementById('roleta-container').innerHTML =
     '<div id="roulette-result" class="roulette-result-box" style="display:none;">' +
-      '<div style="margin: auto 0; width: 100%; flex:1 1 0; min-height:0; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
+      '<div style="margin: auto 0; width: 100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
         '<span id="roulette-source" class="roulette-source-text"></span>' +
         '<div id="roulette-poster-wrap" class="roulette-poster-wrap" style="display:none;"></div>' +
         '<a id="roulette-link" class="roulette-link-text" href="#" target="_blank"></a>' +
@@ -339,7 +339,7 @@ function bindEvents() {
         }
       }
 
-      document.getElementById('roulette-poster-wrap').innerHTML = '<a id="roulette-poster-link" href="' + link + '" target="_blank"><img id="roulette-poster-img" src="' + imgSrc + '" alt="Poster" style="width:100%;display:block;height:100%;object-fit:cover;min-height:0;"></a>';
+      document.getElementById('roulette-poster-wrap').innerHTML = '<a id="roulette-poster-link" href="' + link + '" target="_blank"><img id="roulette-poster-img" src="' + imgSrc + '" alt="Poster" style="width:100%;display:block;height:auto;object-fit:cover;"></a>';
       document.getElementById('roulette-poster-wrap').style.display = 'flex';
       document.getElementById('roulette-link').innerText = displayTitle;
       document.getElementById('roulette-link').href = link;
