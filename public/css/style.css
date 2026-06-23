@@ -1,13 +1,20 @@
 * { box-sizing: border-box; }
 
+html {
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
 body {
   background-color: #14181c;
   color: #9ab;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
   padding: 16px;
-  padding-bottom: 84px;
-  min-height: 100vh;
+  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  height: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,9 +32,11 @@ body {
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid #2c3440;
-  flex-grow: 1;
+  flex: 1 1 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* ===== ONBOARDING ===== */
@@ -156,12 +165,13 @@ body {
 
 /* ===== RESULT BOX ===== */
 .roulette-result-box {
-  display: none;
   text-align: center;
   width: 100%;
-  flex-grow: 1;
+  flex: 1 1 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .roulette-source-text {
@@ -174,8 +184,11 @@ body {
 }
 
 .roulette-poster-wrap {
-  margin: 0 auto 16px auto;
-  width: 220px;
+  margin: 0 auto 10px auto;
+  width: 100%;
+  max-width: 180px;
+  flex: 1 1 auto;
+  min-height: 0;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(64,188,244,0.2);
@@ -185,7 +198,7 @@ body {
   box-shadow: 0 8px 24px rgba(0,0,0,0.6), 0 0 12px rgba(64,188,244,0.1);
 }
 
-.roulette-poster-wrap img { width: 100%; display: block; height: auto; object-fit: cover; }
+.roulette-poster-wrap img { width: 100%; display: block; height: 100%; object-fit: cover; min-height: 0; }
 
 .roulette-link-text {
   color: #fff;
@@ -206,6 +219,7 @@ body {
   background: #14181c;
   border-top: 1px solid #2c3440;
   padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
   display: flex;
   justify-content: center;
   z-index: 100;
@@ -465,7 +479,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   100% { opacity: 0.7; }
 }
 
-button { transition: transform 0.1s ease, filter 0.2s ease, opacity 0.2s ease; }
+button { transition: transform 0.1s ease, filter 0.2s ease, opacity 0.2s ease; touch-action: manipulation; }
 button:active { transform: scale(0.97); filter: brightness(0.9); }
 #roulette-btn:disabled { animation: pulseFade 1.5s infinite ease-in-out; cursor: not-allowed; transform: none; }
 
