@@ -417,22 +417,16 @@ window.onload = function() {
 // ==========================================
 (function() {
   var startY = 0;
-  var currentY = 0;
   var ptrEl = null;
   var isRefreshing = false;
 
-  document.addEventListener('DOMContentLoaded', function() {
-    ptrEl = document.getElementById('custom-ptr');
-  });
-
   document.addEventListener('touchstart', function(e) {
     if (isRefreshing) return;
+    if (!ptrEl) ptrEl = document.getElementById('custom-ptr');
     
-    // Nao ativa PTR se um overlay/modal estiver aberto
     var overlay = document.getElementById('config-overlay');
     if (overlay && overlay.style.display !== 'none' && overlay.style.display !== '') return;
     
-    // Nao ativa PTR se tentar scrollar a lista de watchlists ou algo scrolavel (app-wrapper)
     var wrapper = document.getElementById('app-wrapper');
     if (wrapper && wrapper.scrollTop > 0) return;
 
@@ -441,15 +435,14 @@ window.onload = function() {
 
   document.addEventListener('touchmove', function(e) {
     if (isRefreshing || startY === 0 || !ptrEl) return;
-    currentY = e.touches[0].clientY;
+    var currentY = e.touches[0].clientY;
     var dy = currentY - startY;
     
-    // Só funciona puxando para baixo e começando do topo (startY < 150)
-    if (dy > 0 && startY < 150) {
+    if (dy > 0) {
       var wrapper = document.getElementById('app-wrapper');
       if (wrapper && wrapper.scrollTop > 0) return;
 
-      var dist = Math.min(dy * 0.4, 60); // Resistencia
+      var dist = Math.min(dy * 0.4, 60); 
       ptrEl.style.transition = 'none';
       ptrEl.style.transform = 'translateY(' + (dist - 60) + 'px)';
     }
@@ -459,7 +452,7 @@ window.onload = function() {
     if (isRefreshing || startY === 0 || !ptrEl) return;
     var dy = e.changedTouches[0].clientY - startY;
     
-    if (dy > 120 && startY < 150) {
+    if (dy > 80) {
       isRefreshing = true;
       ptrEl.style.transition = 'transform 0.2s';
       ptrEl.style.transform = 'translateY(0px)';
