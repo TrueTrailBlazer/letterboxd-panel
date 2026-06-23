@@ -1,8 +1,14 @@
 * { box-sizing: border-box; }
 
-html {
+html, body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
   height: 100%;
-  height: 100dvh;
+  overflow: hidden;
 }
 
 body {
@@ -12,11 +18,9 @@ body {
   margin: 0;
   padding: 16px;
   padding-bottom: calc(84px + env(safe-area-inset-bottom));
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overscroll-behavior-y: contain;
 }
 
 #app-container {
