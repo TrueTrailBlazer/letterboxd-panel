@@ -16,7 +16,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: contain;
 }
 
 #app-container {
