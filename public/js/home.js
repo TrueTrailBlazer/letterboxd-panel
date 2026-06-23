@@ -411,3 +411,69 @@ window.onload = function() {
     document.getElementById('app-wrapper').style.display = 'none';
   }
 };
+
+// ==========================================
+// MÓDULO: CUSTOM PULL-TO-REFRESH
+// ==========================================
+(function() {
+  var startY = 0;
+  var currentY = 0;
+  var ptrEl = null;
+  var isRefreshing = false;
+
+  document.addEventListener('DOMContentLoaded', function() {
+    ptrEl = document.getElementById('custom-ptr');
+  });
+
+  document.addEventListener('touchstart', function(e) {
+    if (isRefreshing) return;
+    
+    // Nao ativa PTR se um overlay/modal estiver aberto
+    var overlay = document.getElementById('config-overlay');
+    if (overlay && overlay.style.display !== 'none' && overlay.style.display !== '') return;
+    
+    // Nao ativa PTR se tentar scrollar a lista de watchlists ou algo scrolavel (app-wrapper)
+    var wrapper = document.getElementById('app-wrapper');
+    if (wrapper && wrapper.scrollTop > 0) return;
+
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function(e) {
+    if (isRefreshing || startY === 0 || !ptrEl) return;
+    currentY = e.touches[0].clientY;
+    var dy = currentY - startY;
+    
+    // Só funciona puxando para baixo e começando do topo (startY < 150)
+    if (dy > 0 && startY < 150) {
+      var wrapper = document.getElementById('app-wrapper');
+      if (wrapper && wrapper.scrollTop > 0) return;
+
+      var dist = Math.min(dy * 0.4, 60); // Resistencia
+      ptrEl.style.transition = 'none';
+      ptrEl.style.transform = 'translateY(' + (dist - 60) + 'px)';
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    if (isRefreshing || startY === 0 || !ptrEl) return;
+    var dy = e.changedTouches[0].clientY - startY;
+    
+    if (dy > 120 && startY < 150) {
+      isRefreshing = true;
+      ptrEl.style.transition = 'transform 0.2s';
+      ptrEl.style.transform = 'translateY(0px)';
+      var spin = ptrEl.querySelector('svg');
+      if (spin) {
+        spin.style.animation = 'spin 1s linear infinite';
+      }
+      setTimeout(function() {
+        window.location.reload(true);
+      }, 500);
+    } else {
+      ptrEl.style.transition = 'transform 0.2s';
+      ptrEl.style.transform = 'translateY(-100%)';
+    }
+    startY = 0;
+  }, { passive: true });
+})();

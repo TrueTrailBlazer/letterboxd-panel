@@ -11,9 +11,15 @@
   <link rel="icon" type="image/png" sizes="192x192" href="https://a.ltrbxd.com/logos/letterboxd-mac-icon.png">
   <link rel="apple-touch-icon" href="https://a.ltrbxd.com/logos/letterboxd-mac-icon.png">
   <link rel="manifest" href="/manifest.json">
-  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/style.css?v=11">
 </head>
 <body>
+  <div id="custom-ptr" style="position: fixed; top: 0; left: 0; right: 0; padding-top: env(safe-area-inset-top); height: calc(60px + env(safe-area-inset-top)); display: flex; align-items: center; justify-content: center; transform: translateY(-100%); transition: transform 0.2s; z-index: 9999; color: #89a; font-size: 13px; font-weight: bold; background: rgba(20,24,28,0.95); border-bottom: 1px solid #2c3440; backdrop-filter: blur(8px);">
+    <svg id="ptr-spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+      <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+    </svg>
+    Atualizando...
+  </div>
 
   <!-- ONBOARDING -->
   <div id="onboarding-container">
@@ -187,7 +193,7 @@
 
   <script src="js/quotes.js"></script>
   <script src="js/onboarding.js"></script>
-  <script src="js/config.js?v=10"></script>
-  <script src="js/home.js?v=10"></script>
+  <script src="js/config.js?v=11"></script>
+  <script src="js/home.js?v=11"></script>
 </body>
 </html>
