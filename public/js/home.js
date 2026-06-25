@@ -207,6 +207,14 @@ function bindEvents() {
     var val = parseInt(e.target.value) || 0;
     var state = loadState(); state.maxTimeMin = val; saveState(state);
   };
+  
+  var drawSlider = document.getElementById('draw-count-slider');
+  if (drawSlider) {
+    drawSlider.oninput = function(e) {
+      document.getElementById('draw-count-label').innerText = e.target.value;
+      localStorage.setItem('lbxd_draw_count', e.target.value);
+    };
+  }
 
   document.getElementById('custom-lists-container').onclick = function(e) {
     var delBtn = e.target.closest ? e.target.closest('.config-delete-btn') : null;
@@ -275,6 +283,7 @@ function bindEvents() {
     }
 
     var source = sources[Math.floor(Math.random() * sources.length)];
+    var drawCount = parseInt(localStorage.getItem('lbxd_draw_count')) || 1;
 
     try {
       var html = await proxyFetch(source.url);
@@ -293,57 +302,102 @@ function bindEvents() {
       var posters = Array.from(doc.querySelectorAll('.film-poster'));
       if (!posters.length) throw new Error('Vazio');
 
-      var randomPoster = posters[Math.floor(Math.random() * posters.length)];
-      var containerHtml = (randomPoster.closest('li') || randomPoster.parentNode || randomPoster).outerHTML;
-      var imgNode = randomPoster.querySelector('img');
-      var displayTitle = imgNode && imgNode.alt ? imgNode.alt.replace(/^Poster for /i, '').trim() : 'Filme Sorteado';
+      // Embaralha os posters disponíveis
+      posters = posters.sort(function() { return 0.5 - Math.random() });
 
-      var slug = '';
-      var slugMatch = containerHtml.match(/data-film-slug=["']([^"']+)["']/);
-      var targetMatch = containerHtml.match(/data-target-link=["']([^"']+)["']/);
-      var aMatch = containerHtml.match(/href=["']\/film\/([^"']+)["']/);
-
-      if (slugMatch && slugMatch[1] && slugMatch[1] !== 'null') { slug = slugMatch[1]; } 
-      else if (targetMatch && targetMatch[1] && targetMatch[1] !== 'null') { slug = targetMatch[1].replace(/\/film\/|\//g, ''); } 
-      else if (aMatch && aMatch[1]) { slug = aMatch[1].replace(/\//g, ''); }
-
-      if (!slug || slug === 'null') {
-        slug = displayTitle.replace(/\s*\(\d{4}\)$/, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s-]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
-      }
-
-      var link = 'https://letterboxd.com/film/' + slug + '/';
-      var filmHtml = await proxyFetch(link);
-      var filmDoc = new DOMParser().parseFromString(filmHtml, 'text/html');
-
-      if (state.shortOnly) {
-        var footer = filmDoc.querySelector('.text-link.text-footer');
-        var durationMinutes = footer ? parseInt(footer.innerText.match(/\d+/)[0]) : 0;
+      var validMovies = [];
+      var idx = 0;
+      
+      while(validMovies.length < drawCount && idx < posters.length) {
+        var batch = [];
+        while (batch.length < 5 && idx < posters.length && (validMovies.length + batch.length) < drawCount) {
+           batch.push(posters[idx++]);
+        }
         
-        var maxLimitMinutes = (state.maxTimeHr * 60) + state.maxTimeMin;
+        var results = await Promise.all(batch.map(async function(randomPoster) {
+            var containerHtml = (randomPoster.closest('li') || randomPoster.parentNode || randomPoster).outerHTML;
+            var imgNode = randomPoster.querySelector('img');
+            var displayTitle = imgNode && imgNode.alt ? imgNode.alt.replace(/^Poster for /i, '').trim() : 'Filme Sorteado';
+            
+            var slug = '';
+            var slugMatch = containerHtml.match(/data-film-slug=["']([^"']+)["']/);
+            var targetMatch = containerHtml.match(/data-target-link=["']([^"']+)["']/);
+            var aMatch = containerHtml.match(/href=["']\/film\/([^"']+)["']/);
+            
+            if (slugMatch && slugMatch[1] && slugMatch[1] !== 'null') { slug = slugMatch[1]; } 
+            else if (targetMatch && targetMatch[1] && targetMatch[1] !== 'null') { slug = targetMatch[1].replace(/\/film\/|\//g, ''); } 
+            else if (aMatch && aMatch[1]) { slug = aMatch[1].replace(/\//g, ''); }
+            
+            if (!slug || slug === 'null') {
+              slug = displayTitle.replace(/\s*\(\d{4}\)$/, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s-]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
+            }
+            
+            var link = 'https://letterboxd.com/film/' + slug + '/';
+            var filmHtml = await proxyFetch(link).catch(function(){ return ''; });
+            if(!filmHtml) return null;
+            
+            var filmDoc = new DOMParser().parseFromString(filmHtml, 'text/html');
+            if (state.shortOnly) {
+              var footer = filmDoc.querySelector('.text-link.text-footer');
+              var durationMinutes = footer ? parseInt(footer.innerText.match(/\d+/)[0]) : 0;
+              var maxLimitMinutes = (state.maxTimeHr * 60) + state.maxTimeMin;
+              if (durationMinutes > maxLimitMinutes) return null;
+            }
+            
+            var imgSrc = imgNode ? (imgNode.getAttribute('src') || imgNode.getAttribute('data-image')) : '';
+            var jsonLd = filmDoc.querySelector('script[type="application/ld+json"]');
+            if (jsonLd) {
+              var data = JSON.parse(jsonLd.innerText.replace(/\/\*.*?\*\//g, ''));
+              if (Array.isArray(data)) {
+                var found = data.find(function(i) { return i.image; });
+                if (found) imgSrc = found.image;
+              } else if (data.image) {
+                imgSrc = data.image;
+              }
+            }
+            return { title: displayTitle, link: link, imgSrc: imgSrc };
+        }));
         
-        if (durationMinutes > maxLimitMinutes) {
-          btn.innerText = 'LONGO... TROCANDO';
-          return setTimeout(function() { btn.onclick(); }, 500);
+        for (var i = 0; i < results.length; i++) {
+           if(results[i] !== null && validMovies.length < drawCount) {
+               validMovies.push(results[i]);
+           }
         }
       }
 
-      var imgSrc = imgNode ? (imgNode.getAttribute('src') || imgNode.getAttribute('data-image')) : '';
-      var jsonLd = filmDoc.querySelector('script[type="application/ld+json"]');
-      if (jsonLd) {
-        var data = JSON.parse(jsonLd.innerText.replace(/\/\*.*?\*\//g, ''));
-        if (Array.isArray(data)) {
-          var found = data.find(function(i) { return i.image; });
-          if (found) imgSrc = found.image;
-        } else if (data.image) {
-          imgSrc = data.image;
-        }
-      }
+      if (!validMovies.length) throw new Error('Nenhum filme válido encontrado');
 
-      document.getElementById('roulette-poster-wrap').innerHTML = '<a id="roulette-poster-link" href="' + link + '" target="_blank"><img id="roulette-poster-img" src="' + imgSrc + '" alt="Poster" style="width:100%;display:block;height:auto;object-fit:cover;"></a>';
-      document.getElementById('roulette-poster-wrap').style.display = 'flex';
-      document.getElementById('roulette-link').innerText = displayTitle;
-      document.getElementById('roulette-link').href = link;
-      document.getElementById('roulette-source').innerText = source.type === 'watchlist' ? 'DA SUA WATCHLIST:' : source.name;
+      var resultHtml = '';
+      var sourceName = source.type === 'watchlist' ? 'DA SUA WATCHLIST:' : source.name;
+      
+      if (validMovies.length === 1) {
+        var m = validMovies[0];
+        resultHtml = 
+          '<div style="margin: auto 0; width: 100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
+            '<span id="roulette-source" class="roulette-source-text">' + sourceName + '</span>' +
+            '<div class="roulette-poster-wrap" style="display:flex;">' +
+              '<a id="roulette-poster-link" href="' + m.link + '" target="_blank"><img id="roulette-poster-img" src="' + m.imgSrc + '" alt="Poster" style="width:100%;display:block;height:auto;object-fit:cover;"></a>' +
+            '</div>' +
+            '<a id="roulette-link" class="roulette-link-text" href="' + m.link + '" target="_blank">' + m.title + '</a>' +
+          '</div>';
+      } else {
+        var gridHtml = '<div class="roulette-grid">';
+        for (var i = 0; i < validMovies.length; i++) {
+          var m = validMovies[i];
+          var safeTitle = m.title.replace(/"/g, '&quot;').replace(/'/g, '\\\'');
+          var clickJs = "openPosterModal('" + m.imgSrc + "', '" + safeTitle + "', '" + m.link + "', '" + sourceName + "')";
+          gridHtml += '<div class="grid-poster-wrap" onclick="' + clickJs + '"><img src="' + m.imgSrc + '"></div>';
+        }
+        gridHtml += '</div>';
+        
+        resultHtml = 
+          '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden;">' +
+            '<span class="roulette-source-text" style="margin: auto 0 8px 0;">' + sourceName + '</span>' +
+            gridHtml +
+          '</div>';
+      }
+      
+      document.getElementById('roulette-result').innerHTML = resultHtml;
       document.getElementById('roulette-result').style.display = 'flex';
 
       btn.innerText = 'O QUE ASSISTIR HOJE?';
@@ -410,6 +464,19 @@ window.onload = function() {
     document.getElementById('onboarding-container').style.display = 'block';
     document.getElementById('app-wrapper').style.display = 'none';
   }
+};
+
+window.openPosterModal = function(imgSrc, title, link, sourceName) {
+  document.getElementById('modal-poster-img').src = imgSrc;
+  document.getElementById('modal-link').innerText = title;
+  document.getElementById('modal-link').href = link;
+  document.getElementById('modal-source').innerText = sourceName;
+  document.getElementById('poster-modal').classList.add('active');
+};
+
+window.closePosterModal = function(e) {
+  if (e && e.target.id !== 'poster-modal') return;
+  document.getElementById('poster-modal').classList.remove('active');
 };
 
 // ==========================================

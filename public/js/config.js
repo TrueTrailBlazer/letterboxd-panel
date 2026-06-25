@@ -14,6 +14,14 @@ function openConfig() {
   document.getElementById('num-max-hr').value = state.maxTimeHr !== undefined ? state.maxTimeHr : 1;
   document.getElementById('num-max-min').value = state.maxTimeMin !== undefined ? state.maxTimeMin : 40;
   
+  var drawCount = localStorage.getItem('lbxd_draw_count') || 1;
+  var slider = document.getElementById('draw-count-slider');
+  var label = document.getElementById('draw-count-label');
+  if (slider && label) {
+    slider.value = drawCount;
+    label.innerText = drawCount;
+  }
+  
   renderConfigLists();
 
   openPane('pane-menu'); // Reset to main menu whenever config opens

@@ -214,6 +214,51 @@ body {
   margin-top: 8px;
 }
 
+/* ===== GRID RESULT (MULTIPLE MOVIES) ===== */
+.roulette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 12px;
+  width: 100%;
+  padding: 10px;
+  overflow-y: auto;
+  align-content: start;
+}
+
+.grid-poster-wrap {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(64,188,244,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.grid-poster-wrap:active {
+  transform: scale(0.95);
+}
+
+.grid-poster-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Modals already have inline styles in HTML, but we can add an active class for the zoom effect */
+#poster-modal.active {
+  display: flex !important;
+}
+#poster-modal.active #poster-modal-content {
+  transform: scale(1) !important;
+}
+
 /* ===== FIXED BOTTOM BAR ===== */
 #bottom-bar {
   position: fixed;
