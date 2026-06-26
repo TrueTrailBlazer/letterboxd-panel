@@ -149,7 +149,7 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     var quoteText = quoteObj.quote + ' — ' + quoteObj.movie;
 
     var cardHtml = 
-      '<div id="goal-tracker-card" style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);">' +
+      '<div id="goal-tracker-card" style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);">' +
         // Card Header (Title & Status)
         '<div style="padding: 16px; border-bottom: 1px solid #2c3440; display: flex; justify-content: space-between; align-items: center;">' +
           '<a href="https://letterboxd.com/' + window.appUser + '/" style="display: flex; align-items: center; text-decoration: none; -webkit-tap-highlight-color: transparent;">' +
@@ -174,7 +174,7 @@ function renderTracker(scrapedCount, statusText, statusColor) {
         '</div>' +
         
         // Collapsible Area (Stats Grid + Quote Box)
-        '<div id="goal-tracker-collapsible" style="transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out; max-height: 500px; opacity: 1; overflow: hidden;">' +
+        '<div id="goal-tracker-collapsible" style="transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out; max-height: 0px; opacity: 0; overflow: hidden;">' +
           // Card Body (Stats Grid)
           '<div style="padding: 16px; border-top: 1px solid #2c3440; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">' +
             
@@ -208,7 +208,7 @@ function renderTracker(scrapedCount, statusText, statusColor) {
 
         // Manual Toggle Button
         '<div id="goal-tracker-toggle-btn" style="background: #1c2228; border-top: 1px solid #2c3440; text-align: center; padding: 6px 0; cursor: pointer; color: #89a; font-size: 12px; -webkit-tap-highlight-color: transparent;">' +
-          '<span id="goal-tracker-toggle-icon">▲</span>' +
+          '<span id="goal-tracker-toggle-icon">▼</span>' +
         '</div>' +
 
       '</div>';
@@ -546,7 +546,7 @@ function bindEvents() {
             '<span class="roulette-source-text" style="margin-top: 10px; font-size: 10px; color:#567;" data-i18n="lbl_tap_details">' + window.t('lbl_tap_details') + '</span>' +
           '</div>';
       } else {
-        var gridHtml = '<div class="roulette-grid" id="roulette-grid-scroll" style="align-content: flex-start; padding-bottom: 60px;">';
+        var gridHtml = '<div class="roulette-grid" id="roulette-grid-scroll" style="align-content: flex-start; padding-bottom: 0px;">';
         for (var i = 0; i < validMovies.length; i++) {
           var m = validMovies[i];
           var clickJs = "openPosterModal(" + i + ")";
