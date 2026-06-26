@@ -125,17 +125,17 @@
           <div id="config-meta-section" class="config-section">
             <div class="config-row" id="row-lang">
               <span class="config-label" data-i18n="lbl_language">Idioma / Language</span>
-              <select id="lang-select" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; outline: none; font-size: 14px;">
-                <option value="pt">Português</option>
-                <option value="en">English</option>
+              <select id="lang-select" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 6px 32px 6px 12px; border-radius: 6px; outline: none; font-size: 14px; font-weight: 500; appearance: none; -webkit-appearance: none; cursor: pointer; background-image: url('data:image/svg+xml;utf8,<svg fill=%22%23ffffff%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/></svg>'); background-repeat: no-repeat; background-position-x: 100%; background-position-y: 3px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                <option value="pt" style="color:#000;">Português</option>
+                <option value="en" style="color:#000;">English</option>
               </select>
             </div>
             <div class="config-row" id="row-offset">
-              <span class="config-label">Offset (rewatches)</span>
+              <span class="config-label" data-i18n="lbl_offset">Offset (rewatches)</span>
               <input type="number" id="num-offset" value="2" class="config-input-number">
             </div>
             <div class="config-row" style="padding: 0;">
-              <button id="reset-profile-btn">Sair / Reset</button>
+              <button id="reset-profile-btn" data-i18n="btn_logout">Sair / Reset</button>
             </div>
           </div>
         </div>
@@ -191,7 +191,7 @@
       </div>
       <!-- BOTTOM FOOTER (VOLTAR & FECHAR) -->
     <div class="config-footer">
-      <button id="footer-back-btn" onclick="openPane('pane-menu')">‹ Voltar</button>
+      <button id="footer-back-btn" onclick="openPane('pane-menu')" data-i18n="btn_back_settings">‹ Voltar</button>
       <button id="close-config-btn">✕</button>
     </div>
     </div>

@@ -59,7 +59,21 @@ const i18nData = {
     "lbl_short_link": "Link Curto (boxd.it)",
     "confirm_logout_title": "Sair e Limpar Perfil?",
     "confirm_logout_desc": "Isso apagará seu username e meta salvos neste dispositivo.",
-    "btn_logout": "Sair"
+    "btn_logout": "Sair",
+    "btn_back_settings": "‹ Voltar",
+    "lbl_offset": "Adicionar ao saldo total (rewatches)",
+    "stat_balance": "Saldo",
+    "stat_projection": "Proj.",
+    "msg_ahead": "Com folga de {count} filme(s)",
+    "msg_on_track": "Meta cravada no dia",
+    "msg_behind": "Faltando {count} filme(s) hoje",
+    "stat_day": "DIA",
+    "stat_progress": "Progresso Anual",
+    "stat_syncing": "• Sincronizando...",
+    "stat_synced": "• Sincronizado",
+    "stat_offline": "• Offline",
+    "stat_error": "• Erro",
+    "lbl_goal_title": "Meta {target} Filmes"
   },
   en: {
     "app_title": "Letterboxd Panel",
@@ -121,7 +135,21 @@ const i18nData = {
     "lbl_short_link": "Short Link (boxd.it)",
     "confirm_logout_title": "Logout and Clear Profile?",
     "confirm_logout_desc": "This will delete your saved username and goals on this device.",
-    "btn_logout": "Logout"
+    "btn_logout": "Logout",
+    "btn_back_settings": "‹ Back",
+    "lbl_offset": "Add to total balance (rewatches)",
+    "stat_balance": "Balance",
+    "stat_projection": "Proj.",
+    "msg_ahead": "{count} movie(s) ahead",
+    "msg_on_track": "Right on track today",
+    "msg_behind": "{count} movie(s) behind today",
+    "stat_day": "DAY",
+    "stat_progress": "Annual Progress",
+    "stat_syncing": "• Syncing...",
+    "stat_synced": "• Synced",
+    "stat_offline": "• Offline",
+    "stat_error": "• Error",
+    "lbl_goal_title": "Goal {target} Movies"
   }
 };
 

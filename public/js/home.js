@@ -111,27 +111,27 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     }
 
     var color, msg;
-    if (saldo > 0) { color = '#00e054'; msg = 'Com folga de ' + saldo + ' filme(s)'; }
-    else if (saldo === 0) { color = '#40bcf4'; msg = 'Meta cravada no dia'; }
-    else { color = '#ff4e00'; msg = 'Faltando ' + Math.abs(saldo) + ' filme(s) hoje'; }
+    if (saldo > 0) { color = '#00e054'; msg = window.t('msg_ahead').replace('{count}', saldo); }
+    else if (saldo === 0) { color = '#40bcf4'; msg = window.t('msg_on_track'); }
+    else { color = '#ff4e00'; msg = window.t('msg_behind').replace('{count}', Math.abs(saldo)); }
     
     var quoteObj = window.currentSessionQuote.quote;
     var quoteText = quoteObj.quote + ' — ' + quoteObj.movie;
 
     document.getElementById('app-container').innerHTML =
       '<h2 class="section-heading">' +
-        window.t('ob_step4_title') + ' ' + window.appMetaTarget + ' Filmes ' +
-        '<span id="sync-status" style="color:' + corStatus + '; font-size:10px; text-transform:none; margin-left:8px;">' + labelStatus + '</span>' +
-        '<span style="float: right; color: #678;">DIA ' + currentDay + '/' + daysInYear + '</span>' +
+        window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) +
+        '<span id="sync-status" style="color:' + corStatus + '; font-size:10px; text-transform:none; margin-left:8px;">' + window.t(labelStatus) + '</span>' +
+        '<span style="float: right; color: #678;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
       '</h2>' +
       '<div class="meta-stats-row">' +
         '<div class="meta-stat-item"><span class="meta-stat-val">' + watched + '</span><span class="meta-stat-lbl">' + window.t('stat_watched') + '</span></div>' +
-        '<div class="meta-stat-item"><span class="meta-stat-val" style="color:' + color + '">' + (saldo > 0 ? '+' + saldo : saldo) + '</span><span class="meta-stat-lbl">Saldo</span></div>' +
+        '<div class="meta-stat-item"><span class="meta-stat-val" style="color:' + color + '">' + (saldo > 0 ? '+' + saldo : saldo) + '</span><span class="meta-stat-lbl">' + window.t('stat_balance') + '</span></div>' +
         '<div class="meta-stat-item"><span class="meta-stat-val">' + Math.max(0, window.appMetaTarget - watched) + '</span><span class="meta-stat-lbl">' + window.t('stat_remaining') + '</span></div>' +
-        '<div class="meta-stat-item"><span class="meta-stat-val" style="color:#40bcf4">' + projection + '</span><span class="meta-stat-lbl">Proj.</span></div>' +
+        '<div class="meta-stat-item"><span class="meta-stat-val" style="color:#40bcf4">' + projection + '</span><span class="meta-stat-lbl">' + window.t('stat_projection') + '</span></div>' +
       '</div>' +
       '<div class="meta-progress-header">' +
-        '<span>Progresso Anual</span>' +
+        '<span>' + window.t('stat_progress') + '</span>' +
         '<span class="meta-progress-pct">' + percent + '%</span>' +
       '</div>' +
       '<div class="meta-bar-bg"><div class="meta-bar-fill" style="width: ' + Math.min(100, percent) + '%"></div></div>' +
@@ -184,9 +184,9 @@ function bindEvents() {
   document.getElementById('num-offset').oninput = function(e) {
     localStorage.setItem('meta365_offset', parseInt(e.target.value) || 0);
     var syncEl = document.getElementById('sync-status');
-    var st = syncEl ? syncEl.innerText : '• Sincronizado';
+    var st = syncEl ? syncEl.innerText : window.t('stat_synced');
     var sc = syncEl ? syncEl.style.color : '#00e054';
-    renderTracker(window.lastScrapedCount, st, sc);
+    renderTracker(window.lastScrapedCount, 'stat_synced', sc);
   };
 
   document.getElementById('chk-watchlist').onchange = function(e) {
@@ -505,7 +505,7 @@ function startApp() {
     if (savedCount !== null) { window.lastScrapedCount = parseInt(savedCount) || 0; } 
     else { window.lastScrapedCount = 0; }
 
-    renderTracker(window.lastScrapedCount, '• Sincronizando...', '#678');
+    renderTracker(window.lastScrapedCount, 'stat_syncing', '#678');
     renderRouletteUI();
     bindEvents();
 
@@ -521,19 +521,19 @@ function startApp() {
               if (offsetInput) offsetInput.value = autoOffset;
             }
             
-            renderTracker(data.count, '• Sincronizado', '#00e054');
+            renderTracker(data.count, 'stat_synced', '#00e054');
           } else {
-            renderTracker(window.lastScrapedCount, '• Offline', '#ff4e00');
+            renderTracker(window.lastScrapedCount, 'stat_offline', '#ff4e00');
           }
         })
         .catch(function(err) {
           console.warn('Falha silenciosa:', err);
-          renderTracker(window.lastScrapedCount, '• Offline', '#ff4e00');
+          renderTracker(window.lastScrapedCount, 'stat_offline', '#ff4e00');
         });
     }
   } catch (e) {
     console.error('Init error:', e);
-    if(window.appUseMeta) renderTracker(182, '• Erro', '#ff4e00');
+    if(window.appUseMeta) renderTracker(182, 'stat_error', '#ff4e00');
   }
 }
 
