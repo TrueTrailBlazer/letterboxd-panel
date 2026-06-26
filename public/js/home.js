@@ -50,24 +50,52 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   
   var savedAvatar = localStorage.getItem('lbxd_avatar_' + window.appUser);
   
-  var avatarSvg = '<svg fill="#89a" height="54" viewBox="0 0 24 24" width="54" xmlns="http://www.w3.org/2000/svg" style="margin-right:12px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-  var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:54px; height:54px; border-radius:50%; margin-right:12px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
+  // Helper: create avatar element safely
+  function createAvatarEl(size) {
+    if (savedAvatar) {
+      var img = document.createElement('img');
+      img.src = savedAvatar;
+      img.style.cssText = 'width:' + size + 'px; height:' + size + 'px; border-radius:50%; margin-right:12px; border:1px solid #2c3440; object-fit:cover;';
+      img.onerror = function() {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('fill', '#89a');
+        svg.setAttribute('height', size);
+        svg.setAttribute('width', size);
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.style.marginRight = '12px';
+        var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p.setAttribute('d', 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z');
+        svg.appendChild(p);
+        img.parentNode.replaceChild(svg, img);
+      };
+      return img;
+    } else {
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('fill', '#89a');
+      svg.setAttribute('height', size);
+      svg.setAttribute('width', size);
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.style.marginRight = '12px';
+      var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      p.setAttribute('d', 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z');
+      svg.appendChild(p);
+      return svg;
+    }
+  }
 
-  var avatarSvgRoleta = '<svg fill="#89a" height="54" viewBox="0 0 24 24" width="54" xmlns="http://www.w3.org/2000/svg" style="margin-right:12px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-  var avatarHtmlRoleta = savedAvatar ? '<img src="' + savedAvatar + '" style="width:54px; height:54px; border-radius:50%; margin-right:12px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvgRoleta.replace(/"/g, '&quot;') + '\'">' : avatarSvgRoleta;
-
+  // === ROULETTE-ONLY MODE ===
   if (!window.appUseMeta) {
     if (appCont) {
       appCont.style.display = 'block';
-      appCont.innerHTML = 
-        '<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 10px 0 0 0;">' +
-          '<a href="https://letterboxd.com/' + window.appUser + '/" style="display:flex; align-items:center; background: #14181c; border: 1px solid #2c3440; padding: 6px 16px 6px 6px; border-radius: 26px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-decoration: none; -webkit-tap-highlight-color: transparent;">' +
-            avatarHtmlRoleta +
-            '<span style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 1px;">' + window.appUser + '</span>' +
-          '</a>' +
-          '<h2 style="margin: 16px 0 0 0; font-size: 12px; color: #89a; text-transform: uppercase; letter-spacing: 0.1em;">Roleta Letterboxd</h2>' +
-          '<div style="width: 24px; height: 3px; background: #00e054; margin: 8px auto 0 auto; border-radius: 2px;"></div>' +
-        '</div>';
+      var rhTmpl = document.getElementById('tmpl-roulette-header');
+      if (rhTmpl) {
+        var clone = rhTmpl.content.cloneNode(true);
+        clone.getElementById('tmpl-rh-link').href = 'https://letterboxd.com/' + window.appUser + '/';
+        clone.getElementById('tmpl-rh-avatar').appendChild(createAvatarEl(54));
+        clone.getElementById('tmpl-rh-username').textContent = window.appUser;
+        appCont.innerHTML = '';
+        appCont.appendChild(clone);
+      }
     }
     var offsetHelp = document.getElementById('offset-help');
     if (offsetHelp) offsetHelp.style.display = 'none';
@@ -86,9 +114,8 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     return;
   }
   
-  if (appCont) {
-    appCont.style.display = 'block';
-  }
+  // === META MODE ===
+  if (appCont) appCont.style.display = 'block';
   if (roleta) {
     roleta.style.justifyContent = 'flex-start';
     roleta.style.marginTop = '10px';
@@ -106,7 +133,6 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   var paneTitle = document.getElementById('pane-title-meta');
   if (paneTitle) paneTitle.innerText = window.t('menu_account');
 
-
   try {
     if (scrapedCount && !isNaN(scrapedCount)) {
       window.lastScrapedCount = parseInt(scrapedCount);
@@ -122,9 +148,8 @@ function renderTracker(scrapedCount, statusText, statusColor) {
 
     var watched = window.lastScrapedCount + offset;
     var now = new Date();
-    // Target proporcional aos dias que se passaram no ano
     var currentDay = Math.floor((now - new Date(window.appMetaYear, 0, 0)) / (1000 * 60 * 60 * 24));
-    var daysInYear = 365; // Simplificado
+    var daysInYear = 365;
     var expectedToday = Math.round((window.appMetaTarget / daysInYear) * currentDay);
     
     var saldo = watched - expectedToday;
@@ -145,78 +170,52 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     else if (saldo === 0) { color = '#40bcf4'; msg = window.t('msg_on_track'); }
     else { color = '#ff4e00'; msg = window.t('msg_behind').replace('{count}', Math.abs(saldo)); }
     
+    // Inject quote into empty state
     var quoteObj = window.currentSessionQuote.quote;
-    var quoteHtml = '<span style="font-style: italic; font-weight: bold; color: #fff;">"' + quoteObj.quote + '"</span> <span style="font-style: normal; color: #678;">— ' + quoteObj.movie + '</span>';
-    
     var quoteContainer = document.getElementById('empty-state-quote');
     if (quoteContainer) {
-      quoteContainer.innerHTML = quoteHtml;
+      quoteContainer.innerHTML = '<span style="font-style: italic; font-weight: bold; color: #fff;">"' + quoteObj.quote + '"</span> <span style="font-style: normal; color: #678;">\u2014 ' + quoteObj.movie + '</span>';
     }
 
-    var cardHtml = 
-      '<div id="goal-tracker-card" style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);">' +
-        // Card Header (Title & Status)
-        '<div style="padding: 16px; border-bottom: 1px solid #2c3440; display: flex; justify-content: space-between; align-items: center;">' +
-          '<a href="https://letterboxd.com/' + window.appUser + '/" style="display: flex; align-items: center; text-decoration: none; -webkit-tap-highlight-color: transparent;">' +
-            avatarHtml +
-            '<div style="display: flex; flex-direction: column;">' +
-              '<span style="font-size: 16px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px;">' + window.appUser + '</span>' +
-              '<span style="font-size: 10px; font-weight: bold; color: #89a; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;">' + window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) + '</span>' +
-            '</div>' +
-          '</a>' +
-          '<div style="display: flex; align-items: center; gap: 8px;">' +
-            '<span id="sync-status" data-status-key="' + labelStatus + '" style="color:' + corStatus + '; font-size:11px;">' + window.t(labelStatus) + '</span>' +
-          '</div>' +
-        '</div>' +
+    // Clone and populate template
+    var tmpl = document.getElementById('tmpl-goal-tracker');
+    if (!tmpl) return;
+    var clone = tmpl.content.cloneNode(true);
 
-        // Progress Area
-        '<div style="padding: 16px 16px 16px 16px;">' +
-          '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
-            '<span style="font-size: 11px; font-weight: bold; color: ' + color + ';">' + msg + ' <span style="color:#89a; margin-left:4px;">(' + percent + '%)</span></span>' +
-            '<span style="font-size: 11px; color: #678; text-transform: uppercase;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
-          '</div>' +
-          // PILL PROGRESS BAR
-          '<div style="width: 100%; height: 6px; background: #2c3440; border-radius: 3px; overflow: hidden; position: relative;">' +
-            '<div style="height: 100%; background: #00e054; width: ' + Math.min(100, percent) + '%; border-radius: 3px;"></div>' +
-          '</div>' +
-        '</div>' +
-        
-        // Collapsible Area (Stats Grid + Quote Box)
-        '<div id="goal-tracker-collapsible" style="transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out; max-height: 0px; opacity: 0; overflow: hidden;">' +
-          // Card Body (Stats Grid)
-          '<div style="padding: 16px; border-top: 1px solid #2c3440; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">' +
-            
-            '<div style="display: flex; flex-direction: column;">' +
-              '<span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;">' + watched + '</span>' +
-              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_watched') + '</span>' +
-            '</div>' +
-            
-            '<div style="display: flex; flex-direction: column;">' +
-              '<span style="font-size: 24px; font-weight: bold; color: ' + color + '; line-height: 1;">' + (saldo > 0 ? '+' + saldo : saldo) + '</span>' +
-              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_balance') + '</span>' +
-            '</div>' +
+    clone.getElementById('tmpl-profile-link').href = 'https://letterboxd.com/' + window.appUser + '/';
+    clone.getElementById('tmpl-avatar').appendChild(createAvatarEl(54));
+    clone.getElementById('tmpl-username').textContent = window.appUser;
+    clone.getElementById('tmpl-goal-title').textContent = window.t('lbl_goal_title').replace('{target}', window.appMetaTarget);
+    
+    var syncEl = clone.getElementById('tmpl-sync-status');
+    syncEl.textContent = window.t(labelStatus);
+    syncEl.style.color = corStatus;
+    syncEl.setAttribute('data-status-key', labelStatus);
+    syncEl.id = 'sync-status';
 
-            '<div style="display: flex; flex-direction: column;">' +
-              '<span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;">' + Math.max(0, window.appMetaTarget - watched) + '</span>' +
-              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_remaining') + '</span>' +
-            '</div>' +
+    var statusMsg = clone.getElementById('tmpl-status-msg');
+    statusMsg.innerHTML = msg + ' <span style="color:#89a; margin-left:4px;">(' + percent + '%)</span>';
+    statusMsg.style.color = color;
 
-            '<div style="display: flex; flex-direction: column;">' +
-              '<span style="font-size: 24px; font-weight: bold; color: #40bcf4; line-height: 1;">' + projection + '</span>' +
-              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_projection') + '</span>' +
-            '</div>' +
+    clone.getElementById('tmpl-day-counter').textContent = window.t('stat_day') + ' ' + currentDay + '/' + daysInYear;
+    clone.getElementById('tmpl-progress-bar').style.width = Math.min(100, percent) + '%';
 
-          '</div>' +
-        '</div>' +
+    clone.getElementById('tmpl-stat-watched').textContent = watched;
+    clone.getElementById('tmpl-lbl-watched').textContent = window.t('stat_watched');
+    
+    var balanceEl = clone.getElementById('tmpl-stat-balance');
+    balanceEl.textContent = saldo > 0 ? '+' + saldo : saldo;
+    balanceEl.style.color = color;
+    clone.getElementById('tmpl-lbl-balance').textContent = window.t('stat_balance');
 
-        // Manual Toggle Button
-        '<div id="goal-tracker-toggle-btn" style="background: #1c2228; border-top: 1px solid #2c3440; text-align: center; padding: 6px 0; cursor: pointer; color: #89a; font-size: 12px; -webkit-tap-highlight-color: transparent;">' +
-          '<span id="goal-tracker-toggle-icon">▼</span>' +
-        '</div>' +
+    clone.getElementById('tmpl-stat-remaining').textContent = Math.max(0, window.appMetaTarget - watched);
+    clone.getElementById('tmpl-lbl-remaining').textContent = window.t('stat_remaining');
 
-      '</div>';
-      
-    document.getElementById('app-container').innerHTML = cardHtml;
+    clone.getElementById('tmpl-stat-projection').textContent = projection;
+    clone.getElementById('tmpl-lbl-projection').textContent = window.t('stat_projection');
+
+    appCont.innerHTML = '';
+    appCont.appendChild(clone);
     
     // Attach manual toggle logic
     var toggleBtn = document.getElementById('goal-tracker-toggle-btn');
@@ -229,12 +228,12 @@ function renderTracker(scrapedCount, statusText, statusColor) {
           col.style.maxHeight = '500px';
           col.style.opacity = '1';
           card.style.marginBottom = '24px';
-          icon.innerText = '▲';
+          icon.innerText = '\u25B2';
         } else {
           col.style.maxHeight = '0px';
           col.style.opacity = '0';
           card.style.marginBottom = '8px';
-          icon.innerText = '▼';
+          icon.innerText = '\u25BC';
         }
       };
     }

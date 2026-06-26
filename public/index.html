@@ -240,11 +240,86 @@
     </div>
   </div>
 
+  <!-- TEMPLATES -->
+  <template id="tmpl-goal-tracker">
+    <div id="goal-tracker-card" style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+      <!-- Header -->
+      <div style="padding: 16px; border-bottom: 1px solid #2c3440; display: flex; justify-content: space-between; align-items: center;">
+        <a id="tmpl-profile-link" href="#" style="display: flex; align-items: center; text-decoration: none; -webkit-tap-highlight-color: transparent;">
+          <span id="tmpl-avatar"></span>
+          <div style="display: flex; flex-direction: column;">
+            <span id="tmpl-username" style="font-size: 16px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px;"></span>
+            <span id="tmpl-goal-title" style="font-size: 10px; font-weight: bold; color: #89a; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;"></span>
+          </div>
+        </a>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span id="tmpl-sync-status" style="font-size:11px;"></span>
+        </div>
+      </div>
+      <!-- Progress -->
+      <div style="padding: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span id="tmpl-status-msg" style="font-size: 11px; font-weight: bold;"></span>
+          <span id="tmpl-day-counter" style="font-size: 11px; color: #678; text-transform: uppercase;"></span>
+        </div>
+        <div style="width: 100%; height: 6px; background: #2c3440; border-radius: 3px; overflow: hidden; position: relative;">
+          <div id="tmpl-progress-bar" style="height: 100%; background: #00e054; border-radius: 3px;"></div>
+        </div>
+      </div>
+      <!-- Collapsible -->
+      <div id="goal-tracker-collapsible" style="transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out; max-height: 0px; opacity: 0; overflow: hidden;">
+        <div style="padding: 16px; border-top: 1px solid #2c3440; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="display: flex; flex-direction: column;">
+            <span id="tmpl-stat-watched" style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;"></span>
+            <span id="tmpl-lbl-watched" style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;"></span>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <span id="tmpl-stat-balance" style="font-size: 24px; font-weight: bold; line-height: 1;"></span>
+            <span id="tmpl-lbl-balance" style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;"></span>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <span id="tmpl-stat-remaining" style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;"></span>
+            <span id="tmpl-lbl-remaining" style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;"></span>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <span id="tmpl-stat-projection" style="font-size: 24px; font-weight: bold; color: #40bcf4; line-height: 1;"></span>
+            <span id="tmpl-lbl-projection" style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;"></span>
+          </div>
+        </div>
+      </div>
+      <!-- Toggle -->
+      <div id="goal-tracker-toggle-btn" style="background: #1c2228; border-top: 1px solid #2c3440; text-align: center; padding: 6px 0; cursor: pointer; color: #89a; font-size: 12px; -webkit-tap-highlight-color: transparent;">
+        <span id="goal-tracker-toggle-icon">▼</span>
+      </div>
+    </div>
+  </template>
+
+  <template id="tmpl-roulette-header">
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 10px 0 0 0;">
+      <a id="tmpl-rh-link" href="#" style="display:flex; align-items:center; background: #14181c; border: 1px solid #2c3440; padding: 6px 16px 6px 6px; border-radius: 26px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-decoration: none; -webkit-tap-highlight-color: transparent;">
+        <span id="tmpl-rh-avatar"></span>
+        <span id="tmpl-rh-username" style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 1px;"></span>
+      </a>
+      <h2 style="margin: 16px 0 0 0; font-size: 12px; color: #89a; text-transform: uppercase; letter-spacing: 0.1em;">Roleta Letterboxd</h2>
+      <div style="width: 24px; height: 3px; background: #00e054; margin: 8px auto 0 auto; border-radius: 2px;"></div>
+    </div>
+  </template>
+
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/quotes.js"></script>
   <script src="js/onboarding.js"></script>
-  <script src="js/config.js?v=19"></script>
-  <script src="js/home.js?v=19"></script>
+  <script src="js/config.js?v=20"></script>
+  <script src="js/home.js?v=20"></script>
+  <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js').catch(function(err) {
+          console.log('SW registration failed:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
