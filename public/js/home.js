@@ -117,18 +117,32 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     
     var quoteObj = window.currentSessionQuote.quote;
     var quoteText = quoteObj.quote + ' — ' + quoteObj.movie;
-    var avatarSvg = '<svg fill="#89a" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+    var savedAvatar = localStorage.getItem('lbxd_avatar_' + window.appUser);
+    var avatarSvg = '<svg fill="#89a" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+    var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:24px; height:24px; border-radius:50%; margin-right:8px; border:1px solid #2c3440;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
 
     var cardHtml = 
       '<div style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">' +
         // Card Header (Title & Status)
         '<div style="padding: 16px; border-bottom: 1px solid #2c3440; display: flex; justify-content: space-between; align-items: center;">' +
           '<div style="display: flex; align-items: center;">' +
-            avatarSvg +
+            avatarHtml +
             '<span style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase;">' + window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) + '</span>' +
           '</div>' +
           '<div style="display: flex; align-items: center; gap: 8px;">' +
             '<span id="sync-status" data-status-key="' + labelStatus + '" style="color:' + corStatus + '; font-size:11px;">' + window.t(labelStatus) + '</span>' +
+          '</div>' +
+        '</div>' +
+
+        // Progress Area
+        '<div style="padding: 16px 16px 0 16px;">' +
+          '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
+            '<span style="font-size: 11px; font-weight: bold; color: ' + color + ';">' + msg + '</span>' +
+            '<span style="font-size: 11px; color: #678; text-transform: uppercase;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
+          '</div>' +
+          // PILL PROGRESS BAR
+          '<div style="width: 100%; height: 8px; background: #2c3440; border-radius: 4px; overflow: hidden; position: relative;">' +
+            '<div style="height: 100%; background: #00e054; width: ' + Math.min(100, percent) + '%; border-radius: 4px;"></div>' +
           '</div>' +
         '</div>' +
         
@@ -157,20 +171,11 @@ function renderTracker(scrapedCount, statusText, statusColor) {
 
         '</div>' +
 
-        // Card Quote and Days
-        '<div style="padding: 0 16px 16px 16px;">' +
-          '<div style="font-style: italic; font-size: 13px; color: #9ab; line-height: 1.4; border-left: 2px solid #2c3440; padding-left: 10px;">"' + quoteText + '"</div>' +
-          '<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">' +
-            '<span style="font-size: 12px; font-weight: bold; color: ' + color + ';">' + msg + '</span>' +
-            '<span style="font-size: 11px; color: #567; text-transform: uppercase;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
-          '</div>' +
+        // Quote Box
+        '<div style="background: rgba(255,255,255,0.02); padding: 12px 16px; border-top: 1px solid #2c3440; font-size: 12px; font-style: italic; color: #89a; text-align: center; line-height: 1.4;">' +
+          '"' + quoteText + '"' +
         '</div>' +
 
-        // Slim Progress Bar at the bottom
-        '<div style="width: 100%; height: 3px; background: #2c3440; position: relative;">' +
-          '<div style="height: 100%; background: #00e054; width: ' + Math.min(100, percent) + '%;"></div>' +
-        '</div>' +
-        
       '</div>';
       
     document.getElementById('app-container').innerHTML = cardHtml;
@@ -562,6 +567,23 @@ function startApp() {
           console.warn('Falha silenciosa:', err);
           renderTracker(window.lastScrapedCount, 'stat_offline', '#ff4e00');
         });
+        
+      // Fetch avatar in background
+      fetch('/api/scrape?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
+        .then(function(res) { return res.text(); })
+        .then(function(html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var avatarImg = doc.querySelector('.profile-avatar img');
+          if (avatarImg && avatarImg.src) {
+             localStorage.setItem('lbxd_avatar_' + window.appUser, avatarImg.src);
+             var syncEl = document.getElementById('sync-status');
+             var st = syncEl ? syncEl.getAttribute('data-status-key') : 'stat_synced';
+             var sc = syncEl ? syncEl.style.color : '#00e054';
+             if (!st) st = 'stat_synced';
+             renderTracker(window.lastScrapedCount, st, sc);
+          }
+        }).catch(function(e){});
+        
     }
   } catch (e) {
     console.error('Init error:', e);
