@@ -46,12 +46,9 @@ function showConfirm(title, desc, confirmText, onConfirm) {
 // ===== TRACKER LOGIC =====
 function renderTracker(scrapedCount, statusText, statusColor) {
   var roleta = document.getElementById('roleta-container');
+  var appCont = document.getElementById('app-container');
   if (!window.appUseMeta) {
-    document.getElementById('app-container').innerHTML = 
-      '<div style="text-align:center; padding: 10px 0 20px 0;">' +
-        '<h2 style="margin:0; font-size: 16px; color: #fff; text-transform: uppercase; letter-spacing: 0.1em;">Roleta Letterboxd</h2>' +
-        '<div style="width: 30px; height: 3px; background: #00e054; margin: 12px auto 0 auto; border-radius: 2px;"></div>' +
-      '</div>';
+    if (appCont) appCont.style.display = 'none';
     var offsetHelp = document.getElementById('offset-help');
     if (offsetHelp) offsetHelp.style.display = 'none';
     var rowOffset = document.getElementById('row-offset');
@@ -62,8 +59,21 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     if (paneTitle) paneTitle.innerText = window.t('menu_account_only');
     if (roleta) {
       roleta.style.borderTop = 'none';
+      roleta.style.justifyContent = 'center';
+      roleta.style.marginTop = '0';
+      roleta.style.paddingTop = '0';
     }
     return;
+  }
+  
+  if (appCont) {
+    appCont.style.display = 'block';
+  }
+  if (roleta) {
+    roleta.style.justifyContent = 'flex-start';
+    roleta.style.marginTop = '10px';
+    roleta.style.paddingTop = '10px';
+    roleta.style.borderTop = '1px solid #2c3440';
   }
   
   document.getElementById('config-meta-section').style.display = 'block';
@@ -141,8 +151,9 @@ function renderTracker(scrapedCount, statusText, statusColor) {
             '<span style="font-size: 11px; color: #678; text-transform: uppercase;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
           '</div>' +
           // PILL PROGRESS BAR
-          '<div style="width: 100%; height: 8px; background: #2c3440; border-radius: 4px; overflow: hidden; position: relative;">' +
-            '<div style="height: 100%; background: #00e054; width: ' + Math.min(100, percent) + '%; border-radius: 4px;"></div>' +
+          '<div style="width: 100%; height: 16px; background: #2c3440; border-radius: 8px; overflow: hidden; position: relative;">' +
+            '<div style="height: 100%; background: #00e054; width: ' + Math.min(100, percent) + '%; border-radius: 8px;"></div>' +
+            '<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); pointer-events: none;">' + percent + '%</div>' +
           '</div>' +
         '</div>' +
         
@@ -466,14 +477,14 @@ function bindEvents() {
           '</div>';
       } else if (validMovies.length >= 2 && validMovies.length <= 5) {
         var sourceLabel = sources.length > 1 ? window.t('lbl_multi_source') : validMovies[0].sourceName;
-        var swiperHtml = '<div class="swiper"><div class="swiper-wrapper">';
+        var swiperHtml = '<div class="swiper" style="width: 100%; max-width: 260px; aspect-ratio: 2/3; max-height: 55vh;"><div class="swiper-wrapper">';
         
         for (var i = 0; i < validMovies.length; i++) {
           var m = validMovies[i];
           var clickJs = "openPosterModal(" + i + ")";
           swiperHtml += 
-            '<div class="swiper-slide" onclick="' + clickJs + '">' +
-              '<img src="' + m.imgSrc + '">' +
+            '<div class="swiper-slide" onclick="' + clickJs + '" style="display: flex; align-items: center; justify-content: center;">' +
+              '<img src="' + m.imgSrc + '" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">' +
             '</div>';
         }
         swiperHtml += '</div></div>';
