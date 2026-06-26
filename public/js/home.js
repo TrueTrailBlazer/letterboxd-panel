@@ -57,10 +57,10 @@ function renderTracker(scrapedCount, statusText, statusColor) {
       appCont.style.display = 'block';
       appCont.innerHTML = 
         '<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 10px 0 0 0;">' +
-          '<div style="display:flex; align-items:center; background: #14181c; border: 1px solid #2c3440; padding: 6px 16px 6px 6px; border-radius: 26px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">' +
+          '<a href="https://letterboxd.com/' + window.appUser + '/" style="display:flex; align-items:center; background: #14181c; border: 1px solid #2c3440; padding: 6px 16px 6px 6px; border-radius: 26px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-decoration: none; -webkit-tap-highlight-color: transparent;">' +
             avatarHtml +
-            '<span style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 1px;">' + window.appUser + '</span>' +
-          '</div>' +
+            '<span style="font-size: 18px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px;">' + window.appUser + '</span>' +
+          '</a>' +
           '<h2 style="margin: 16px 0 0 0; font-size: 12px; color: #89a; text-transform: uppercase; letter-spacing: 0.1em;">Roleta Letterboxd</h2>' +
           '<div style="width: 24px; height: 3px; background: #00e054; margin: 8px auto 0 auto; border-radius: 2px;"></div>' +
         '</div>';
@@ -148,10 +148,10 @@ function renderTracker(scrapedCount, statusText, statusColor) {
       '<div style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">' +
         // Card Header (Title & Status)
         '<div style="padding: 16px; border-bottom: 1px solid #2c3440; display: flex; justify-content: space-between; align-items: center;">' +
-          '<div style="display: flex; align-items: center;">' +
+          '<a href="https://letterboxd.com/' + window.appUser + '/" style="display: flex; align-items: center; text-decoration: none; -webkit-tap-highlight-color: transparent;">' +
             avatarHtml +
             '<span style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase;">' + window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) + '</span>' +
-          '</div>' +
+          '</a>' +
           '<div style="display: flex; align-items: center; gap: 8px;">' +
             '<span id="sync-status" data-status-key="' + labelStatus + '" style="color:' + corStatus + '; font-size:11px;">' + window.t(labelStatus) + '</span>' +
           '</div>' +
@@ -488,7 +488,11 @@ function bindEvents() {
             '<a id="roulette-link" class="roulette-link-text" href="' + m.link + '">' + m.title + '</a>' +
           '</div>';
       } else if (validMovies.length >= 2 && validMovies.length <= 5) {
-        var sourceLabel = sources.length > 1 ? window.t('lbl_multi_source') : validMovies[0].sourceName;
+        var drawnSourcesObj = {};
+        for (var j = 0; j < validMovies.length; j++) drawnSourcesObj[validMovies[j].sourceName] = true;
+        var drawnSources = Object.keys(drawnSourcesObj);
+        var sourceLabel = drawnSources.length > 1 ? window.t('lbl_multi_source') : drawnSources[0];
+        
         var swiperHtml = '<div class="swiper" style="width: 100%; padding: 20px 0; flex-shrink: 0;"><div class="swiper-wrapper">';
         
         for (var i = 0; i < validMovies.length; i++) {
