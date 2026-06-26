@@ -200,6 +200,12 @@ app.post('/api/roulette', async function(req, res) {
 
       var results = await Promise.all(batch.map(async function(poster) {
         try {
+          // Se for um grid (> 8) e não tem filtro de duração ativo,
+          // pula o fetch individual pra não demorar (o thumbnail já serve)
+          if (!filter.shortOnly && drawCount > 8) {
+            return poster;
+          }
+
           var filmUrl = 'https://letterboxd.com/film/' + poster.slug + '/';
           var filmHtml = await cachedFetch(filmUrl);
           var $f = cheerio.load(filmHtml);
