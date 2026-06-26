@@ -49,8 +49,12 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   var appCont = document.getElementById('app-container');
   
   var savedAvatar = localStorage.getItem('lbxd_avatar_' + window.appUser);
-  var avatarSvg = '<svg fill="#89a" height="36" viewBox="0 0 24 24" width="36" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-  var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:36px; height:36px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
+  
+  var avatarSvg = '<svg fill="#89a" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:32px; height:32px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
+
+  var avatarSvgRoleta = '<svg fill="#89a" height="38" viewBox="0 0 24 24" width="38" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  var avatarHtmlRoleta = savedAvatar ? '<img src="' + savedAvatar + '" style="width:38px; height:38px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvgRoleta.replace(/"/g, '&quot;') + '\'">' : avatarSvgRoleta;
 
   if (!window.appUseMeta) {
     if (appCont) {
@@ -58,8 +62,8 @@ function renderTracker(scrapedCount, statusText, statusColor) {
       appCont.innerHTML = 
         '<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 10px 0 0 0;">' +
           '<a href="https://letterboxd.com/' + window.appUser + '/" style="display:flex; align-items:center; background: #14181c; border: 1px solid #2c3440; padding: 6px 16px 6px 6px; border-radius: 26px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-decoration: none; -webkit-tap-highlight-color: transparent;">' +
-            avatarHtml +
-            '<span style="font-size: 18px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px;">' + window.appUser + '</span>' +
+            avatarHtmlRoleta +
+            '<span style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 1px;">' + window.appUser + '</span>' +
           '</a>' +
           '<h2 style="margin: 16px 0 0 0; font-size: 12px; color: #89a; text-transform: uppercase; letter-spacing: 0.1em;">Roleta Letterboxd</h2>' +
           '<div style="width: 24px; height: 3px; background: #00e054; margin: 8px auto 0 auto; border-radius: 2px;"></div>' +
