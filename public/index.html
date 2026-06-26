@@ -305,6 +305,33 @@
     </div>
   </template>
 
+  <template id="tmpl-roulette-single">
+    <div style="margin: auto 0; width: 100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <span class="roulette-source-text" id="tmpl-rs-source"></span>
+      <div class="roulette-poster-wrap" style="display:flex;">
+        <a id="tmpl-rs-img-link" href="#"><img id="tmpl-rs-img" src="" alt="Poster" style="width:100%;display:block;height:auto;object-fit:cover;"></a>
+      </div>
+      <a id="tmpl-rs-title-link" class="roulette-link-text" href="#"></a>
+    </div>
+  </template>
+
+  <template id="tmpl-roulette-swiper">
+    <div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <span class="roulette-source-text" id="tmpl-rsw-source" style="margin-bottom: 0; text-align: center;"></span>
+      <div class="swiper" style="width: 100%; padding: 20px 0; flex-shrink: 0;">
+        <div class="swiper-wrapper" id="tmpl-rsw-wrapper"></div>
+      </div>
+      <span class="roulette-source-text" id="tmpl-rsw-details" style="margin-top: 10px; font-size: 10px; color:#567;"></span>
+    </div>
+  </template>
+
+  <template id="tmpl-roulette-grid">
+    <div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; justify-content:flex-start;">
+      <span class="roulette-source-text" id="tmpl-rg-source" style="margin-top: 12px; margin-bottom: 12px; text-align: center; flex-shrink: 0;"></span>
+      <div class="roulette-grid" id="tmpl-rg-container" style="align-content: flex-start; padding-bottom: 0px;"></div>
+    </div>
+  </template>
+
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/quotes.js"></script>

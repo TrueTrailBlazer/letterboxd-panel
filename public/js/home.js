@@ -441,64 +441,75 @@ function bindEvents() {
       if (!validMovies || !validMovies.length) throw new Error(window.t('err_empty'));
 
       window.currentDrawData = validMovies;
-      var resultHtml = '';
+      window.currentDrawData = validMovies;
+      
+      var resultCont = document.getElementById('roulette-result');
+      resultCont.innerHTML = '';
       
       if (validMovies.length === 1) {
         var m = validMovies[0];
-        resultHtml = 
-          '<div style="margin: auto 0; width: 100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
-            '<span id="roulette-source" class="roulette-source-text">' + m.sourceName + '</span>' +
-            '<div class="roulette-poster-wrap" style="display:flex;">' +
-              '<a id="roulette-poster-link" href="' + m.link + '"><img id="roulette-poster-img" src="' + m.imgSrc + '" alt="Poster" style="width:100%;display:block;height:auto;object-fit:cover;"></a>' +
-            '</div>' +
-            '<a id="roulette-link" class="roulette-link-text" href="' + m.link + '">' + m.title + '</a>' +
-          '</div>';
+        var tmpl = document.getElementById('tmpl-roulette-single');
+        if (tmpl) {
+          var clone = tmpl.content.cloneNode(true);
+          clone.getElementById('tmpl-rs-source').textContent = m.sourceName;
+          clone.getElementById('tmpl-rs-img-link').href = m.link;
+          clone.getElementById('tmpl-rs-img').src = m.imgSrc;
+          var titleLink = clone.getElementById('tmpl-rs-title-link');
+          titleLink.textContent = m.title;
+          titleLink.href = m.link;
+          resultCont.appendChild(clone);
+        }
       } else if (validMovies.length >= 2 && validMovies.length <= 8) {
         var drawnSourcesObj = {};
         for (var j = 0; j < validMovies.length; j++) drawnSourcesObj[validMovies[j].sourceName] = true;
         var drawnSources = Object.keys(drawnSourcesObj);
         var sourceLabel = drawnSources.length > 1 ? window.t('lbl_multi_source') : drawnSources[0];
         
-        var swiperHtml = '<div class="swiper" style="width: 100%; padding: 20px 0; flex-shrink: 0;"><div class="swiper-wrapper">';
-        
-        for (var i = 0; i < validMovies.length; i++) {
-          var m = validMovies[i];
-          var clickJs = "openPosterModal(" + i + ")";
-          swiperHtml += 
-            '<div class="swiper-slide" onclick="' + clickJs + '" style="width: 170px; aspect-ratio: 2/3; height: auto;">' +
-              '<img src="' + m.imgSrc + '" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">' +
-            '</div>';
+        var tmpl = document.getElementById('tmpl-roulette-swiper');
+        if (tmpl) {
+          var clone = tmpl.content.cloneNode(true);
+          clone.getElementById('tmpl-rsw-source').textContent = sourceLabel;
+          var wrapper = clone.getElementById('tmpl-rsw-wrapper');
+          for (var i = 0; i < validMovies.length; i++) {
+            var m = validMovies[i];
+            var slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+            slide.style.cssText = 'width: 170px; aspect-ratio: 2/3; height: auto;';
+            slide.onclick = (function(idx) { return function() { openPosterModal(idx); }; })(i);
+            var img = document.createElement('img');
+            img.src = m.imgSrc;
+            img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.5);';
+            slide.appendChild(img);
+            wrapper.appendChild(slide);
+          }
+          clone.getElementById('tmpl-rsw-details').textContent = window.t('lbl_tap_details');
+          clone.getElementById('tmpl-rsw-details').setAttribute('data-i18n', 'lbl_tap_details');
+          resultCont.appendChild(clone);
         }
-        swiperHtml += '</div></div>';
-        
-        resultHtml = 
-          '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
-            '<span class="roulette-source-text" style="margin-bottom: 0; text-align: center;">' + sourceLabel + '</span>' +
-            swiperHtml +
-            '<span class="roulette-source-text" style="margin-top: 10px; font-size: 10px; color:#567;" data-i18n="lbl_tap_details">' + window.t('lbl_tap_details') + '</span>' +
-          '</div>';
       } else {
-        var gridHtml = '<div class="roulette-grid" id="roulette-grid-scroll" style="align-content: flex-start; padding-bottom: 0px;">';
-        for (var i = 0; i < validMovies.length; i++) {
-          var m = validMovies[i];
-          var clickJs = "openPosterModal(" + i + ")";
-          gridHtml += '<div class="grid-poster-wrap" onclick="' + clickJs + '"><img src="' + m.imgSrc + '"></div>';
-        }
-        gridHtml += '</div>';
-        
         var drawnSourcesObj = {};
         for (var j = 0; j < validMovies.length; j++) drawnSourcesObj[validMovies[j].sourceName] = true;
         var drawnSources = Object.keys(drawnSourcesObj);
         var sourceLabel = drawnSources.length > 1 ? window.t('lbl_multi_source') : drawnSources[0];
         
-        resultHtml = 
-          '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; justify-content:flex-start;">' +
-            '<span class="roulette-source-text" style="margin-top: 12px; margin-bottom: 12px; text-align: center; flex-shrink: 0;">' + sourceLabel + '</span>' +
-            gridHtml +
-          '</div>';
+        var tmpl = document.getElementById('tmpl-roulette-grid');
+        if (tmpl) {
+          var clone = tmpl.content.cloneNode(true);
+          clone.getElementById('tmpl-rg-source').textContent = sourceLabel;
+          var container = clone.getElementById('tmpl-rg-container');
+          for (var i = 0; i < validMovies.length; i++) {
+            var m = validMovies[i];
+            var wrap = document.createElement('div');
+            wrap.className = 'grid-poster-wrap';
+            wrap.onclick = (function(idx) { return function() { openPosterModal(idx); }; })(i);
+            var img = document.createElement('img');
+            img.src = m.imgSrc;
+            wrap.appendChild(img);
+            container.appendChild(wrap);
+          }
+          resultCont.appendChild(clone);
+        }
       }
-      
-      document.getElementById('roulette-result').innerHTML = resultHtml;
       document.getElementById('roulette-result').style.display = 'flex';
 
       if (validMovies.length >= 2 && validMovies.length <= 8 && typeof Swiper !== 'undefined') {
@@ -578,25 +589,6 @@ function startApp() {
           renderTracker(window.lastScrapedCount, 'stat_offline', '#ff4e00');
         });
         
-      // Fetch avatar in background (Scrape Update)
-      fetch('/api/proxy?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
-        .then(function(res) { 
-           if (!res.ok) throw new Error('HTTP ' + res.status);
-           return res.text(); 
-        })
-        .then(function(html) {
-          var doc = new DOMParser().parseFromString(html, 'text/html');
-          var avatarImg = doc.querySelector('.profile-avatar img, .avatar img, img.avatar, img[src*="/avatar/"]');
-          if (avatarImg && avatarImg.src && avatarImg.src !== localStorage.getItem('lbxd_avatar_' + window.appUser)) {
-             localStorage.setItem('lbxd_avatar_' + window.appUser, avatarImg.src);
-             var syncEl = document.getElementById('sync-status');
-             var st = syncEl ? syncEl.getAttribute('data-status-key') : 'stat_synced';
-             var sc = syncEl ? syncEl.style.color : '#00e054';
-             renderTracker(window.lastScrapedCount, st, sc);
-          }
-        }).catch(function(e){
-           console.warn('Background avatar fetch failed', e);
-        });
         
     }
   } catch (e) {

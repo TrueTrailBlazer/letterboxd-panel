@@ -105,22 +105,6 @@ app.get('/api/watched-count', async function(req, res) {
   }
 });
 
-// ===== API: Proxy para buscar HTML do Letterboxd (contorna CORS) =====
-// Mantido temporariamente para compatibilidade enquanto migramos o frontend
-app.get('/api/proxy', async function(req, res) {
-  var url = req.query.url;
-  if (!url || url.indexOf('letterboxd.com') === -1) {
-    return res.status(400).send('URL inválida');
-  }
-  try {
-    var html = await cachedFetch(url);
-    res.send(html);
-  } catch (e) {
-    console.error('proxy error:', e.message);
-    res.send('');
-  }
-});
-
 // ===== API: ROULETTE (todo o scraping pesado no backend) =====
 app.post('/api/roulette', async function(req, res) {
   var sources = req.body.sources; // [{ type, url, name }]
