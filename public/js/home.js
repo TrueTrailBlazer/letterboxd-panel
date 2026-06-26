@@ -50,11 +50,11 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   
   var savedAvatar = localStorage.getItem('lbxd_avatar_' + window.appUser);
   
-  var avatarSvg = '<svg fill="#89a" height="50" viewBox="0 0 24 24" width="50" xmlns="http://www.w3.org/2000/svg" style="margin-right:12px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-  var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:50px; height:50px; border-radius:50%; margin-right:12px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
+  var avatarSvg = '<svg fill="#89a" height="54" viewBox="0 0 24 24" width="54" xmlns="http://www.w3.org/2000/svg" style="margin-right:12px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:54px; height:54px; border-radius:50%; margin-right:12px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
 
-  var avatarSvgRoleta = '<svg fill="#89a" height="50" viewBox="0 0 24 24" width="50" xmlns="http://www.w3.org/2000/svg" style="margin-right:12px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-  var avatarHtmlRoleta = savedAvatar ? '<img src="' + savedAvatar + '" style="width:50px; height:50px; border-radius:50%; margin-right:12px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvgRoleta.replace(/"/g, '&quot;') + '\'">' : avatarSvgRoleta;
+  var avatarSvgRoleta = '<svg fill="#89a" height="54" viewBox="0 0 24 24" width="54" xmlns="http://www.w3.org/2000/svg" style="margin-right:12px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  var avatarHtmlRoleta = savedAvatar ? '<img src="' + savedAvatar + '" style="width:54px; height:54px; border-radius:50%; margin-right:12px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvgRoleta.replace(/"/g, '&quot;') + '\'">' : avatarSvgRoleta;
 
   if (!window.appUseMeta) {
     if (appCont) {
@@ -146,7 +146,12 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     else { color = '#ff4e00'; msg = window.t('msg_behind').replace('{count}', Math.abs(saldo)); }
     
     var quoteObj = window.currentSessionQuote.quote;
-    var quoteText = quoteObj.quote + ' — ' + quoteObj.movie;
+    var quoteHtml = '<span style="font-style: italic; font-weight: bold; color: #fff;">"' + quoteObj.quote + '"</span> <span style="font-style: normal; color: #678;">— ' + quoteObj.movie + '</span>';
+    
+    var quoteContainer = document.getElementById('empty-state-quote');
+    if (quoteContainer) {
+      quoteContainer.innerHTML = quoteHtml;
+    }
 
     var cardHtml = 
       '<div id="goal-tracker-card" style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);">' +
@@ -201,11 +206,6 @@ function renderTracker(scrapedCount, statusText, statusColor) {
               '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_projection') + '</span>' +
             '</div>' +
 
-          '</div>' +
-
-          // Quote Box
-          '<div style="background: rgba(255,255,255,0.02); padding: 12px 16px; border-top: 1px solid #2c3440; font-size: 12px; font-style: italic; color: #89a; text-align: center; line-height: 1.4;">' +
-            '"' + quoteText + '"' +
           '</div>' +
         '</div>' +
 
