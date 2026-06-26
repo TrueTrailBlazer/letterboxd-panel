@@ -292,6 +292,16 @@ body {
 #poster-modal.active #poster-modal-content {
   transform: scale(1) !important;
 }
+#modal-synopsis::-webkit-scrollbar {
+  width: 4px;
+}
+#modal-synopsis::-webkit-scrollbar-track {
+  background: transparent;
+}
+#modal-synopsis::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+}
 
 /* ===== FIXED BOTTOM BAR ===== */
 #bottom-bar {

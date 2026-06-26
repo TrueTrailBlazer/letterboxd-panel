@@ -391,7 +391,19 @@ function bindEvents() {
                 imgSrc = data.image;
               }
             }
-            return { title: displayTitle, link: link, imgSrc: imgSrc, sourceName: currentSourceName };
+            var synopsis = '';
+            var metaDesc = filmDoc.querySelector('meta[property="og:description"]');
+            if (metaDesc) synopsis = metaDesc.getAttribute('content');
+            if (!synopsis) {
+              var metaName = filmDoc.querySelector('meta[name="description"]');
+              if (metaName) synopsis = metaName.getAttribute('content');
+            }
+            if (synopsis) {
+              synopsis = synopsis.replace(/^.*? directed by .*?\.\s*/i, '');
+              if (synopsis.length > 600) synopsis = synopsis.substring(0, 600) + '...';
+            }
+
+            return { title: displayTitle, link: link, imgSrc: imgSrc, sourceName: currentSourceName, synopsis: synopsis };
         }));
         
         for (var i = 0; i < results.length; i++) {
@@ -403,6 +415,7 @@ function bindEvents() {
 
       if (!validMovies.length) throw new Error('Nenhum filme válido encontrado');
 
+      window.currentDrawData = validMovies;
       var resultHtml = '';
       
       if (validMovies.length === 1) {
@@ -421,8 +434,7 @@ function bindEvents() {
         
         for (var i = 0; i < validMovies.length; i++) {
           var m = validMovies[i];
-          var safeTitle = m.title.replace(/"/g, '&quot;').replace(/'/g, '\\\'');
-          var clickJs = "openPosterModal('" + m.imgSrc + "', '" + safeTitle + "', '" + m.link + "', '" + m.sourceName + "')";
+          var clickJs = "openPosterModal(" + i + ")";
           swiperHtml += 
             '<div class="swiper-slide" onclick="' + clickJs + '">' +
               '<img src="' + m.imgSrc + '">' +
@@ -440,8 +452,7 @@ function bindEvents() {
         var gridHtml = '<div class="roulette-grid">';
         for (var i = 0; i < validMovies.length; i++) {
           var m = validMovies[i];
-          var safeTitle = m.title.replace(/"/g, '&quot;').replace(/'/g, '\\\'');
-          var clickJs = "openPosterModal('" + m.imgSrc + "', '" + safeTitle + "', '" + m.link + "', '" + m.sourceName + "')";
+          var clickJs = "openPosterModal(" + i + ")";
           gridHtml += '<div class="grid-poster-wrap" onclick="' + clickJs + '"><img src="' + m.imgSrc + '"></div>';
         }
         gridHtml += '</div>';
@@ -541,12 +552,23 @@ window.onload = function() {
   }
 };
 
-window.openPosterModal = function(imgSrc, title, linkUrl, sourceName) {
-  document.getElementById('modal-poster-img').src = imgSrc;
-  document.getElementById('modal-link').innerText = title;
-  document.getElementById('modal-link').href = linkUrl;
-  document.getElementById('modal-img-link').href = linkUrl;
-  document.getElementById('modal-source').innerText = sourceName;
+window.openPosterModal = function(index) {
+  var m = window.currentDrawData ? window.currentDrawData[index] : null;
+  if (!m) return;
+  document.getElementById('modal-poster-img').src = m.imgSrc;
+  document.getElementById('modal-link').innerText = m.title;
+  document.getElementById('modal-link').href = m.link;
+  document.getElementById('modal-img-link').href = m.link;
+  document.getElementById('modal-source').innerText = m.sourceName;
+  
+  var synEl = document.getElementById('modal-synopsis');
+  if (m.synopsis) {
+    synEl.innerText = m.synopsis;
+    synEl.style.display = 'block';
+  } else {
+    synEl.style.display = 'none';
+  }
+  
   document.getElementById('poster-modal').classList.add('active');
 };
 
