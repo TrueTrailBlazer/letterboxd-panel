@@ -166,7 +166,12 @@ app.post('/api/roulette', async function(req, res) {
             slug = displayTitle.replace(/\s*\(\d{4}\)$/, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s-]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
           }
 
-          var imgSrc = el.attr('data-image-url') || imgNode.attr('src') || imgNode.attr('data-image') || '';
+          var imgSrc = el.attr('data-image-url') || el.attr('data-poster-url') || imgNode.attr('data-image') || imgNode.attr('data-src') || imgNode.attr('src') || '';
+          
+          // Prevenção contra lazy load pixels
+          if (imgSrc && (imgSrc.includes('empty-poster') || imgSrc.includes('transparent') || imgSrc.startsWith('data:image'))) {
+            imgSrc = imgNode.attr('data-image') || el.attr('data-image-url') || '';
+          }
 
           allPosters.push({
             title: displayTitle,
