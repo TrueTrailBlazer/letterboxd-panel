@@ -256,15 +256,15 @@ function bindEvents() {
   document.getElementById('add-list-btn').onclick = function() {
     var val = document.getElementById('new-list-url').value.trim();
     if (val.indexOf('letterboxd.com/') === -1 && val.indexOf('boxd.it/') === -1) { 
-      showToast('Use um link do Letterboxd ou boxd.it', true); return; 
+      showToast(window.t('err_use_link'), true); return; 
     }
     
-    try { new URL(val); } catch(err) { showToast('Link inválido', true); return; }
+    try { new URL(val); } catch(err) { showToast(window.t('err_invalid_link'), true); return; }
     
     var state = loadState();
     for (var i = 0; i < state.lists.length; i++) {
       if (state.lists[i].url === val || state.lists[i].path === new URL(val).pathname) { 
-        showToast('Lista já existe', true); return; 
+        showToast(window.t('err_list_exists'), true); return; 
       }
     }
     
@@ -287,18 +287,18 @@ function bindEvents() {
     state.lists.forEach(function(l) {
       if (l.checked) {
           var url = l.url ? l.url : 'https://letterboxd.com' + l.path;
-          var name = 'DE UMA LISTA CUSTOMIZADA:';
+          var name = window.t('lbl_custom_list_source');
           try { 
               var pathParts = new URL(url).pathname.split('/').filter(Boolean);
-              if (pathParts.length >= 3 && pathParts[1] === 'list') name = "DA LISTA: " + pathParts[2].replace(/-/g, ' ').toUpperCase();
-              else if (url.indexOf('boxd.it') !== -1) name = 'DE UM LINK CURTO (BOXD.IT):';
+              if (pathParts.length >= 3 && pathParts[1] === 'list') name = window.t('lbl_list_source').replace('{name}', pathParts[2].replace(/-/g, ' ').toUpperCase());
+              else if (url.indexOf('boxd.it') !== -1) name = window.t('lbl_short_link_source');
           } catch(e) {}
           sources.push({ type: 'list', url: url, name: name });
       }
     });
 
     if (!sources.length) {
-      btn.innerText = 'ESCOLHA UMA FONTE';
+      btn.innerText = window.t('btn_choose_source');
       btn.disabled = false;
       return;
     }
@@ -352,7 +352,7 @@ function bindEvents() {
             
             var containerHtml = (randomPoster.closest('li') || randomPoster.parentNode || randomPoster).outerHTML;
             var imgNode = randomPoster.querySelector('img');
-            var displayTitle = imgNode && imgNode.alt ? imgNode.alt.replace(/^Poster for /i, '').trim() : 'Filme Sorteado';
+            var displayTitle = imgNode && imgNode.alt ? imgNode.alt.replace(/^Poster for /i, '').trim() : window.t('lbl_drawn_film');
             
             var slug = '';
             var slugMatch = containerHtml.match(/data-film-slug=["']([^"']+)["']/);
@@ -412,7 +412,7 @@ function bindEvents() {
         }
       }
 
-      if (!validMovies.length) throw new Error('Nenhum filme válido encontrado');
+      if (!validMovies.length) throw new Error(window.t('err_empty'));
 
       window.currentDrawData = validMovies;
       var resultHtml = '';
@@ -490,7 +490,7 @@ function bindEvents() {
 
     } catch (err) {
       console.error('Roulette error:', err);
-      btn.innerText = 'ERRO. TENTAR DE NOVO';
+      btn.innerText = window.t('btn_error_retry');
       btn.disabled = false;
     }
   };

@@ -71,10 +71,22 @@ const i18nData = {
     "stat_progress": "Progresso Anual",
     "stat_syncing": "• Sincronizando...",
     "stat_synced": "• Sincronizado",
-    "stat_offline": "• Offline",
     "stat_error": "• Erro",
     "lbl_goal_title": "Meta {target} Filmes",
-    "offset_help": "O Letterboxd conta filmes únicos. Para que filmes reassistidos contem, adicione-os no campo abaixo."
+    "offset_help": "O Letterboxd conta filmes únicos. Para que filmes reassistidos contem, adicione-os no campo abaixo.",
+    "err_use_link": "Use um link do Letterboxd ou boxd.it",
+    "err_invalid_link": "Link inválido",
+    "err_list_exists": "Lista já existe",
+    "btn_choose_source": "ESCOLHA UMA FONTE",
+    "btn_error_retry": "ERRO. TENTAR DE NOVO",
+    "lbl_custom_list_source": "DE UMA LISTA CUSTOMIZADA:",
+    "lbl_list_source": "DA LISTA: {name}",
+    "lbl_short_link_source": "DE UM LINK CURTO (BOXD.IT):",
+    "lbl_drawn_film": "Filme Sorteado",
+    "placeholder_list_link": "Link de lista...",
+    "btn_add": "ADD",
+    "err_enter_username": "Digite seu nome de usuário!",
+    "err_valid_goal": "Digite uma meta válida"
   },
   en: {
     "app_title": "Letterboxd Panel",
@@ -148,10 +160,22 @@ const i18nData = {
     "stat_progress": "Annual Progress",
     "stat_syncing": "• Syncing...",
     "stat_synced": "• Synced",
-    "stat_offline": "• Offline",
     "stat_error": "• Error",
     "lbl_goal_title": "Goal {target} Movies",
-    "offset_help": "Letterboxd tracks unique films. To count rewatches, add them manually in the field below."
+    "offset_help": "Letterboxd tracks unique films. To count rewatches, add them manually in the field below.",
+    "err_use_link": "Use a Letterboxd or boxd.it link",
+    "err_invalid_link": "Invalid link",
+    "err_list_exists": "List already exists",
+    "btn_choose_source": "CHOOSE A SOURCE",
+    "btn_error_retry": "ERROR. TRY AGAIN",
+    "lbl_custom_list_source": "FROM A CUSTOM LIST:",
+    "lbl_list_source": "FROM LIST: {name}",
+    "lbl_short_link_source": "FROM A SHORT LINK (BOXD.IT):",
+    "lbl_drawn_film": "Random Film",
+    "placeholder_list_link": "List link...",
+    "btn_add": "ADD",
+    "err_enter_username": "Enter your username!",
+    "err_valid_goal": "Enter a valid goal"
   }
 };
 
@@ -176,6 +200,11 @@ window.setLanguage = function(lang) {
       var st = syncEl ? syncEl.innerText : window.t('stat_synced');
       var sc = syncEl ? syncEl.style.color : '#00e054';
       window.renderTracker(window.lastScrapedCount, st, sc);
+  }
+  
+  // Re-render config lists if it exists
+  if (typeof window.renderConfigLists === 'function') {
+      window.renderConfigLists();
   }
 };
 
