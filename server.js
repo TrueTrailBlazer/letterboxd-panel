@@ -51,6 +51,14 @@ app.get('/api/watched-count', async function(req, res) {
       result.diaryCount = parseInt(matchDiary[1].replace(/,/g, ''));
     }
 
+    // Captura Avatar
+    var matchAvatar = html.match(/<img[^>]+class="[^"]*profile-avatar[^"]*"[^>]+src="([^"]+)"/i);
+    if (!matchAvatar) matchAvatar = html.match(/<img[^>]+class="[^"]*avatar[^"]*"[^>]+src="([^"]+)"/i);
+    if (!matchAvatar) matchAvatar = html.match(/<img[^>]+src="([^"]+\/avatar\/[^"]+)"/i);
+    if (matchAvatar && matchAvatar[1]) {
+      result.avatarUrl = matchAvatar[1];
+    }
+
     res.json(result);
   } catch (e) {
     console.error('getWatchedCount error:', e.message);

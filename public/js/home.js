@@ -231,7 +231,7 @@ function bindEvents() {
   document.getElementById('num-offset').oninput = function(e) {
     localStorage.setItem('meta365_offset', parseInt(e.target.value) || 0);
     var syncEl = document.getElementById('sync-status');
-    var st = syncEl ? syncEl.getAttribute('data-status-key') : 'stat_synced';
+    var st = syncEl ? syncEl.getAttribute('preferred-status-key') : 'stat_synced';
     var sc = syncEl ? syncEl.style.color : '#00e054';
     renderTracker(window.lastScrapedCount, st, sc);
   };
@@ -557,9 +557,16 @@ function startApp() {
     bindEvents();
 
     if (window.appUseMeta) {
+      // Fetch avatar in background (Immediate Cache Check)
+      var savedAvatar = localStorage.getItem('lbxd_avatar_' + window.appUser);
+      if (savedAvatar) renderTracker(window.lastScrapedCount, 'stat_syncing', '#678');
+
       fetch('/api/watched-count?user=' + encodeURIComponent(window.appUser) + '&year=' + window.appMetaYear)
         .then(function(res) { return res.json(); })
         .then(function(data) {
+          if (data && data.avatarUrl) {
+             localStorage.setItem('lbxd_avatar_' + window.appUser, data.avatarUrl);
+          }
           if (data && data.count !== undefined && !isNaN(data.count)) {
             if (data.diaryCount && data.diaryCount > data.count) {
               var autoOffset = data.diaryCount - data.count;
@@ -578,7 +585,7 @@ function startApp() {
           renderTracker(window.lastScrapedCount, 'stat_offline', '#ff4e00');
         });
         
-      // Fetch avatar in background (DEBUG MODE)
+      // Fetch avatar in background (Scrape Update)
       fetch('/api/proxy?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
         .then(function(res) { 
            if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -587,66 +594,22 @@ function startApp() {
         .then(function(html) {
           var doc = new DOMParser().parseFromString(html, 'text/html');
           var avatarImg = doc.querySelector('.profile-avatar img, .avatar img, img.avatar, img[src*="/avatar/"]');
-          if (avatarImg && avatarImg.src) {
-             showToast('DEBUG: Avatar encontrado!', false);
+          if (avatarImg && avatarImg.src && avatarImg.src !== localStorage.getItem('lbxd_avatar_' + window.appUser)) {
              localStorage.setItem('lbxd_avatar_' + window.appUser, avatarImg.src);
              var syncEl = document.getElementById('sync-status');
              var st = syncEl ? syncEl.getAttribute('data-status-key') : 'stat_synced';
              var sc = syncEl ? syncEl.style.color : '#00e054';
-             if (!st) st = 'stat_synced';
              renderTracker(window.lastScrapedCount, st, sc);
-          } else {
-             showToast('DEBUG: Avatar não encontrado no HTML (' + html.length + 'b)', true);
           }
         }).catch(function(e){
-           showToast('DEBUG Avatar Erro: ' + e.message, true);
+           console.warn('Background avatar fetch failed', e);
         });
         
     }
   } catch (e) {
     console.error('Init error:', e);
-    if(window.appUseMeta) renderTracker(182, 'stat_error', '#ff4e00');
   }
 }
-
-// ===== TEMPORARY DEBUG AVATAR SCRAPE =====
-window.runDebugScrape = function() {
-  var out = document.getElementById('debug-output');
-  var img = document.getElementById('debug-img-preview');
-  out.innerText = 'Fetching https://letterboxd.com/' + window.appUser + '/ ...';
-  img.style.display = 'none';
-  
-  fetch('/api/proxy?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
-    .then(function(res) {
-       out.innerText += '\nStatus: ' + res.status;
-       if (!res.ok) throw new Error('HTTP ' + res.status);
-       return res.text();
-    })
-    .then(function(html) {
-       out.innerText += '\nHTML recebido: ' + html.length + ' bytes';
-       var doc = new DOMParser().parseFromString(html, 'text/html');
-       
-       var selectors = ['.profile-avatar img', '.avatar img', 'img.avatar', 'img[src*="/avatar/"]', 'meta[property="og:image"]'];
-       var found = false;
-       for (var i = 0; i < selectors.length; i++) {
-         var el = doc.querySelector(selectors[i]);
-         var src = el ? (el.src || el.content) : null;
-         if (src) {
-            out.innerText += '\nSUCESSO com seletor: ' + selectors[i] + '\nSRC: ' + src;
-            img.src = src;
-            img.style.display = 'block';
-            found = true;
-            break;
-         }
-       }
-       if (!found) {
-         out.innerText += '\nNENHUM seletor encontrou o avatar.\nPrimeiros 200 chars:\n' + html.substring(0,200);
-       }
-    })
-    .catch(function(err) {
-       out.innerText += '\nERRO FATAL: ' + err.message;
-    });
-};
 
 window.onload = function() {
   var savedUser = localStorage.getItem('lbxd_user');
