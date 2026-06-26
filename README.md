@@ -20,18 +20,28 @@ Um painel pessoal definitivo para usuários do Letterboxd, desenhado com foco em
 ### Ferramentas e Filtros
 - **Filtro de Duração:** Cansado de sortear um "Curta de 3 minutos" sem querer? O app possui um filtro para eliminar curtas e mini-séries da roleta.
 - **Offset Personalizado:** Permite ignorar re-watches ou ajustar os números para bater com a exatidão que você espera.
-- **PWA Instalável:** Experiência nativa em tela cheia no Android/iOS (sem a barra de navegação do Chrome). Navegação perfeitamente integrada aos links do seu aplicativo Letterboxd original.
+- **PWA Instalável e Offline:** Experiência nativa em tela cheia no Android/iOS (sem a barra de navegação do Chrome). Graças ao **Service Worker** com estratégia de *Cache-First*, o aplicativo abre instantaneamente com seus dados salvos mesmo sem conexão com a internet.
 - **Internacionalização:** Suporte rápido para troca entre Português e Inglês.
+
+---
+
+## Arquitetura Resiliente
+
+Este projeto utiliza um servidor **Node.js/Express** para atuar como motor de extração de dados do Letterboxd, protegendo o app cliente e evitando quebras de UI:
+
+- **Web Scraping via Cheerio:** Extrações baseadas em seletores CSS nativos, prevenindo quebras causadas por atualizações cosméticas na página original.
+- **Prevenção de Abusos (Rate Limiting):** A API bloqueia IPs com requisições abusivas para proteger a estabilidade do painel.
+- **Memória em Cache (`node-cache`):** Respostas de Listas e Watchlists ficam salvas temporariamente, economizando requisições repetidas ao servidor alvo.
+- **Rotação de User-Agents:** Camuflagem inteligente de headers nas requisições do Node.js.
+- **Segurança de Interface:** 100% da renderização do frontend é protegida utilizando injeção via `textContent` nas tags nativas HTML `<template>`, isolando ameaças e quebras de sintaxe (zero `innerHTML` com HTML bruto).
 
 ---
 
 ## Como rodar localmente
 
-Este projeto utiliza um servidor **Node.js/Express** para contornar bloqueios de CORS e realizar a captura de dados (Scraping) do Letterboxd de forma rápida e segura.
-
 ```bash
 npm install
-npm start
+npm run dev
 ```
 
 Acesse `http://localhost:3000`
