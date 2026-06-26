@@ -282,39 +282,53 @@ function bindEvents() {
       return;
     }
 
-    var source = sources[Math.floor(Math.random() * sources.length)];
     var drawCount = parseInt(localStorage.getItem('lbxd_draw_count')) || 1;
 
     try {
-      var html = await proxyFetch(source.url);
-      var doc = new DOMParser().parseFromString(html, 'text/html');
-      
-      var pagLinks = doc.querySelectorAll('.paginate-pages li a');
-      var maxPage = pagLinks.length ? parseInt(pagLinks[pagLinks.length - 1].innerText) : 1;
-      var randomPage = Math.floor(Math.random() * maxPage) + 1;
+      var allPosters = [];
+      await Promise.all(sources.map(async function(source) {
+        try {
+          var html = await proxyFetch(source.url);
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          
+          var pagLinks = doc.querySelectorAll('.paginate-pages li a');
+          var maxPage = pagLinks.length ? parseInt(pagLinks[pagLinks.length - 1].innerText) : 1;
+          var randomPage = Math.floor(Math.random() * maxPage) + 1;
+          
+          if (randomPage > 1) {
+            var targetUrl = source.url.replace(/\/$/, '') + '/page/' + randomPage + '/';
+            html = await proxyFetch(targetUrl);
+            doc = new DOMParser().parseFromString(html, 'text/html');
+          }
+          
+          var posters = Array.from(doc.querySelectorAll('.film-poster'));
+          var sName = source.type === 'watchlist' ? 'DA SUA WATCHLIST' : source.name;
+          posters.forEach(function(p) {
+            allPosters.push({ element: p, sourceName: sName });
+          });
+        } catch(e) {
+          console.error("Erro ao puxar fonte", source.url, e);
+        }
+      }));
 
-      if (randomPage > 1) {
-        var targetUrl = source.url.replace(/\/$/, '') + '/page/' + randomPage + '/';
-        html = await proxyFetch(targetUrl);
-        doc = new DOMParser().parseFromString(html, 'text/html');
-      }
+      if (!allPosters.length) throw new Error('Vazio');
 
-      var posters = Array.from(doc.querySelectorAll('.film-poster'));
-      if (!posters.length) throw new Error('Vazio');
-
-      // Embaralha os posters disponíveis
-      posters = posters.sort(function() { return 0.5 - Math.random() });
+      // Embaralha TODOS os posters combinados
+      allPosters = allPosters.sort(function() { return 0.5 - Math.random() });
 
       var validMovies = [];
       var idx = 0;
       
-      while(validMovies.length < drawCount && idx < posters.length) {
+      while(validMovies.length < drawCount && idx < allPosters.length) {
         var batch = [];
-        while (batch.length < 5 && idx < posters.length && (validMovies.length + batch.length) < drawCount) {
-           batch.push(posters[idx++]);
+        while (batch.length < 5 && idx < allPosters.length && (validMovies.length + batch.length) < drawCount) {
+           batch.push(allPosters[idx++]);
         }
         
-        var results = await Promise.all(batch.map(async function(randomPoster) {
+        var results = await Promise.all(batch.map(async function(randomPosterObj) {
+            var randomPoster = randomPosterObj.element;
+            var currentSourceName = randomPosterObj.sourceName;
+            
             var containerHtml = (randomPoster.closest('li') || randomPoster.parentNode || randomPoster).outerHTML;
             var imgNode = randomPoster.querySelector('img');
             var displayTitle = imgNode && imgNode.alt ? imgNode.alt.replace(/^Poster for /i, '').trim() : 'Filme Sorteado';
@@ -355,7 +369,7 @@ function bindEvents() {
                 imgSrc = data.image;
               }
             }
-            return { title: displayTitle, link: link, imgSrc: imgSrc };
+            return { title: displayTitle, link: link, imgSrc: imgSrc, sourceName: currentSourceName };
         }));
         
         for (var i = 0; i < results.length; i++) {
@@ -368,13 +382,12 @@ function bindEvents() {
       if (!validMovies.length) throw new Error('Nenhum filme válido encontrado');
 
       var resultHtml = '';
-      var sourceName = source.type === 'watchlist' ? 'DA SUA WATCHLIST:' : source.name;
       
       if (validMovies.length === 1) {
         var m = validMovies[0];
         resultHtml = 
           '<div style="margin: auto 0; width: 100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
-            '<span id="roulette-source" class="roulette-source-text">' + sourceName + '</span>' +
+            '<span id="roulette-source" class="roulette-source-text">' + m.sourceName + '</span>' +
             '<div class="roulette-poster-wrap" style="display:flex;">' +
               '<a id="roulette-poster-link" href="' + m.link + '" target="_blank"><img id="roulette-poster-img" src="' + m.imgSrc + '" alt="Poster" style="width:100%;display:block;height:auto;object-fit:cover;"></a>' +
             '</div>' +
@@ -385,14 +398,16 @@ function bindEvents() {
         for (var i = 0; i < validMovies.length; i++) {
           var m = validMovies[i];
           var safeTitle = m.title.replace(/"/g, '&quot;').replace(/'/g, '\\\'');
-          var clickJs = "openPosterModal('" + m.imgSrc + "', '" + safeTitle + "', '" + m.link + "', '" + sourceName + "')";
+          var clickJs = "openPosterModal('" + m.imgSrc + "', '" + safeTitle + "', '" + m.link + "', '" + m.sourceName + "')";
           gridHtml += '<div class="grid-poster-wrap" onclick="' + clickJs + '"><img src="' + m.imgSrc + '"></div>';
         }
         gridHtml += '</div>';
         
+        var sourceLabel = sources.length > 1 ? 'MÚLTIPLAS FONTES' : validMovies[0].sourceName;
+        
         resultHtml = 
-          '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden;">' +
-            '<span class="roulette-source-text" style="margin: auto 0 8px 0;">' + sourceName + '</span>' +
+          '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; justify-content:center;">' +
+            '<span class="roulette-source-text" style="margin-bottom: 12px; text-align: center;">' + sourceLabel + '</span>' +
             gridHtml +
           '</div>';
       }
