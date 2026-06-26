@@ -570,6 +570,18 @@ window.closePosterModal = function(e) {
     var overlay = document.getElementById('config-overlay');
     if (overlay && overlay.style.display !== 'none' && overlay.style.display !== '') return;
     
+    // Check if user is scrolling inside any inner element (like roulette-grid)
+    var current = e.target;
+    var isScrollingInner = false;
+    while(current && current !== document.body && current !== document) {
+      if (current.scrollTop > 0) {
+        isScrollingInner = true;
+        break;
+      }
+      current = current.parentNode;
+    }
+    if (isScrollingInner) return;
+
     var wrapper = document.getElementById('app-wrapper');
     if (wrapper && wrapper.scrollTop > 0) return;
 
@@ -582,6 +594,17 @@ window.closePosterModal = function(e) {
     var dy = currentY - startY;
     
     if (dy > 0) {
+      var current = e.target;
+      var isScrollingInner = false;
+      while(current && current !== document.body && current !== document) {
+        if (current.scrollTop > 0) {
+          isScrollingInner = true;
+          break;
+        }
+        current = current.parentNode;
+      }
+      if (isScrollingInner) return;
+
       var wrapper = document.getElementById('app-wrapper');
       if (wrapper && wrapper.scrollTop > 0) return;
 
