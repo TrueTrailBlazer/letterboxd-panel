@@ -263,6 +263,11 @@ function saveState(state) {
 
 function renderRouletteUI() {
   document.getElementById('roleta-container').innerHTML =
+    '<div id="roulette-empty-state" style="margin: auto; text-align: center; color: #678; font-size: 14px; padding: 24px; line-height: 1.5; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">' +
+      '<svg fill="#678" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 16px; opacity: 0.5;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>' +
+      '<div data-i18n="msg_empty_roulette">' + (window.t ? window.t('msg_empty_roulette') : 'Toque no botão abaixo para sortear seu próximo filme!') + '</div>' +
+      '<div id="empty-state-quote" style="margin-top: 32px; font-size: 12px; color: #89a; max-width: 85%;"></div>' +
+    '</div>' +
     '<div id="roulette-result" class="roulette-result-box" style="display:none;">' +
       '<div style="margin: auto 0; width: 100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
         '<span id="roulette-source" class="roulette-source-text"></span>' +
@@ -377,6 +382,8 @@ function bindEvents() {
     btn.innerText = window.t('msg_shuffling');
     btn.disabled = true;
     document.getElementById('roulette-result').style.display = 'none';
+    var emptyEl = document.getElementById('roulette-empty-state');
+    if (emptyEl) emptyEl.style.display = 'none';
 
     var state = loadState();
     var sources = [];
@@ -593,6 +600,8 @@ function bindEvents() {
       console.error('Roulette error:', err);
       btn.innerText = window.t('btn_error_retry');
       btn.disabled = false;
+      var emptyEl = document.getElementById('roulette-empty-state');
+      if (emptyEl) emptyEl.style.display = 'flex';
     }
   };
 }
