@@ -147,13 +147,12 @@ function renderTracker(scrapedCount, statusText, statusColor) {
         // Progress Area
         '<div style="padding: 16px 16px 0 16px;">' +
           '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
-            '<span style="font-size: 11px; font-weight: bold; color: ' + color + ';">' + msg + '</span>' +
+            '<span style="font-size: 11px; font-weight: bold; color: ' + color + ';">' + msg + ' <span style="color:#fff; margin-left:4px;">(' + percent + '%)</span></span>' +
             '<span style="font-size: 11px; color: #678; text-transform: uppercase;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
           '</div>' +
           // PILL PROGRESS BAR
-          '<div style="width: 100%; height: 16px; background: #2c3440; border-radius: 8px; overflow: hidden; position: relative;">' +
-            '<div style="height: 100%; background: #00e054; width: ' + Math.min(100, percent) + '%; border-radius: 8px;"></div>' +
-            '<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); pointer-events: none;">' + percent + '%</div>' +
+          '<div style="width: 100%; height: 6px; background: #2c3440; border-radius: 3px; overflow: hidden; position: relative;">' +
+            '<div style="height: 100%; background: #00e054; width: ' + Math.min(100, percent) + '%; border-radius: 3px;"></div>' +
           '</div>' +
         '</div>' +
         
@@ -477,14 +476,14 @@ function bindEvents() {
           '</div>';
       } else if (validMovies.length >= 2 && validMovies.length <= 5) {
         var sourceLabel = sources.length > 1 ? window.t('lbl_multi_source') : validMovies[0].sourceName;
-        var swiperHtml = '<div class="swiper" style="width: 100%; max-width: 260px; aspect-ratio: 2/3; max-height: 55vh;"><div class="swiper-wrapper">';
+        var swiperHtml = '<div class="swiper" style="width: 100%; padding: 20px 0; flex-shrink: 0;"><div class="swiper-wrapper">';
         
         for (var i = 0; i < validMovies.length; i++) {
           var m = validMovies[i];
           var clickJs = "openPosterModal(" + i + ")";
           swiperHtml += 
-            '<div class="swiper-slide" onclick="' + clickJs + '" style="display: flex; align-items: center; justify-content: center;">' +
-              '<img src="' + m.imgSrc + '" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">' +
+            '<div class="swiper-slide" onclick="' + clickJs + '" style="width: 220px; aspect-ratio: 2/3; height: auto;">' +
+              '<img src="' + m.imgSrc + '" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">' +
             '</div>';
         }
         swiperHtml += '</div></div>';
