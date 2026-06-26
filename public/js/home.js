@@ -205,9 +205,37 @@ function renderTracker(scrapedCount, statusText, statusColor) {
             '"' + quoteText + '"' +
           '</div>' +
         '</div>' +
+
+        // Manual Toggle Button
+        '<div id="goal-tracker-toggle-btn" style="background: #1c2228; border-top: 1px solid #2c3440; text-align: center; padding: 6px 0; cursor: pointer; color: #89a; font-size: 12px; -webkit-tap-highlight-color: transparent;">' +
+          '<span id="goal-tracker-toggle-icon">▲</span>' +
+        '</div>' +
+
       '</div>';
       
     document.getElementById('app-container').innerHTML = cardHtml;
+    
+    // Attach manual toggle logic
+    var toggleBtn = document.getElementById('goal-tracker-toggle-btn');
+    if (toggleBtn) {
+      toggleBtn.onclick = function() {
+        var col = document.getElementById('goal-tracker-collapsible');
+        var card = document.getElementById('goal-tracker-card');
+        var icon = document.getElementById('goal-tracker-toggle-icon');
+        if (col.style.maxHeight === '0px') {
+          col.style.maxHeight = '500px';
+          col.style.opacity = '1';
+          card.style.marginBottom = '24px';
+          icon.innerText = '▲';
+        } else {
+          col.style.maxHeight = '0px';
+          col.style.opacity = '0';
+          card.style.marginBottom = '8px';
+          icon.innerText = '▼';
+        }
+      };
+    }
+
   } catch (e) {
     console.error('renderTracker error:', e);
   }
@@ -537,33 +565,6 @@ function bindEvents() {
       
       document.getElementById('roulette-result').innerHTML = resultHtml;
       document.getElementById('roulette-result').style.display = 'flex';
-
-      // Scroll event logic for collapsible Goal Tracker
-      var scrollBox = document.getElementById('roulette-grid-scroll');
-      if (scrollBox) {
-        var isCollapsed = false;
-        scrollBox.addEventListener('scroll', function(e) {
-          var card = document.getElementById('goal-tracker-card');
-          var col = document.getElementById('goal-tracker-collapsible');
-          if (card && col) {
-            // Only collapse if there is actually enough scrollable space
-            if (e.target.scrollHeight <= e.target.clientHeight + 60) return;
-            
-            var st = e.target.scrollTop;
-            if (!isCollapsed && st > 40) {
-              isCollapsed = true;
-              col.style.maxHeight = '0px';
-              col.style.opacity = '0';
-              card.style.marginBottom = '8px';
-            } else if (isCollapsed && st < 10) {
-              isCollapsed = false;
-              col.style.maxHeight = '500px';
-              col.style.opacity = '1';
-              card.style.marginBottom = '24px';
-            }
-          }
-        }, { passive: true });
-      }
 
       if (validMovies.length >= 2 && validMovies.length <= 8 && typeof Swiper !== 'undefined') {
         new Swiper('.swiper', {
