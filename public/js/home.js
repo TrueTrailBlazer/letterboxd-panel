@@ -154,7 +154,7 @@ function renderTracker(scrapedCount, statusText, statusColor) {
         '<div style="padding: 16px; border-bottom: 1px solid #2c3440; display: flex; justify-content: space-between; align-items: center;">' +
           '<a href="https://letterboxd.com/' + window.appUser + '/" style="display: flex; align-items: center; text-decoration: none; -webkit-tap-highlight-color: transparent;">' +
             avatarHtml +
-            '<span style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase;">' + window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) + '</span>' +
+            '<span style="font-size: 18px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px;">' + window.appUser + '</span>' +
           '</a>' +
           '<div style="display: flex; align-items: center; gap: 8px;">' +
             '<span id="sync-status" data-status-key="' + labelStatus + '" style="color:' + corStatus + '; font-size:11px;">' + window.t(labelStatus) + '</span>' +
@@ -163,6 +163,9 @@ function renderTracker(scrapedCount, statusText, statusColor) {
 
         // Progress Area
         '<div style="padding: 16px 16px 16px 16px;">' +
+          '<div style="margin-bottom: 12px;">' +
+            '<span style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 0.5px;">' + window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) + '</span>' +
+          '</div>' +
           '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
             '<span style="font-size: 11px; font-weight: bold; color: ' + color + ';">' + msg + ' <span style="color:#89a; margin-left:4px;">(' + percent + '%)</span></span>' +
             '<span style="font-size: 11px; color: #678; text-transform: uppercase;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
