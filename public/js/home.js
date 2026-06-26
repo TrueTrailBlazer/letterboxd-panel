@@ -50,11 +50,11 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   
   var savedAvatar = localStorage.getItem('lbxd_avatar_' + window.appUser);
   
-  var avatarSvg = '<svg fill="#89a" height="46" viewBox="0 0 24 24" width="46" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-  var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:46px; height:46px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
+  var avatarSvg = '<svg fill="#89a" height="50" viewBox="0 0 24 24" width="50" xmlns="http://www.w3.org/2000/svg" style="margin-right:12px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:50px; height:50px; border-radius:50%; margin-right:12px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
 
-  var avatarSvgRoleta = '<svg fill="#89a" height="46" viewBox="0 0 24 24" width="46" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-  var avatarHtmlRoleta = savedAvatar ? '<img src="' + savedAvatar + '" style="width:46px; height:46px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvgRoleta.replace(/"/g, '&quot;') + '\'">' : avatarSvgRoleta;
+  var avatarSvgRoleta = '<svg fill="#89a" height="50" viewBox="0 0 24 24" width="50" xmlns="http://www.w3.org/2000/svg" style="margin-right:12px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  var avatarHtmlRoleta = savedAvatar ? '<img src="' + savedAvatar + '" style="width:50px; height:50px; border-radius:50%; margin-right:12px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvgRoleta.replace(/"/g, '&quot;') + '\'">' : avatarSvgRoleta;
 
   if (!window.appUseMeta) {
     if (appCont) {
@@ -156,7 +156,7 @@ function renderTracker(scrapedCount, statusText, statusColor) {
             avatarHtml +
             '<div style="display: flex; flex-direction: column;">' +
               '<span style="font-size: 16px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px;">' + window.appUser + '</span>' +
-              '<span style="font-size: 11px; font-weight: bold; color: #89a; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;">' + window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) + '</span>' +
+              '<span style="font-size: 10px; font-weight: bold; color: #89a; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;">' + window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) + '</span>' +
             '</div>' +
           '</a>' +
           '<div style="display: flex; align-items: center; gap: 8px;">' +
