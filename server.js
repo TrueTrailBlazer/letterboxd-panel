@@ -48,6 +48,9 @@ const apiLimiter = rateLimit({
 });
 
 // ===== MIDDLEWARE =====
+// Habilita a confiança no proxy reverso do Render para o rate-limiter funcionar
+app.set('trust proxy', 1);
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use('/api/', apiLimiter);
