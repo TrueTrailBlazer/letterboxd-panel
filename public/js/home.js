@@ -445,7 +445,7 @@ function bindEvents() {
           '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
             '<span class="roulette-source-text" style="margin-bottom: 0; text-align: center;">' + sourceLabel + '</span>' +
             swiperHtml +
-            '<span class="roulette-source-text" style="margin-top: 10px; font-size: 10px; color:#567;">' + window.t('lbl_tap_details') + '</span>' +
+            '<span class="roulette-source-text" style="margin-top: 10px; font-size: 10px; color:#567;" data-i18n="lbl_tap_details">' + window.t('lbl_tap_details') + '</span>' +
           '</div>';
       } else {
         var gridHtml = '<div class="roulette-grid">';
