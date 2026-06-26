@@ -117,31 +117,63 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     
     var quoteObj = window.currentSessionQuote.quote;
     var quoteText = quoteObj.quote + ' — ' + quoteObj.movie;
+    var avatarSvg = '<svg fill="#89a" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
 
-    document.getElementById('app-container').innerHTML =
-      '<h2 class="section-heading">' +
-        window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) +
-        '<span id="sync-status" data-status-key="' + labelStatus + '" style="color:' + corStatus + '; font-size:10px; text-transform:none; margin-left:8px;">' + window.t(labelStatus) + '</span>' +
-        '<span style="float: right; color: #678;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
-      '</h2>' +
-      '<div class="meta-stats-row">' +
-        '<div class="meta-stat-item"><span class="meta-stat-val">' + watched + '</span><span class="meta-stat-lbl">' + window.t('stat_watched') + '</span></div>' +
-        '<div class="meta-stat-item"><span class="meta-stat-val" style="color:' + color + '">' + (saldo > 0 ? '+' + saldo : saldo) + '</span><span class="meta-stat-lbl">' + window.t('stat_balance') + '</span></div>' +
-        '<div class="meta-stat-item"><span class="meta-stat-val">' + Math.max(0, window.appMetaTarget - watched) + '</span><span class="meta-stat-lbl">' + window.t('stat_remaining') + '</span></div>' +
-        '<div class="meta-stat-item"><span class="meta-stat-val" style="color:#40bcf4">' + projection + '</span><span class="meta-stat-lbl">' + window.t('stat_projection') + '</span></div>' +
-      '</div>' +
-      '<div class="meta-progress-header">' +
-        '<span>' + window.t('stat_progress') + '</span>' +
-        '<span class="meta-progress-pct">' + percent + '%</span>' +
-      '</div>' +
-      '<div class="meta-bar-bg"><div class="meta-bar-fill" style="width: ' + Math.min(100, percent) + '%"></div></div>' +
-      '<div class="meta-msg-box">' +
-        '<div class="meta-msg-main">' +
-          '<div class="meta-msg-dot" style="background:' + color + '; box-shadow: 0 0 5px ' + color + '"></div>' +
-          '<span style="color:#fff">' + msg + '</span>' +
+    var cardHtml = 
+      '<div style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">' +
+        // Card Header (Title & Status)
+        '<div style="padding: 16px; border-bottom: 1px solid #2c3440; display: flex; justify-content: space-between; align-items: center;">' +
+          '<div style="display: flex; align-items: center;">' +
+            avatarSvg +
+            '<span style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase;">' + window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) + '</span>' +
+          '</div>' +
+          '<div style="display: flex; align-items: center; gap: 8px;">' +
+            '<span id="sync-status" data-status-key="' + labelStatus + '" style="color:' + corStatus + '; font-size:11px;">' + window.t(labelStatus) + '</span>' +
+          '</div>' +
         '</div>' +
-        '<div class="meta-quote">"' + quoteText + '"</div>' +
+        
+        // Card Body (Stats Grid)
+        '<div style="padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">' +
+          
+          '<div style="display: flex; flex-direction: column;">' +
+            '<span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;">' + watched + '</span>' +
+            '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_watched') + '</span>' +
+          '</div>' +
+          
+          '<div style="display: flex; flex-direction: column;">' +
+            '<span style="font-size: 24px; font-weight: bold; color: ' + color + '; line-height: 1;">' + (saldo > 0 ? '+' + saldo : saldo) + '</span>' +
+            '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_balance') + '</span>' +
+          '</div>' +
+
+          '<div style="display: flex; flex-direction: column;">' +
+            '<span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;">' + Math.max(0, window.appMetaTarget - watched) + '</span>' +
+            '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_remaining') + '</span>' +
+          '</div>' +
+
+          '<div style="display: flex; flex-direction: column;">' +
+            '<span style="font-size: 24px; font-weight: bold; color: #40bcf4; line-height: 1;">' + projection + '</span>' +
+            '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_projection') + '</span>' +
+          '</div>' +
+
+        '</div>' +
+
+        // Card Quote and Days
+        '<div style="padding: 0 16px 16px 16px;">' +
+          '<div style="font-style: italic; font-size: 13px; color: #9ab; line-height: 1.4; border-left: 2px solid #2c3440; padding-left: 10px;">"' + quoteText + '"</div>' +
+          '<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">' +
+            '<span style="font-size: 12px; font-weight: bold; color: ' + color + ';">' + msg + '</span>' +
+            '<span style="font-size: 11px; color: #567; text-transform: uppercase;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
+          '</div>' +
+        '</div>' +
+
+        // Slim Progress Bar at the bottom
+        '<div style="width: 100%; height: 3px; background: #2c3440; position: relative;">' +
+          '<div style="height: 100%; background: #00e054; width: ' + Math.min(100, percent) + '%;"></div>' +
+        '</div>' +
+        
       '</div>';
+      
+    document.getElementById('app-container').innerHTML = cardHtml;
   } catch (e) {
     console.error('renderTracker error:', e);
   }
