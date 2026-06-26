@@ -53,20 +53,20 @@ function renderConfigLists() {
     var list = state.lists[i];
     
     // Determina um nome bonitinho pra lista baseado na URL
-    var name = 'Lista Customizada';
+    var name = window.t('lbl_custom_list');
     if (list.url) {
         try { 
             var pathParts = new URL(list.url).pathname.split('/').filter(Boolean);
             if (pathParts.length >= 3 && pathParts[1] === 'list') {
                 name = pathParts[2].replace(/-/g, ' ');
             } else if (list.url.indexOf('boxd.it') !== -1) {
-                name = 'Link Curto (boxd.it)';
+                name = window.t('lbl_short_link');
             }
         } catch(e) {}
     } else if (list.path) {
         // Legado
         var parts = list.path.split('/').filter(Boolean);
-        name = parts.length >= 3 ? parts[2].replace(/-/g, ' ') : 'Lista Customizada';
+        name = parts.length >= 3 ? parts[2].replace(/-/g, ' ') : window.t('lbl_custom_list');
     }
 
     var div = document.createElement('div');
@@ -89,7 +89,7 @@ function removeList(idx) {
 }
 
 function resetProfile() {
-  showConfirm('Sair e Limpar Perfil?', 'Isso apagará seu username e meta salvos neste dispositivo.', 'Sair', function() {
+  showConfirm(window.t('confirm_logout_title'), window.t('confirm_logout_desc'), window.t('btn_logout'), function() {
     localStorage.removeItem('lbxd_user');
     localStorage.removeItem('lbxd_use_meta');
     localStorage.removeItem('lbxd_meta_target');

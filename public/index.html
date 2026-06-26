@@ -19,7 +19,7 @@
     <svg id="ptr-spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
       <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
     </svg>
-    Atualizando...
+    <span data-i18n="updating">Atualizando...</span>
   </div>
 
   <!-- ONBOARDING -->
@@ -28,36 +28,36 @@
     <!-- Passo 1: Boas-vindas -->
     <div class="ob-step active" id="ob-step-1">
       <img src="https://a.ltrbxd.com/logos/letterboxd-mac-icon.png" width="80" style="margin-bottom:20px; border-radius:10px;">
-      <h1 class="ob-title">Painel Letterboxd</h1>
-      <p class="ob-desc">Acompanhe sua meta anual de filmes e use a nossa Roleta Inteligente para decidir o que assistir hoje. Ideal também para quem faz rewatches!</p>
-      <button class="ob-btn" onclick="nextObStep(2)">Começar</button>
+      <h1 class="ob-title" data-i18n="app_title">Painel Letterboxd</h1>
+      <p class="ob-desc" data-i18n="ob_step1_desc">Acompanhe sua meta anual de filmes e use a nossa Roleta Inteligente para decidir o que assistir hoje. Ideal também para quem faz rewatches!</p>
+      <button class="ob-btn" onclick="nextObStep(2)" data-i18n="btn_start">Começar</button>
     </div>
 
     <!-- Passo 2: Username -->
     <div class="ob-step" id="ob-step-2">
-      <h1 class="ob-title">Qual é o seu usuário?</h1>
-      <p class="ob-desc">Digite seu username do Letterboxd para sincronizarmos sua Watchlist e filmes vistos.</p>
-      <input type="text" id="ob-user-input" class="ob-input" placeholder="ex: spklf" autocapitalize="none" autocomplete="off">
-      <button class="ob-btn" onclick="saveUserAndNext()">Avançar</button>
-      <button class="ob-btn-sec" onclick="nextObStep(1)">Voltar</button>
+      <h1 class="ob-title" data-i18n="ob_step2_title">Qual é o seu usuário?</h1>
+      <p class="ob-desc" data-i18n="ob_step2_desc">Digite seu username do Letterboxd para sincronizarmos sua Watchlist e filmes vistos.</p>
+      <input type="text" id="ob-user-input" class="ob-input" placeholder="ex: spklf" data-i18n="ob_step2_desc" autocapitalize="none" autocomplete="off">
+      <button class="ob-btn" onclick="saveUserAndNext()" data-i18n="btn_next">Avançar</button>
+      <button class="ob-btn-sec" onclick="nextObStep(1)" data-i18n="btn_back">Voltar</button>
     </div>
 
     <!-- Passo 3: Meta Sim ou Não -->
     <div class="ob-step" id="ob-step-3">
-      <h1 class="ob-title">Acompanhar Meta?</h1>
-      <p class="ob-desc">Você quer acompanhar um objetivo anual de filmes ou prefere usar apenas a Roleta?</p>
-      <button class="ob-btn" onclick="nextObStep(4)">Sim, definir meta</button>
-      <button class="ob-btn-sec" onclick="finishOnboarding(false)">Não, só a roleta</button>
-      <button class="ob-btn-sec" style="margin-top:10px;" onclick="nextObStep(2)">Voltar</button>
+      <h1 class="ob-title" data-i18n="ob_step3_title">Acompanhar Meta?</h1>
+      <p class="ob-desc" data-i18n="ob_step3_desc">Você quer acompanhar um objetivo anual de filmes ou prefere usar apenas a Roleta?</p>
+      <button class="ob-btn" onclick="nextObStep(4)" data-i18n="btn_yes_goal">Sim, definir meta</button>
+      <button class="ob-btn-sec" onclick="finishOnboarding(false)" data-i18n="btn_no_goal">Não, só a roleta</button>
+      <button class="ob-btn-sec" style="margin-top:10px;" onclick="nextObStep(2)" data-i18n="btn_back">Voltar</button>
     </div>
 
     <!-- Passo 4: Definir Meta -->
     <div class="ob-step" id="ob-step-4">
-      <h1 class="ob-title">Sua Meta</h1>
-      <p class="ob-desc">Quantos filmes você quer assistir este ano?</p>
+      <h1 class="ob-title" data-i18n="ob_step4_title">Sua Meta</h1>
+      <p class="ob-desc" data-i18n="ob_step4_desc">Quantos filmes você quer assistir este ano?</p>
       <input type="number" id="ob-target-input" class="ob-input" value="365">
-      <button class="ob-btn" onclick="finishOnboarding(true)">Finalizar</button>
-      <button class="ob-btn-sec" onclick="nextObStep(3)">Voltar</button>
+      <button class="ob-btn" onclick="finishOnboarding(true)" data-i18n="btn_finish">Finalizar</button>
+      <button class="ob-btn-sec" onclick="nextObStep(3)" data-i18n="btn_back">Voltar</button>
     </div>
 
   </div>
@@ -69,7 +69,7 @@
 
     <div id="bottom-bar">
       <div id="bottom-bar-inner">
-        <button id="roulette-btn">O QUE ASSISTIR HOJE?</button>
+        <button id="roulette-btn" data-i18n="btn_roulette">O QUE ASSISTIR HOJE?</button>
         <button id="open-config-btn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         </button>
@@ -79,7 +79,7 @@
     <!-- OVERLAY CONFIG -->
     <div id="config-overlay">
       <div class="config-header">
-        <h2>Configurações</h2>
+        <h2 data-i18n="settings_title">Configurações</h2>
       </div>
       <div class="config-body">
         
@@ -87,21 +87,21 @@
         <div id="pane-menu" class="config-pane active">
           <div class="config-section" style="padding: 0;">
             <div class="pane-menu-item" onclick="openPane('pane-meta')">
-              <span id="menu-title-meta">Conta e Metas</span>
+              <span id="menu-title-meta" data-i18n="menu_account">Conta e Metas</span>
               <span class="pane-menu-arrow">›</span>
             </div>
             <div class="pane-menu-item" onclick="openPane('pane-sources')">
-              <span>Fontes de Sorteio</span>
+              <span data-i18n="menu_sources">Fontes de Sorteio</span>
               <span class="pane-menu-arrow">›</span>
             </div>
             <div class="pane-menu-item" onclick="openPane('pane-filters')" style="border-bottom: none;">
-              <span>Filtros</span>
+              <span data-i18n="menu_filters">Filtros</span>
               <span class="pane-menu-arrow">›</span>
             </div>
           </div>
           <div class="config-section" style="margin-top: 16px; padding: 16px;">
             <label style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px; font-size: 14px; font-weight: bold; color: #89a;">
-              <span>Filmes por Sorteio:</span>
+              <span data-i18n="draw_count_label">Filmes por Sorteio:</span>
               <span id="draw-count-label" style="color: #00e054; font-size: 18px;">1</span>
             </label>
             <div style="display: flex; align-items: center; gap: 8px; padding: 4px 0;">
@@ -119,18 +119,23 @@
         <!-- PANE 1: CONTA E META -->
         <div id="pane-meta" class="config-pane">
           <div class="config-pane-header">
-            <span class="config-pane-title" id="pane-title-meta">Sua Meta</span>
+            <span class="config-pane-title" id="pane-title-meta" data-i18n="menu_account">Conta e Metas</span>
           </div>
-          <div id="offset-help" style="font-size: 12px; color: #89a; line-height: 1.4; background: transparent; padding: 0 16px; margin-bottom: 12px; text-align: center;">
-            O Letterboxd conta filmes únicos. Para que filmes reassistidos contem, adicione-os no campo abaixo.
-          </div>
+          <div id="offset-help" style="font-size: 12px; color: #89a; line-height: 1.4; background: transparent; padding: 0 16px; margin-bottom: 12px; text-align: center;"></div>
           <div id="config-meta-section" class="config-section">
+            <div class="config-row" id="row-lang">
+              <span class="config-label" data-i18n="lbl_language">Idioma / Language</span>
+              <select id="lang-select" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; outline: none; font-size: 14px;">
+                <option value="pt">Português</option>
+                <option value="en">English</option>
+              </select>
+            </div>
             <div class="config-row" id="row-offset">
-              <span class="config-label">Adicionar ao saldo total</span>
+              <span class="config-label">Offset (rewatches)</span>
               <input type="number" id="num-offset" value="2" class="config-input-number">
             </div>
             <div class="config-row" style="padding: 0;">
-              <button id="reset-profile-btn">Limpar Perfil (Sair)</button>
+              <button id="reset-profile-btn">Sair / Reset</button>
             </div>
           </div>
         </div>
@@ -138,11 +143,11 @@
         <!-- PANE 2: FONTES DE SORTEIO -->
         <div id="pane-sources" class="config-pane">
           <div class="config-pane-header">
-            <span class="config-pane-title">Fontes de Sorteio</span>
+            <span class="config-pane-title" data-i18n="menu_sources">Fontes de Sorteio</span>
           </div>
           <div class="config-section">
             <div class="config-row">
-              <span class="config-label">Sua Watchlist</span>
+              <span class="config-label" data-i18n="src_watchlist">Sua Watchlist</span>
               <label class="switch">
                 <input type="checkbox" id="chk-watchlist">
                 <span class="slider"></span>
@@ -161,23 +166,23 @@
         <!-- PANE 3: FILTROS -->
         <div id="pane-filters" class="config-pane">
           <div class="config-pane-header">
-            <span class="config-pane-title">Filtros</span>
+            <span class="config-pane-title" data-i18n="menu_filters">Filtros</span>
           </div>
           <div class="config-section" style="margin-bottom:0;">
             <div class="config-row">
-              <span class="config-label">Ativar filtro de duração</span>
+              <span class="config-label" data-i18n="lbl_short_only">Ativar filtro de duração</span>
               <label class="switch">
                 <input type="checkbox" id="chk-short-only">
                 <span class="slider"></span>
               </label>
             </div>
             <div class="config-row" id="time-filter-settings" style="display: none; background: rgba(20,24,28,0.3);">
-              <span class="config-label">Duração máxima</span>
+              <span class="config-label">Duração</span>
               <div style="display:flex; align-items:center; gap: 8px;">
                 <input type="number" id="num-max-hr" value="1" class="config-input-number" style="width:50px;">
-                <span style="color:#89a; font-size:13px;">hr</span>
+                <span style="color:#89a; font-size:13px;" data-i18n="lbl_hours">hr</span>
                 <input type="number" id="num-max-min" value="40" class="config-input-number" style="width:50px;">
-                <span style="color:#89a; font-size:13px;">min</span>
+                <span style="color:#89a; font-size:13px;" data-i18n="lbl_min">min</span>
               </div>
             </div>
           </div>
@@ -198,11 +203,11 @@
   <!-- CUSTOM CONFIRM MODAL -->
   <div id="custom-confirm-overlay">
     <div class="confirm-box">
-      <h3 class="confirm-title" id="confirm-title">Tem certeza?</h3>
-      <p class="confirm-desc" id="confirm-desc">Esta ação não pode ser desfeita.</p>
+      <h3 class="confirm-title" id="confirm-title" data-i18n="confirm_title">Tem certeza?</h3>
+      <p class="confirm-desc" id="confirm-desc" data-i18n="confirm_desc">Esta ação não pode ser desfeita.</p>
       <div class="confirm-actions">
-        <button class="confirm-btn confirm-btn-cancel" id="confirm-btn-cancel">Cancelar</button>
-        <button class="confirm-btn confirm-btn-danger" id="confirm-btn-danger">Confirmar</button>
+        <button class="confirm-btn confirm-btn-cancel" id="confirm-btn-cancel" data-i18n="btn_cancel">Cancelar</button>
+        <button class="confirm-btn confirm-btn-danger" id="confirm-btn-danger" data-i18n="btn_confirm">Confirmar</button>
       </div>
     </div>
   </div>
@@ -218,6 +223,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/quotes.js"></script>
   <script src="js/onboarding.js"></script>
   <script src="js/config.js?v=19"></script>

@@ -15,10 +15,9 @@ function proxyFetch(url) {
 
 // ===== MODALS & TOASTS =====
 function showToast(msg, isError) {
-  var container = document.getElementById('toast-container');
   var toast = document.createElement('div');
   toast.className = 'toast-msg' + (isError ? ' error' : '');
-  toast.innerText = msg;
+  toast.innerText = window.t(msg) || msg;
   container.appendChild(toast);
   setTimeout(function() {
     toast.classList.add('fade-out');
@@ -121,15 +120,15 @@ function renderTracker(scrapedCount, statusText, statusColor) {
 
     document.getElementById('app-container').innerHTML =
       '<h2 class="section-heading">' +
-        'Meta ' + window.appMetaTarget + ' Filmes ' +
+        window.t('ob_step4_title') + ' ' + window.appMetaTarget + ' Filmes ' +
         '<span id="sync-status" style="color:' + corStatus + '; font-size:10px; text-transform:none; margin-left:8px;">' + labelStatus + '</span>' +
         '<span style="float: right; color: #678;">DIA ' + currentDay + '/' + daysInYear + '</span>' +
       '</h2>' +
       '<div class="meta-stats-row">' +
-        '<div class="meta-stat-item"><span class="meta-stat-val">' + watched + '</span><span class="meta-stat-lbl">Vistos</span></div>' +
+        '<div class="meta-stat-item"><span class="meta-stat-val">' + watched + '</span><span class="meta-stat-lbl">' + window.t('stat_watched') + '</span></div>' +
         '<div class="meta-stat-item"><span class="meta-stat-val" style="color:' + color + '">' + (saldo > 0 ? '+' + saldo : saldo) + '</span><span class="meta-stat-lbl">Saldo</span></div>' +
-        '<div class="meta-stat-item"><span class="meta-stat-val">' + Math.max(0, window.appMetaTarget - watched) + '</span><span class="meta-stat-lbl">Restam</span></div>' +
-        '<div class="meta-stat-item"><span class="meta-stat-val" style="color:#40bcf4">' + projection + '</span><span class="meta-stat-lbl">Projeção</span></div>' +
+        '<div class="meta-stat-item"><span class="meta-stat-val">' + Math.max(0, window.appMetaTarget - watched) + '</span><span class="meta-stat-lbl">' + window.t('stat_remaining') + '</span></div>' +
+        '<div class="meta-stat-item"><span class="meta-stat-val" style="color:#40bcf4">' + projection + '</span><span class="meta-stat-lbl">Proj.</span></div>' +
       '</div>' +
       '<div class="meta-progress-header">' +
         '<span>Progresso Anual</span>' +
@@ -278,7 +277,7 @@ function bindEvents() {
   // ===== SPIN ROULETTE =====
   document.getElementById('roulette-btn').onclick = async function() {
     var btn = this;
-    btn.innerText = 'EMBARALHANDO...';
+    btn.innerText = window.t('msg_shuffling');
     btn.disabled = true;
     document.getElementById('roulette-result').style.display = 'none';
 
@@ -324,7 +323,7 @@ function bindEvents() {
           }
           
           var posters = Array.from(doc.querySelectorAll('.film-poster'));
-          var sName = source.type === 'watchlist' ? 'DA SUA WATCHLIST' : source.name;
+          var sName = source.type === 'watchlist' ? window.t('lbl_from_watch') : source.name;
           posters.forEach(function(p) {
             allPosters.push({ element: p, sourceName: sName });
           });
@@ -429,7 +428,7 @@ function bindEvents() {
             '<a id="roulette-link" class="roulette-link-text" href="' + m.link + '" target="_blank">' + m.title + '</a>' +
           '</div>';
       } else if (validMovies.length >= 2 && validMovies.length <= 5) {
-        var sourceLabel = sources.length > 1 ? 'MÚLTIPLAS FONTES' : validMovies[0].sourceName;
+        var sourceLabel = sources.length > 1 ? window.t('lbl_multi_source') : validMovies[0].sourceName;
         var swiperHtml = '<div class="swiper"><div class="swiper-wrapper">';
         
         for (var i = 0; i < validMovies.length; i++) {
@@ -446,7 +445,7 @@ function bindEvents() {
           '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
             '<span class="roulette-source-text" style="margin-bottom: 0; text-align: center;">' + sourceLabel + '</span>' +
             swiperHtml +
-            '<span class="roulette-source-text" style="margin-top: 10px; font-size: 10px; color:#567;">Toque para + detalhes</span>' +
+            '<span class="roulette-source-text" style="margin-top: 10px; font-size: 10px; color:#567;">' + window.t('lbl_tap_details') + '</span>' +
           '</div>';
       } else {
         var gridHtml = '<div class="roulette-grid">';
@@ -457,7 +456,7 @@ function bindEvents() {
         }
         gridHtml += '</div>';
         
-        var sourceLabel = sources.length > 1 ? 'MÚLTIPLAS FONTES' : validMovies[0].sourceName;
+        var sourceLabel = sources.length > 1 ? window.t('lbl_multi_source') : validMovies[0].sourceName;
         
         resultHtml = 
           '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; justify-content:center;">' +
@@ -486,7 +485,7 @@ function bindEvents() {
         });
       }
 
-      btn.innerText = 'O QUE ASSISTIR HOJE?';
+      btn.innerText = window.t('btn_roulette');
       btn.disabled = false;
 
     } catch (err) {
