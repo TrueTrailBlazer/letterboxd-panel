@@ -17,7 +17,8 @@ const i18nData = {
     "btn_finish": "Finalizar",
     "btn_roulette": "O QUE ASSISTIR HOJE?",
     "settings_title": "Configurações",
-    "menu_account": "Conta, Idioma e Metas",
+    "menu_account": "Conta e Metas",
+    "menu_account_only": "Sua Conta",
     "menu_sources": "Fontes de Sorteio",
     "menu_filters": "Filtros",
     "draw_count_label": "Filmes por Sorteio:",
@@ -106,7 +107,8 @@ const i18nData = {
     "btn_finish": "Finish",
     "btn_roulette": "WHAT TO WATCH TODAY?",
     "settings_title": "Settings",
-    "menu_account": "Account, Language & Goals",
+    "menu_account": "Account & Goals",
+    "menu_account_only": "Your Account",
     "menu_sources": "Roulette Sources",
     "menu_filters": "Filters",
     "draw_count_label": "Movies per Draw:",
@@ -197,8 +199,9 @@ window.setLanguage = function(lang) {
   // Re-render tracker explicitly if it exists
   if (typeof window.renderTracker === 'function' && window.appUseMeta && window.lastScrapedCount !== undefined) {
       var syncEl = document.getElementById('sync-status');
-      var st = syncEl ? syncEl.innerText : window.t('stat_synced');
+      var st = syncEl ? syncEl.getAttribute('data-status-key') : 'stat_synced';
       var sc = syncEl ? syncEl.style.color : '#00e054';
+      if (!st) st = 'stat_synced';
       window.renderTracker(window.lastScrapedCount, st, sc);
   }
   

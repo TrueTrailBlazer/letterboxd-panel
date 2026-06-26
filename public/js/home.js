@@ -57,9 +57,9 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     var rowOffset = document.getElementById('row-offset');
     if (rowOffset) rowOffset.style.display = 'none';
     var menuTitle = document.getElementById('menu-title-meta');
-    if (menuTitle) menuTitle.innerText = 'Sua Conta';
+    if (menuTitle) menuTitle.innerText = window.t('menu_account_only');
     var paneTitle = document.getElementById('pane-title-meta');
-    if (paneTitle) paneTitle.innerText = 'Sua Conta';
+    if (paneTitle) paneTitle.innerText = window.t('menu_account_only');
     if (roleta) {
       roleta.style.borderTop = 'none';
     }
@@ -72,9 +72,9 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   var rowOffset = document.getElementById('row-offset');
   if (rowOffset) rowOffset.style.display = 'flex';
   var menuTitle = document.getElementById('menu-title-meta');
-  if (menuTitle) menuTitle.innerText = 'Conta e Metas';
+  if (menuTitle) menuTitle.innerText = window.t('menu_account');
   var paneTitle = document.getElementById('pane-title-meta');
-  if (paneTitle) paneTitle.innerText = 'Sua Meta';
+  if (paneTitle) paneTitle.innerText = window.t('menu_account');
 
 
   try {
@@ -121,7 +121,7 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     document.getElementById('app-container').innerHTML =
       '<h2 class="section-heading">' +
         window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) +
-        '<span id="sync-status" style="color:' + corStatus + '; font-size:10px; text-transform:none; margin-left:8px;">' + window.t(labelStatus) + '</span>' +
+        '<span id="sync-status" data-status-key="' + labelStatus + '" style="color:' + corStatus + '; font-size:10px; text-transform:none; margin-left:8px;">' + window.t(labelStatus) + '</span>' +
         '<span style="float: right; color: #678;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
       '</h2>' +
       '<div class="meta-stats-row">' +
@@ -184,9 +184,9 @@ function bindEvents() {
   document.getElementById('num-offset').oninput = function(e) {
     localStorage.setItem('meta365_offset', parseInt(e.target.value) || 0);
     var syncEl = document.getElementById('sync-status');
-    var st = syncEl ? syncEl.innerText : window.t('stat_synced');
+    var st = syncEl ? syncEl.getAttribute('data-status-key') : 'stat_synced';
     var sc = syncEl ? syncEl.style.color : '#00e054';
-    renderTracker(window.lastScrapedCount, 'stat_synced', sc);
+    renderTracker(window.lastScrapedCount, st, sc);
   };
 
   document.getElementById('chk-watchlist').onchange = function(e) {
