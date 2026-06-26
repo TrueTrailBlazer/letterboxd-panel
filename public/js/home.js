@@ -147,7 +147,7 @@ function renderTracker(scrapedCount, statusText, statusColor) {
         // Progress Area
         '<div style="padding: 16px 16px 0 16px;">' +
           '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
-            '<span style="font-size: 11px; font-weight: bold; color: ' + color + ';">' + msg + ' <span style="color:#fff; margin-left:4px;">(' + percent + '%)</span></span>' +
+            '<span style="font-size: 11px; font-weight: bold; color: ' + color + ';">' + msg + ' <span style="color:#89a; margin-left:4px;">(' + percent + '%)</span></span>' +
             '<span style="font-size: 11px; color: #678; text-transform: uppercase;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
           '</div>' +
           // PILL PROGRESS BAR
@@ -470,9 +470,9 @@ function bindEvents() {
           '<div style="margin: auto 0; width: 100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
             '<span id="roulette-source" class="roulette-source-text">' + m.sourceName + '</span>' +
             '<div class="roulette-poster-wrap" style="display:flex;">' +
-              '<a id="roulette-poster-link" href="' + m.link + '" target="_blank"><img id="roulette-poster-img" src="' + m.imgSrc + '" alt="Poster" style="width:100%;display:block;height:auto;object-fit:cover;"></a>' +
+              '<a id="roulette-poster-link" href="' + m.link + '"><img id="roulette-poster-img" src="' + m.imgSrc + '" alt="Poster" style="width:100%;display:block;height:auto;object-fit:cover;"></a>' +
             '</div>' +
-            '<a id="roulette-link" class="roulette-link-text" href="' + m.link + '" target="_blank">' + m.title + '</a>' +
+            '<a id="roulette-link" class="roulette-link-text" href="' + m.link + '">' + m.title + '</a>' +
           '</div>';
       } else if (validMovies.length >= 2 && validMovies.length <= 5) {
         var sourceLabel = sources.length > 1 ? window.t('lbl_multi_source') : validMovies[0].sourceName;
@@ -583,7 +583,7 @@ function startApp() {
         .then(function(res) { return res.text(); })
         .then(function(html) {
           var doc = new DOMParser().parseFromString(html, 'text/html');
-          var avatarImg = doc.querySelector('.profile-avatar img');
+          var avatarImg = doc.querySelector('.profile-avatar img, .avatar img, img.avatar, img[src*="/avatar/"]');
           if (avatarImg && avatarImg.src) {
              localStorage.setItem('lbxd_avatar_' + window.appUser, avatarImg.src);
              var syncEl = document.getElementById('sync-status');
