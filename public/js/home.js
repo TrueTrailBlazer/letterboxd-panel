@@ -50,11 +50,11 @@ function renderTracker(scrapedCount, statusText, statusColor) {
   
   var savedAvatar = localStorage.getItem('lbxd_avatar_' + window.appUser);
   
-  var avatarSvg = '<svg fill="#89a" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-  var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:32px; height:32px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
+  var avatarSvg = '<svg fill="#89a" height="46" viewBox="0 0 24 24" width="46" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:46px; height:46px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
 
-  var avatarSvgRoleta = '<svg fill="#89a" height="38" viewBox="0 0 24 24" width="38" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-  var avatarHtmlRoleta = savedAvatar ? '<img src="' + savedAvatar + '" style="width:38px; height:38px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvgRoleta.replace(/"/g, '&quot;') + '\'">' : avatarSvgRoleta;
+  var avatarSvgRoleta = '<svg fill="#89a" height="46" viewBox="0 0 24 24" width="46" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  var avatarHtmlRoleta = savedAvatar ? '<img src="' + savedAvatar + '" style="width:46px; height:46px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvgRoleta.replace(/"/g, '&quot;') + '\'">' : avatarSvgRoleta;
 
   if (!window.appUseMeta) {
     if (appCont) {
@@ -149,7 +149,7 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     var quoteText = quoteObj.quote + ' — ' + quoteObj.movie;
 
     var cardHtml = 
-      '<div style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">' +
+      '<div id="goal-tracker-card" style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);">' +
         // Card Header (Title & Status)
         '<div style="padding: 16px; border-bottom: 1px solid #2c3440; display: flex; justify-content: space-between; align-items: center;">' +
           '<a href="https://letterboxd.com/' + window.appUser + '/" style="display: flex; align-items: center; text-decoration: none; -webkit-tap-highlight-color: transparent;">' +
@@ -162,7 +162,7 @@ function renderTracker(scrapedCount, statusText, statusColor) {
         '</div>' +
 
         // Progress Area
-        '<div style="padding: 16px 16px 0 16px;">' +
+        '<div style="padding: 16px 16px 16px 16px;">' +
           '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
             '<span style="font-size: 11px; font-weight: bold; color: ' + color + ';">' + msg + ' <span style="color:#89a; margin-left:4px;">(' + percent + '%)</span></span>' +
             '<span style="font-size: 11px; color: #678; text-transform: uppercase;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
@@ -173,36 +173,38 @@ function renderTracker(scrapedCount, statusText, statusColor) {
           '</div>' +
         '</div>' +
         
-        // Card Body (Stats Grid)
-        '<div style="padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">' +
-          
-          '<div style="display: flex; flex-direction: column;">' +
-            '<span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;">' + watched + '</span>' +
-            '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_watched') + '</span>' +
-          '</div>' +
-          
-          '<div style="display: flex; flex-direction: column;">' +
-            '<span style="font-size: 24px; font-weight: bold; color: ' + color + '; line-height: 1;">' + (saldo > 0 ? '+' + saldo : saldo) + '</span>' +
-            '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_balance') + '</span>' +
+        // Collapsible Area (Stats Grid + Quote Box)
+        '<div id="goal-tracker-collapsible" style="transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out; max-height: 500px; opacity: 1; overflow: hidden;">' +
+          // Card Body (Stats Grid)
+          '<div style="padding: 16px; border-top: 1px solid #2c3440; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">' +
+            
+            '<div style="display: flex; flex-direction: column;">' +
+              '<span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;">' + watched + '</span>' +
+              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_watched') + '</span>' +
+            '</div>' +
+            
+            '<div style="display: flex; flex-direction: column;">' +
+              '<span style="font-size: 24px; font-weight: bold; color: ' + color + '; line-height: 1;">' + (saldo > 0 ? '+' + saldo : saldo) + '</span>' +
+              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_balance') + '</span>' +
+            '</div>' +
+
+            '<div style="display: flex; flex-direction: column;">' +
+              '<span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;">' + Math.max(0, window.appMetaTarget - watched) + '</span>' +
+              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_remaining') + '</span>' +
+            '</div>' +
+
+            '<div style="display: flex; flex-direction: column;">' +
+              '<span style="font-size: 24px; font-weight: bold; color: #40bcf4; line-height: 1;">' + projection + '</span>' +
+              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_projection') + '</span>' +
+            '</div>' +
+
           '</div>' +
 
-          '<div style="display: flex; flex-direction: column;">' +
-            '<span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;">' + Math.max(0, window.appMetaTarget - watched) + '</span>' +
-            '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_remaining') + '</span>' +
+          // Quote Box
+          '<div style="background: rgba(255,255,255,0.02); padding: 12px 16px; border-top: 1px solid #2c3440; font-size: 12px; font-style: italic; color: #89a; text-align: center; line-height: 1.4;">' +
+            '"' + quoteText + '"' +
           '</div>' +
-
-          '<div style="display: flex; flex-direction: column;">' +
-            '<span style="font-size: 24px; font-weight: bold; color: #40bcf4; line-height: 1;">' + projection + '</span>' +
-            '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_projection') + '</span>' +
-          '</div>' +
-
         '</div>' +
-
-        // Quote Box
-        '<div style="background: rgba(255,255,255,0.02); padding: 12px 16px; border-top: 1px solid #2c3440; font-size: 12px; font-style: italic; color: #89a; text-align: center; line-height: 1.4;">' +
-          '"' + quoteText + '"' +
-        '</div>' +
-
       '</div>';
       
     document.getElementById('app-container').innerHTML = cardHtml;
@@ -491,7 +493,7 @@ function bindEvents() {
             '</div>' +
             '<a id="roulette-link" class="roulette-link-text" href="' + m.link + '">' + m.title + '</a>' +
           '</div>';
-      } else if (validMovies.length >= 2 && validMovies.length <= 5) {
+      } else if (validMovies.length >= 2 && validMovies.length <= 8) {
         var drawnSourcesObj = {};
         for (var j = 0; j < validMovies.length; j++) drawnSourcesObj[validMovies[j].sourceName] = true;
         var drawnSources = Object.keys(drawnSourcesObj);
@@ -516,7 +518,7 @@ function bindEvents() {
             '<span class="roulette-source-text" style="margin-top: 10px; font-size: 10px; color:#567;" data-i18n="lbl_tap_details">' + window.t('lbl_tap_details') + '</span>' +
           '</div>';
       } else {
-        var gridHtml = '<div class="roulette-grid">';
+        var gridHtml = '<div class="roulette-grid" id="roulette-grid-scroll" style="align-content: flex-start; padding-bottom: 60px;">';
         for (var i = 0; i < validMovies.length; i++) {
           var m = validMovies[i];
           var clickJs = "openPosterModal(" + i + ")";
@@ -527,8 +529,8 @@ function bindEvents() {
         var sourceLabel = sources.length > 1 ? window.t('lbl_multi_source') : validMovies[0].sourceName;
         
         resultHtml = 
-          '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; justify-content:center;">' +
-            '<span class="roulette-source-text" style="margin-bottom: 12px; text-align: center;">' + sourceLabel + '</span>' +
+          '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; justify-content:flex-start;">' +
+            '<span class="roulette-source-text" style="margin-top: 12px; margin-bottom: 12px; text-align: center; flex-shrink: 0;">' + sourceLabel + '</span>' +
             gridHtml +
           '</div>';
       }
@@ -536,7 +538,27 @@ function bindEvents() {
       document.getElementById('roulette-result').innerHTML = resultHtml;
       document.getElementById('roulette-result').style.display = 'flex';
 
-      if (validMovies.length >= 2 && validMovies.length <= 5 && typeof Swiper !== 'undefined') {
+      // Scroll event logic for collapsible Goal Tracker
+      var scrollBox = document.getElementById('roulette-grid-scroll');
+      if (scrollBox) {
+        scrollBox.addEventListener('scroll', function(e) {
+          var card = document.getElementById('goal-tracker-card');
+          var col = document.getElementById('goal-tracker-collapsible');
+          if (card && col) {
+            if (e.target.scrollTop > 15) {
+              col.style.maxHeight = '0px';
+              col.style.opacity = '0';
+              card.style.marginBottom = '8px';
+            } else {
+              col.style.maxHeight = '500px';
+              col.style.opacity = '1';
+              card.style.marginBottom = '24px';
+            }
+          }
+        }, { passive: true });
+      }
+
+      if (validMovies.length >= 2 && validMovies.length <= 8 && typeof Swiper !== 'undefined') {
         new Swiper('.swiper', {
           effect: 'coverflow',
           grabCursor: true,
