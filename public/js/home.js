@@ -578,21 +578,29 @@ function startApp() {
           renderTracker(window.lastScrapedCount, 'stat_offline', '#ff4e00');
         });
         
-      // Fetch avatar in background
+      // Fetch avatar in background (DEBUG MODE)
       fetch('/api/scrape?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
-        .then(function(res) { return res.text(); })
+        .then(function(res) { 
+           if (!res.ok) throw new Error('HTTP ' + res.status);
+           return res.text(); 
+        })
         .then(function(html) {
           var doc = new DOMParser().parseFromString(html, 'text/html');
           var avatarImg = doc.querySelector('.profile-avatar img, .avatar img, img.avatar, img[src*="/avatar/"]');
           if (avatarImg && avatarImg.src) {
+             showToast('DEBUG: Avatar encontrado!', false);
              localStorage.setItem('lbxd_avatar_' + window.appUser, avatarImg.src);
              var syncEl = document.getElementById('sync-status');
              var st = syncEl ? syncEl.getAttribute('data-status-key') : 'stat_synced';
              var sc = syncEl ? syncEl.style.color : '#00e054';
              if (!st) st = 'stat_synced';
              renderTracker(window.lastScrapedCount, st, sc);
+          } else {
+             showToast('DEBUG: Avatar não encontrado no HTML (' + html.length + 'b)', true);
           }
-        }).catch(function(e){});
+        }).catch(function(e){
+           showToast('DEBUG Avatar Erro: ' + e.message, true);
+        });
         
     }
   } catch (e) {
