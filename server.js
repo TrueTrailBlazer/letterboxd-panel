@@ -212,13 +212,13 @@ app.post('/api/roulette', async function(req, res) {
           var filmHtml = await cachedFetch(filmUrl);
           var $f = cheerio.load(filmHtml);
 
-          // Filtro de duração (Ignorar Curtas)
+          // Filtro de duração (Apenas Filmes Curtos)
           if (filter.shortOnly) {
             var footerText = $f('.text-link.text-footer').text();
             var durationMatch = footerText.match(/(\d+)\s*min/);
             var durationMinutes = durationMatch ? parseInt(durationMatch[1]) : 0;
             var minLimitMinutes = ((filter.maxTimeHr || 1) * 60) + (filter.maxTimeMin || 40);
-            if (durationMinutes > 0 && durationMinutes < minLimitMinutes) return null;
+            if (durationMinutes > 0 && durationMinutes > minLimitMinutes) return null;
           }
 
           // Imagem HD via JSON-LD
