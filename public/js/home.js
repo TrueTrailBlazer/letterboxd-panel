@@ -46,12 +46,29 @@ function showConfirm(title, desc, confirmText, onConfirm) {
 // ===== TRACKER LOGIC =====
 function renderTracker(scrapedCount, statusText, statusColor) {
   var roleta = document.getElementById('roleta-container');
+  var appCont = document.getElementById('app-container');
+  
+  var savedAvatar = localStorage.getItem('lbxd_avatar_' + window.appUser);
+  
+  var avatarSvg = '<svg fill="#89a" height="46" viewBox="0 0 24 24" width="46" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  var avatarHtml = savedAvatar ? '<img src="' + savedAvatar + '" style="width:46px; height:46px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvg.replace(/"/g, '&quot;') + '\'">' : avatarSvg;
+
+  var avatarSvgRoleta = '<svg fill="#89a" height="46" viewBox="0 0 24 24" width="46" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+  var avatarHtmlRoleta = savedAvatar ? '<img src="' + savedAvatar + '" style="width:46px; height:46px; border-radius:50%; margin-right:8px; border:1px solid #2c3440; object-fit:cover;" onerror="this.outerHTML=\'' + avatarSvgRoleta.replace(/"/g, '&quot;') + '\'">' : avatarSvgRoleta;
+
   if (!window.appUseMeta) {
-    document.getElementById('app-container').innerHTML = 
-      '<div style="text-align:center; padding: 10px 0 20px 0;">' +
-        '<h2 style="margin:0; font-size: 16px; color: #fff; text-transform: uppercase; letter-spacing: 0.1em;">Roleta Letterboxd</h2>' +
-        '<div style="width: 30px; height: 3px; background: #00e054; margin: 12px auto 0 auto; border-radius: 2px;"></div>' +
-      '</div>';
+    if (appCont) {
+      appCont.style.display = 'block';
+      appCont.innerHTML = 
+        '<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 10px 0 0 0;">' +
+          '<a href="https://letterboxd.com/' + window.appUser + '/" style="display:flex; align-items:center; background: #14181c; border: 1px solid #2c3440; padding: 6px 16px 6px 6px; border-radius: 26px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-decoration: none; -webkit-tap-highlight-color: transparent;">' +
+            avatarHtmlRoleta +
+            '<span style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 1px;">' + window.appUser + '</span>' +
+          '</a>' +
+          '<h2 style="margin: 16px 0 0 0; font-size: 12px; color: #89a; text-transform: uppercase; letter-spacing: 0.1em;">Roleta Letterboxd</h2>' +
+          '<div style="width: 24px; height: 3px; background: #00e054; margin: 8px auto 0 auto; border-radius: 2px;"></div>' +
+        '</div>';
+    }
     var offsetHelp = document.getElementById('offset-help');
     if (offsetHelp) offsetHelp.style.display = 'none';
     var rowOffset = document.getElementById('row-offset');
@@ -62,8 +79,21 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     if (paneTitle) paneTitle.innerText = window.t('menu_account_only');
     if (roleta) {
       roleta.style.borderTop = 'none';
+      roleta.style.justifyContent = 'center';
+      roleta.style.marginTop = '0';
+      roleta.style.paddingTop = '0';
     }
     return;
+  }
+  
+  if (appCont) {
+    appCont.style.display = 'block';
+  }
+  if (roleta) {
+    roleta.style.justifyContent = 'flex-start';
+    roleta.style.marginTop = '10px';
+    roleta.style.paddingTop = '10px';
+    roleta.style.borderTop = '1px solid #2c3440';
   }
   
   document.getElementById('config-meta-section').style.display = 'block';
@@ -118,30 +148,94 @@ function renderTracker(scrapedCount, statusText, statusColor) {
     var quoteObj = window.currentSessionQuote.quote;
     var quoteText = quoteObj.quote + ' — ' + quoteObj.movie;
 
-    document.getElementById('app-container').innerHTML =
-      '<h2 class="section-heading">' +
-        window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) +
-        '<span id="sync-status" data-status-key="' + labelStatus + '" style="color:' + corStatus + '; font-size:10px; text-transform:none; margin-left:8px;">' + window.t(labelStatus) + '</span>' +
-        '<span style="float: right; color: #678;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
-      '</h2>' +
-      '<div class="meta-stats-row">' +
-        '<div class="meta-stat-item"><span class="meta-stat-val">' + watched + '</span><span class="meta-stat-lbl">' + window.t('stat_watched') + '</span></div>' +
-        '<div class="meta-stat-item"><span class="meta-stat-val" style="color:' + color + '">' + (saldo > 0 ? '+' + saldo : saldo) + '</span><span class="meta-stat-lbl">' + window.t('stat_balance') + '</span></div>' +
-        '<div class="meta-stat-item"><span class="meta-stat-val">' + Math.max(0, window.appMetaTarget - watched) + '</span><span class="meta-stat-lbl">' + window.t('stat_remaining') + '</span></div>' +
-        '<div class="meta-stat-item"><span class="meta-stat-val" style="color:#40bcf4">' + projection + '</span><span class="meta-stat-lbl">' + window.t('stat_projection') + '</span></div>' +
-      '</div>' +
-      '<div class="meta-progress-header">' +
-        '<span>' + window.t('stat_progress') + '</span>' +
-        '<span class="meta-progress-pct">' + percent + '%</span>' +
-      '</div>' +
-      '<div class="meta-bar-bg"><div class="meta-bar-fill" style="width: ' + Math.min(100, percent) + '%"></div></div>' +
-      '<div class="meta-msg-box">' +
-        '<div class="meta-msg-main">' +
-          '<div class="meta-msg-dot" style="background:' + color + '; box-shadow: 0 0 5px ' + color + '"></div>' +
-          '<span style="color:#fff">' + msg + '</span>' +
+    var cardHtml = 
+      '<div id="goal-tracker-card" style="background: #14181c; border-radius: 8px; border: 1px solid #2c3440; overflow: hidden; margin-bottom: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);">' +
+        // Card Header (Title & Status)
+        '<div style="padding: 16px; border-bottom: 1px solid #2c3440; display: flex; justify-content: space-between; align-items: center;">' +
+          '<a href="https://letterboxd.com/' + window.appUser + '/" style="display: flex; align-items: center; text-decoration: none; -webkit-tap-highlight-color: transparent;">' +
+            avatarHtml +
+            '<span style="font-size: 14px; font-weight: bold; color: #fff; text-transform: uppercase;">' + window.t('lbl_goal_title').replace('{target}', window.appMetaTarget) + '</span>' +
+          '</a>' +
+          '<div style="display: flex; align-items: center; gap: 8px;">' +
+            '<span id="sync-status" data-status-key="' + labelStatus + '" style="color:' + corStatus + '; font-size:11px;">' + window.t(labelStatus) + '</span>' +
+          '</div>' +
         '</div>' +
-        '<div class="meta-quote">"' + quoteText + '"</div>' +
+
+        // Progress Area
+        '<div style="padding: 16px 16px 16px 16px;">' +
+          '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
+            '<span style="font-size: 11px; font-weight: bold; color: ' + color + ';">' + msg + ' <span style="color:#89a; margin-left:4px;">(' + percent + '%)</span></span>' +
+            '<span style="font-size: 11px; color: #678; text-transform: uppercase;">' + window.t('stat_day') + ' ' + currentDay + '/' + daysInYear + '</span>' +
+          '</div>' +
+          // PILL PROGRESS BAR
+          '<div style="width: 100%; height: 6px; background: #2c3440; border-radius: 3px; overflow: hidden; position: relative;">' +
+            '<div style="height: 100%; background: #00e054; width: ' + Math.min(100, percent) + '%; border-radius: 3px;"></div>' +
+          '</div>' +
+        '</div>' +
+        
+        // Collapsible Area (Stats Grid + Quote Box)
+        '<div id="goal-tracker-collapsible" style="transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out; max-height: 0px; opacity: 0; overflow: hidden;">' +
+          // Card Body (Stats Grid)
+          '<div style="padding: 16px; border-top: 1px solid #2c3440; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">' +
+            
+            '<div style="display: flex; flex-direction: column;">' +
+              '<span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;">' + watched + '</span>' +
+              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_watched') + '</span>' +
+            '</div>' +
+            
+            '<div style="display: flex; flex-direction: column;">' +
+              '<span style="font-size: 24px; font-weight: bold; color: ' + color + '; line-height: 1;">' + (saldo > 0 ? '+' + saldo : saldo) + '</span>' +
+              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_balance') + '</span>' +
+            '</div>' +
+
+            '<div style="display: flex; flex-direction: column;">' +
+              '<span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1;">' + Math.max(0, window.appMetaTarget - watched) + '</span>' +
+              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_remaining') + '</span>' +
+            '</div>' +
+
+            '<div style="display: flex; flex-direction: column;">' +
+              '<span style="font-size: 24px; font-weight: bold; color: #40bcf4; line-height: 1;">' + projection + '</span>' +
+              '<span style="font-size: 11px; color: #89a; text-transform: uppercase; margin-top: 4px;">' + window.t('stat_projection') + '</span>' +
+            '</div>' +
+
+          '</div>' +
+
+          // Quote Box
+          '<div style="background: rgba(255,255,255,0.02); padding: 12px 16px; border-top: 1px solid #2c3440; font-size: 12px; font-style: italic; color: #89a; text-align: center; line-height: 1.4;">' +
+            '"' + quoteText + '"' +
+          '</div>' +
+        '</div>' +
+
+        // Manual Toggle Button
+        '<div id="goal-tracker-toggle-btn" style="background: #1c2228; border-top: 1px solid #2c3440; text-align: center; padding: 6px 0; cursor: pointer; color: #89a; font-size: 12px; -webkit-tap-highlight-color: transparent;">' +
+          '<span id="goal-tracker-toggle-icon">▼</span>' +
+        '</div>' +
+
       '</div>';
+      
+    document.getElementById('app-container').innerHTML = cardHtml;
+    
+    // Attach manual toggle logic
+    var toggleBtn = document.getElementById('goal-tracker-toggle-btn');
+    if (toggleBtn) {
+      toggleBtn.onclick = function() {
+        var col = document.getElementById('goal-tracker-collapsible');
+        var card = document.getElementById('goal-tracker-card');
+        var icon = document.getElementById('goal-tracker-toggle-icon');
+        if (col.style.maxHeight === '0px') {
+          col.style.maxHeight = '500px';
+          col.style.opacity = '1';
+          card.style.marginBottom = '24px';
+          icon.innerText = '▲';
+        } else {
+          col.style.maxHeight = '0px';
+          col.style.opacity = '0';
+          card.style.marginBottom = '8px';
+          icon.innerText = '▼';
+        }
+      };
+    }
+
   } catch (e) {
     console.error('renderTracker error:', e);
   }
@@ -184,7 +278,7 @@ function bindEvents() {
   document.getElementById('num-offset').oninput = function(e) {
     localStorage.setItem('meta365_offset', parseInt(e.target.value) || 0);
     var syncEl = document.getElementById('sync-status');
-    var st = syncEl ? syncEl.getAttribute('data-status-key') : 'stat_synced';
+    var st = syncEl ? syncEl.getAttribute('preferred-status-key') : 'stat_synced';
     var sc = syncEl ? syncEl.style.color : '#00e054';
     renderTracker(window.lastScrapedCount, st, sc);
   };
@@ -209,7 +303,7 @@ function bindEvents() {
   
   function updateSliderValue(val) {
     if (val < 1) val = 1;
-    if (val > 20) val = 20;
+    if (val > 21) val = 21;
     var drawSlider = document.getElementById('draw-count-slider');
     if (drawSlider) {
       drawSlider.value = val;
@@ -423,20 +517,24 @@ function bindEvents() {
           '<div style="margin: auto 0; width: 100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
             '<span id="roulette-source" class="roulette-source-text">' + m.sourceName + '</span>' +
             '<div class="roulette-poster-wrap" style="display:flex;">' +
-              '<a id="roulette-poster-link" href="' + m.link + '" target="_blank"><img id="roulette-poster-img" src="' + m.imgSrc + '" alt="Poster" style="width:100%;display:block;height:auto;object-fit:cover;"></a>' +
+              '<a id="roulette-poster-link" href="' + m.link + '"><img id="roulette-poster-img" src="' + m.imgSrc + '" alt="Poster" style="width:100%;display:block;height:auto;object-fit:cover;"></a>' +
             '</div>' +
-            '<a id="roulette-link" class="roulette-link-text" href="' + m.link + '" target="_blank">' + m.title + '</a>' +
+            '<a id="roulette-link" class="roulette-link-text" href="' + m.link + '">' + m.title + '</a>' +
           '</div>';
-      } else if (validMovies.length >= 2 && validMovies.length <= 5) {
-        var sourceLabel = sources.length > 1 ? window.t('lbl_multi_source') : validMovies[0].sourceName;
-        var swiperHtml = '<div class="swiper"><div class="swiper-wrapper">';
+      } else if (validMovies.length >= 2 && validMovies.length <= 8) {
+        var drawnSourcesObj = {};
+        for (var j = 0; j < validMovies.length; j++) drawnSourcesObj[validMovies[j].sourceName] = true;
+        var drawnSources = Object.keys(drawnSourcesObj);
+        var sourceLabel = drawnSources.length > 1 ? window.t('lbl_multi_source') : drawnSources[0];
+        
+        var swiperHtml = '<div class="swiper" style="width: 100%; padding: 20px 0; flex-shrink: 0;"><div class="swiper-wrapper">';
         
         for (var i = 0; i < validMovies.length; i++) {
           var m = validMovies[i];
           var clickJs = "openPosterModal(" + i + ")";
           swiperHtml += 
-            '<div class="swiper-slide" onclick="' + clickJs + '">' +
-              '<img src="' + m.imgSrc + '">' +
+            '<div class="swiper-slide" onclick="' + clickJs + '" style="width: 170px; aspect-ratio: 2/3; height: auto;">' +
+              '<img src="' + m.imgSrc + '" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">' +
             '</div>';
         }
         swiperHtml += '</div></div>';
@@ -448,7 +546,7 @@ function bindEvents() {
             '<span class="roulette-source-text" style="margin-top: 10px; font-size: 10px; color:#567;" data-i18n="lbl_tap_details">' + window.t('lbl_tap_details') + '</span>' +
           '</div>';
       } else {
-        var gridHtml = '<div class="roulette-grid">';
+        var gridHtml = '<div class="roulette-grid" id="roulette-grid-scroll" style="align-content: flex-start; padding-bottom: 0px;">';
         for (var i = 0; i < validMovies.length; i++) {
           var m = validMovies[i];
           var clickJs = "openPosterModal(" + i + ")";
@@ -459,8 +557,8 @@ function bindEvents() {
         var sourceLabel = sources.length > 1 ? window.t('lbl_multi_source') : validMovies[0].sourceName;
         
         resultHtml = 
-          '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; justify-content:center;">' +
-            '<span class="roulette-source-text" style="margin-bottom: 12px; text-align: center;">' + sourceLabel + '</span>' +
+          '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; justify-content:flex-start;">' +
+            '<span class="roulette-source-text" style="margin-top: 12px; margin-bottom: 12px; text-align: center; flex-shrink: 0;">' + sourceLabel + '</span>' +
             gridHtml +
           '</div>';
       }
@@ -468,7 +566,7 @@ function bindEvents() {
       document.getElementById('roulette-result').innerHTML = resultHtml;
       document.getElementById('roulette-result').style.display = 'flex';
 
-      if (validMovies.length >= 2 && validMovies.length <= 5 && typeof Swiper !== 'undefined') {
+      if (validMovies.length >= 2 && validMovies.length <= 8 && typeof Swiper !== 'undefined') {
         new Swiper('.swiper', {
           effect: 'coverflow',
           grabCursor: true,
@@ -510,9 +608,16 @@ function startApp() {
     bindEvents();
 
     if (window.appUseMeta) {
+      // Fetch avatar in background (Immediate Cache Check)
+      var savedAvatar = localStorage.getItem('lbxd_avatar_' + window.appUser);
+      if (savedAvatar) renderTracker(window.lastScrapedCount, 'stat_syncing', '#678');
+
       fetch('/api/watched-count?user=' + encodeURIComponent(window.appUser) + '&year=' + window.appMetaYear)
         .then(function(res) { return res.json(); })
         .then(function(data) {
+          if (data && data.avatarUrl) {
+             localStorage.setItem('lbxd_avatar_' + window.appUser, data.avatarUrl);
+          }
           if (data && data.count !== undefined && !isNaN(data.count)) {
             if (data.diaryCount && data.diaryCount > data.count) {
               var autoOffset = data.diaryCount - data.count;
@@ -530,10 +635,30 @@ function startApp() {
           console.warn('Falha silenciosa:', err);
           renderTracker(window.lastScrapedCount, 'stat_offline', '#ff4e00');
         });
+        
+      // Fetch avatar in background (Scrape Update)
+      fetch('/api/proxy?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
+        .then(function(res) { 
+           if (!res.ok) throw new Error('HTTP ' + res.status);
+           return res.text(); 
+        })
+        .then(function(html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var avatarImg = doc.querySelector('.profile-avatar img, .avatar img, img.avatar, img[src*="/avatar/"]');
+          if (avatarImg && avatarImg.src && avatarImg.src !== localStorage.getItem('lbxd_avatar_' + window.appUser)) {
+             localStorage.setItem('lbxd_avatar_' + window.appUser, avatarImg.src);
+             var syncEl = document.getElementById('sync-status');
+             var st = syncEl ? syncEl.getAttribute('data-status-key') : 'stat_synced';
+             var sc = syncEl ? syncEl.style.color : '#00e054';
+             renderTracker(window.lastScrapedCount, st, sc);
+          }
+        }).catch(function(e){
+           console.warn('Background avatar fetch failed', e);
+        });
+        
     }
   } catch (e) {
     console.error('Init error:', e);
-    if(window.appUseMeta) renderTracker(182, 'stat_error', '#ff4e00');
   }
 }
 
