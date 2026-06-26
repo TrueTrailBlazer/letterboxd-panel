@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="https://a.ltrbxd.com/logos/letterboxd-mac-icon.png">
   <link rel="manifest" href="/manifest.json">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-  <link rel="stylesheet" href="css/style.css?v=15">
+  <link rel="stylesheet" href="css/style.css?v=16">
 </head>
 <body>
   <div id="custom-ptr" style="position: fixed; top: 0; left: 0; right: 0; padding-top: env(safe-area-inset-top); height: calc(60px + env(safe-area-inset-top)); display: flex; align-items: center; justify-content: center; transform: translateY(-100%); transition: transform 0.2s; z-index: 9999; color: #89a; font-size: 13px; font-weight: bold; background: rgba(20,24,28,0.95); border-bottom: 1px solid #2c3440; backdrop-filter: blur(8px);">
@@ -104,10 +104,10 @@
               <span>Filmes por Sorteio:</span>
               <span id="draw-count-label" style="color: #00e054; font-size: 18px;">1</span>
             </label>
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <button id="draw-count-minus" style="background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 16px; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer;">-</button>
-              <input type="range" id="draw-count-slider" min="1" max="20" step="1" value="1" style="flex: 1; accent-color: #00e054; height: 6px; border-radius: 3px; outline: none;">
-              <button id="draw-count-plus" style="background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 16px; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer;">+</button>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 4px 0;">
+              <button id="draw-count-minus" style="flex-shrink: 0; padding: 0; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 16px; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer;">-</button>
+              <input type="range" id="draw-count-slider" min="1" max="20" step="1" value="1" style="flex: 1; min-width: 0; margin: 0 4px; accent-color: #00e054; height: 6px; border-radius: 3px; outline: none;">
+              <button id="draw-count-plus" style="flex-shrink: 0; padding: 0; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 16px; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer;">+</button>
             </div>
             <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: #678;">
               <span>1</span>
@@ -211,15 +211,15 @@
   <div id="poster-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; background:rgba(0,0,0,0.85); flex-direction:column; align-items:center; justify-content:center; padding: 20px; backdrop-filter: blur(5px);" onclick="closePosterModal(event)">
     <div id="poster-modal-content" style="width: 100%; max-width: 260px; display: flex; flex-direction: column; align-items: center; text-align: center; transform: scale(0.9); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
       <span id="modal-source" style="color:#89a; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);"></span>
-      <img id="modal-poster-img" src="" alt="Poster" style="width:100%; border-radius:8px; box-shadow:0 12px 30px rgba(0,0,0,0.8);">
-      <a id="modal-link" href="#" target="_blank" style="color:#fff; font-weight:bold; font-size:24px; text-decoration:none; margin-top:16px; line-height:1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.8);"></a>
+      <a id="modal-img-link" href="#" target="_blank" style="display: block; width: 100%; -webkit-tap-highlight-color: transparent;"><img id="modal-poster-img" src="" alt="Poster" style="width:100%; border-radius:8px; box-shadow:0 12px 30px rgba(0,0,0,0.8); display: block;"></a>
+      <a id="modal-link" href="#" target="_blank" style="color:#fff; font-weight:bold; font-size:24px; text-decoration:none; margin-top:16px; line-height:1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.8); -webkit-tap-highlight-color: transparent;"></a>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script src="js/quotes.js"></script>
   <script src="js/onboarding.js"></script>
-  <script src="js/config.js?v=15"></script>
-  <script src="js/home.js?v=15"></script>
+  <script src="js/config.js?v=16"></script>
+  <script src="js/home.js?v=16"></script>
 </body>
 </html>

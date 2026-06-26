@@ -236,6 +236,7 @@ body {
   cursor: pointer;
   position: relative;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .grid-poster-wrap::before {
@@ -272,6 +273,7 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.6);
   border: 1px solid rgba(64,188,244,0.3);
   background: #1a1e24;
+  -webkit-tap-highlight-color: transparent;
 }
 .swiper-slide img {
   display: block;

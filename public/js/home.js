@@ -541,10 +541,11 @@ window.onload = function() {
   }
 };
 
-window.openPosterModal = function(imgSrc, title, link, sourceName) {
+window.openPosterModal = function(imgSrc, title, linkUrl, sourceName) {
   document.getElementById('modal-poster-img').src = imgSrc;
   document.getElementById('modal-link').innerText = title;
-  document.getElementById('modal-link').href = link;
+  document.getElementById('modal-link').href = linkUrl;
+  document.getElementById('modal-img-link').href = linkUrl;
   document.getElementById('modal-source').innerText = sourceName;
   document.getElementById('poster-modal').classList.add('active');
 };
