@@ -121,14 +121,14 @@
           <div class="config-pane-header">
             <span class="config-pane-title" id="pane-title-meta" data-i18n="menu_account">Conta e Metas</span>
           </div>
-          <div id="offset-help" style="font-size: 12px; color: #89a; line-height: 1.4; background: transparent; padding: 0 16px; margin-bottom: 12px; text-align: center;"></div>
+          <div id="offset-help" data-i18n="offset_help" style="font-size: 12px; color: #89a; line-height: 1.4; background: transparent; padding: 0 16px; margin-bottom: 12px; text-align: center;"></div>
           <div id="config-meta-section" class="config-section">
-            <div class="config-row" id="row-lang">
+            <div class="config-row" id="row-lang" style="cursor:pointer;" onclick="document.getElementById('lang-modal').style.display='flex'">
               <span class="config-label" data-i18n="lbl_language">Idioma / Language</span>
-              <select id="lang-select" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 6px 32px 6px 12px; border-radius: 6px; outline: none; font-size: 14px; font-weight: 500; appearance: none; -webkit-appearance: none; cursor: pointer; background-image: url('data:image/svg+xml;utf8,<svg fill=%22%23ffffff%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/></svg>'); background-repeat: no-repeat; background-position-x: 100%; background-position-y: 3px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-                <option value="pt" style="color:#000;">Português</option>
-                <option value="en" style="color:#000;">English</option>
-              </select>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span id="current-lang-display" style="color:#00e054; font-size:14px; font-weight:bold; text-transform:uppercase;"></span>
+                <span style="color:#678; font-size:18px;">›</span>
+              </div>
             </div>
             <div class="config-row" id="row-offset">
               <span class="config-label" data-i18n="lbl_offset">Offset (rewatches)</span>
@@ -208,6 +208,24 @@
       <div class="confirm-actions">
         <button class="confirm-btn confirm-btn-cancel" id="confirm-btn-cancel" data-i18n="btn_cancel">Cancelar</button>
         <button class="confirm-btn confirm-btn-danger" id="confirm-btn-danger" data-i18n="btn_confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOM LANGUAGE MODAL -->
+  <div id="lang-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; background:rgba(20,24,28,0.95); flex-direction:column; align-items:center; justify-content:center; padding: 20px; backdrop-filter: blur(8px);">
+    <div class="confirm-box" style="width: 280px; max-width: 90%;">
+      <h3 class="confirm-title" data-i18n="lbl_language" style="margin-bottom: 20px;">Idioma / Language</h3>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+        <button onclick="window.setLanguage('pt'); document.getElementById('lang-modal').style.display='none';" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+          Português (PT-BR) <span id="lang-check-pt" style="color: #00e054; display:none;">✔</span>
+        </button>
+        <button onclick="window.setLanguage('en'); document.getElementById('lang-modal').style.display='none';" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+          English (EN) <span id="lang-check-en" style="color: #00e054; display:none;">✔</span>
+        </button>
+      </div>
+      <div class="confirm-actions" style="justify-content: center; margin-top:0;">
+        <button class="confirm-btn confirm-btn-cancel" onclick="document.getElementById('lang-modal').style.display='none';" style="width: 100%; border-radius: 8px;" data-i18n="btn_cancel">Cancelar</button>
       </div>
     </div>
   </div>

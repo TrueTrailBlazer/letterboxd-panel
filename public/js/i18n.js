@@ -73,7 +73,8 @@ const i18nData = {
     "stat_synced": "• Sincronizado",
     "stat_offline": "• Offline",
     "stat_error": "• Erro",
-    "lbl_goal_title": "Meta {target} Filmes"
+    "lbl_goal_title": "Meta {target} Filmes",
+    "offset_help": "O Letterboxd conta filmes únicos. Para que filmes reassistidos contem, adicione-os no campo abaixo."
   },
   en: {
     "app_title": "Letterboxd Panel",
@@ -149,7 +150,8 @@ const i18nData = {
     "stat_synced": "• Synced",
     "stat_offline": "• Offline",
     "stat_error": "• Error",
-    "lbl_goal_title": "Goal {target} Movies"
+    "lbl_goal_title": "Goal {target} Movies",
+    "offset_help": "Letterboxd tracks unique films. To count rewatches, add them manually in the field below."
   }
 };
 
@@ -167,6 +169,14 @@ window.setLanguage = function(lang) {
   window.currentLang = lang;
   localStorage.setItem('lbxd_lang', lang);
   window.applyTranslations();
+  
+  // Re-render tracker explicitly if it exists
+  if (typeof window.renderTracker === 'function' && window.appUseMeta && window.lastScrapedCount !== undefined) {
+      var syncEl = document.getElementById('sync-status');
+      var st = syncEl ? syncEl.innerText : window.t('stat_synced');
+      var sc = syncEl ? syncEl.style.color : '#00e054';
+      window.renderTracker(window.lastScrapedCount, st, sc);
+  }
 };
 
 window.applyTranslations = function() {
@@ -175,21 +185,23 @@ window.applyTranslations = function() {
     var key = el.getAttribute('data-i18n');
     var translated = window.t(key);
     if (el.tagName === 'INPUT' && el.type === 'text' && el.hasAttribute('placeholder')) {
-       // specific logic if needed, but normally placeholder is translated separately or via a data-i18n-placeholder
        el.placeholder = translated;
     } else {
        el.innerHTML = translated;
     }
   });
+  
+  // Update UI for language modal
+  var langDisplay = document.getElementById('current-lang-display');
+  if (langDisplay) {
+    langDisplay.innerText = window.currentLang === 'pt' ? 'Português' : 'English';
+  }
+  var checkPt = document.getElementById('lang-check-pt');
+  var checkEn = document.getElementById('lang-check-en');
+  if (checkPt) checkPt.style.display = window.currentLang === 'pt' ? 'block' : 'none';
+  if (checkEn) checkEn.style.display = window.currentLang === 'en' ? 'block' : 'none';
 };
 
 document.addEventListener('DOMContentLoaded', function() {
   window.applyTranslations();
-  var langSelect = document.getElementById('lang-select');
-  if (langSelect) {
-    langSelect.value = window.currentLang;
-    langSelect.addEventListener('change', function(e) {
-      window.setLanguage(e.target.value);
-    });
-  }
 });
