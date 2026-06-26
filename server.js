@@ -163,7 +163,7 @@ app.post('/api/roulette', async function(req, res) {
             slug = displayTitle.replace(/\s*\(\d{4}\)$/, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s-]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
           }
 
-          var imgSrc = imgNode.attr('src') || imgNode.attr('data-image') || '';
+          var imgSrc = el.attr('data-image-url') || imgNode.attr('src') || imgNode.attr('data-image') || '';
 
           allPosters.push({
             title: displayTitle,
