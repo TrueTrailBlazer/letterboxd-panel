@@ -275,7 +275,7 @@ function bindEvents() {
   
   function updateSliderValue(val) {
     if (val < 1) val = 1;
-    if (val > 20) val = 20;
+    if (val > 21) val = 21;
     var drawSlider = document.getElementById('draw-count-slider');
     if (drawSlider) {
       drawSlider.value = val;
@@ -505,7 +505,7 @@ function bindEvents() {
           var m = validMovies[i];
           var clickJs = "openPosterModal(" + i + ")";
           swiperHtml += 
-            '<div class="swiper-slide" onclick="' + clickJs + '" style="width: 220px; aspect-ratio: 2/3; height: auto;">' +
+            '<div class="swiper-slide" onclick="' + clickJs + '" style="width: 170px; aspect-ratio: 2/3; height: auto;">' +
               '<img src="' + m.imgSrc + '" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">' +
             '</div>';
         }
@@ -541,15 +541,22 @@ function bindEvents() {
       // Scroll event logic for collapsible Goal Tracker
       var scrollBox = document.getElementById('roulette-grid-scroll');
       if (scrollBox) {
+        var isCollapsed = false;
         scrollBox.addEventListener('scroll', function(e) {
           var card = document.getElementById('goal-tracker-card');
           var col = document.getElementById('goal-tracker-collapsible');
           if (card && col) {
-            if (e.target.scrollTop > 15) {
+            // Only collapse if there is actually enough scrollable space
+            if (e.target.scrollHeight <= e.target.clientHeight + 60) return;
+            
+            var st = e.target.scrollTop;
+            if (!isCollapsed && st > 40) {
+              isCollapsed = true;
               col.style.maxHeight = '0px';
               col.style.opacity = '0';
               card.style.marginBottom = '8px';
-            } else {
+            } else if (isCollapsed && st < 10) {
+              isCollapsed = false;
               col.style.maxHeight = '500px';
               col.style.opacity = '1';
               card.style.marginBottom = '24px';
