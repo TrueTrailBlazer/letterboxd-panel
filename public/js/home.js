@@ -609,6 +609,45 @@ function startApp() {
   }
 }
 
+// ===== TEMPORARY DEBUG AVATAR SCRAPE =====
+window.runDebugScrape = function() {
+  var out = document.getElementById('debug-output');
+  var img = document.getElementById('debug-img-preview');
+  out.innerText = 'Fetching https://letterboxd.com/' + window.appUser + '/ ...';
+  img.style.display = 'none';
+  
+  fetch('/api/scrape?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
+    .then(function(res) {
+       out.innerText += '\nStatus: ' + res.status;
+       if (!res.ok) throw new Error('HTTP ' + res.status);
+       return res.text();
+    })
+    .then(function(html) {
+       out.innerText += '\nHTML recebido: ' + html.length + ' bytes';
+       var doc = new DOMParser().parseFromString(html, 'text/html');
+       
+       var selectors = ['.profile-avatar img', '.avatar img', 'img.avatar', 'img[src*="/avatar/"]', 'meta[property="og:image"]'];
+       var found = false;
+       for (var i = 0; i < selectors.length; i++) {
+         var el = doc.querySelector(selectors[i]);
+         var src = el ? (el.src || el.content) : null;
+         if (src) {
+            out.innerText += '\nSUCESSO com seletor: ' + selectors[i] + '\nSRC: ' + src;
+            img.src = src;
+            img.style.display = 'block';
+            found = true;
+            break;
+         }
+       }
+       if (!found) {
+         out.innerText += '\nNENHUM seletor encontrou o avatar.\nPrimeiros 200 chars:\n' + html.substring(0,200);
+       }
+    })
+    .catch(function(err) {
+       out.innerText += '\nERRO FATAL: ' + err.message;
+    });
+};
+
 window.onload = function() {
   var savedUser = localStorage.getItem('lbxd_user');
   if (savedUser) {

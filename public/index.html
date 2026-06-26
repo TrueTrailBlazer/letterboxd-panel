@@ -94,8 +94,12 @@
               <span data-i18n="menu_sources">Fontes de Sorteio</span>
               <span class="pane-menu-arrow">›</span>
             </div>
-            <div class="pane-menu-item" onclick="openPane('pane-filters')" style="border-bottom: none;">
+            <div class="pane-menu-item" onclick="openPane('pane-filters')">
               <span data-i18n="menu_filters">Filtros</span>
+              <span class="pane-menu-arrow">›</span>
+            </div>
+            <div class="pane-menu-item" onclick="openPane('pane-debug')" style="border-bottom: none;">
+              <span>🛠 DEBUGGER</span>
               <span class="pane-menu-arrow">›</span>
             </div>
           </div>
@@ -185,6 +189,18 @@
                 <span style="color:#89a; font-size:13px;" data-i18n="lbl_min">min</span>
               </div>
             </div>
+          </div>
+        </div>
+        
+        <!-- PANE 4: DEBUG TEMPORARIO -->
+        <div id="pane-debug" class="config-pane">
+          <div class="config-pane-header">
+            <span class="config-pane-title">Avatar Debugger</span>
+          </div>
+          <div class="config-section" style="display:flex; flex-direction:column; gap: 10px;">
+            <button onclick="window.runDebugScrape()" style="background:#00e054; color:#14181c; padding:12px; border:radius:8px; font-weight:bold; cursor:pointer; border:none; width:100%;">Executar Teste de Avatar</button>
+            <div id="debug-output" style="background:#14181c; border:1px solid #2c3440; padding:10px; border-radius:8px; font-family:monospace; font-size:10px; color:#fff; height:200px; overflow-y:auto; word-break:break-all;">Aguardando...</div>
+            <img id="debug-img-preview" src="" style="width: 50px; height: 50px; border-radius: 25px; display:none; margin: 0 auto;">
           </div>
         </div>
         
