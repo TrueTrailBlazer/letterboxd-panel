@@ -387,7 +387,7 @@ function bindEvents() {
 
     var state = loadState();
     var sources = [];
-    if (state.watchlist) sources.push({ type: 'watchlist', url: 'https://letterboxd.com/' + window.appUser + '/watchlist/' });
+    if (state.watchlist) sources.push({ type: 'watchlist', url: 'https://letterboxd.com/' + window.appUser + '/watchlist/', name: window.t('lbl_from_watch') });
     state.lists.forEach(function(l) {
       if (l.checked) {
           var url = l.url ? l.url : 'https://letterboxd.com' + l.path;
@@ -409,114 +409,37 @@ function bindEvents() {
 
     var drawCount = parseInt(localStorage.getItem('lbxd_draw_count')) || 1;
 
+    // AbortController com timeout de 45 segundos
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 45000);
+
     try {
-      var allPosters = [];
-      await Promise.all(sources.map(async function(source) {
-        try {
-          var html = await proxyFetch(source.url);
-          var doc = new DOMParser().parseFromString(html, 'text/html');
-          
-          var pagLinks = doc.querySelectorAll('.paginate-pages li a');
-          var maxPage = pagLinks.length ? parseInt(pagLinks[pagLinks.length - 1].innerText) : 1;
-          var randomPage = Math.floor(Math.random() * maxPage) + 1;
-          
-          if (randomPage > 1) {
-            var targetUrl = source.url.replace(/\/$/, '') + '/page/' + randomPage + '/';
-            html = await proxyFetch(targetUrl);
-            doc = new DOMParser().parseFromString(html, 'text/html');
+      var response = await fetch('/api/roulette', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sources: sources,
+          drawCount: drawCount,
+          filter: {
+            shortOnly: state.shortOnly || false,
+            maxTimeHr: state.maxTimeHr || 1,
+            maxTimeMin: state.maxTimeMin || 40
           }
-          
-          var posters = Array.from(doc.querySelectorAll('.film-poster'));
-          var sName = source.type === 'watchlist' ? window.t('lbl_from_watch') : source.name;
-          posters.forEach(function(p) {
-            allPosters.push({ element: p, sourceName: sName });
-          });
-        } catch(e) {
-          console.error("Erro ao puxar fonte", source.url, e);
-        }
-      }));
+        }),
+        signal: controller.signal
+      });
 
-      if (!allPosters.length) throw new Error('Vazio');
+      clearTimeout(timeoutId);
 
-      // Embaralha TODOS os posters combinados
-      allPosters = allPosters.sort(function() { return 0.5 - Math.random() });
-
-      var validMovies = [];
-      var idx = 0;
-      
-      while(validMovies.length < drawCount && idx < allPosters.length) {
-        var batch = [];
-        while (batch.length < 5 && idx < allPosters.length && (validMovies.length + batch.length) < drawCount) {
-           batch.push(allPosters[idx++]);
-        }
-        
-        var results = await Promise.all(batch.map(async function(randomPosterObj) {
-            var randomPoster = randomPosterObj.element;
-            var currentSourceName = randomPosterObj.sourceName;
-            
-            var containerHtml = (randomPoster.closest('li') || randomPoster.parentNode || randomPoster).outerHTML;
-            var imgNode = randomPoster.querySelector('img');
-            var displayTitle = imgNode && imgNode.alt ? imgNode.alt.replace(/^Poster for /i, '').trim() : window.t('lbl_drawn_film');
-            
-            var slug = '';
-            var slugMatch = containerHtml.match(/data-film-slug=["']([^"']+)["']/);
-            var targetMatch = containerHtml.match(/data-target-link=["']([^"']+)["']/);
-            var aMatch = containerHtml.match(/href=["']\/film\/([^"']+)["']/);
-            
-            if (slugMatch && slugMatch[1] && slugMatch[1] !== 'null') { slug = slugMatch[1]; } 
-            else if (targetMatch && targetMatch[1] && targetMatch[1] !== 'null') { slug = targetMatch[1].replace(/\/film\/|\//g, ''); } 
-            else if (aMatch && aMatch[1]) { slug = aMatch[1].replace(/\//g, ''); }
-            
-            if (!slug || slug === 'null') {
-              slug = displayTitle.replace(/\s*\(\d{4}\)$/, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s-]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
-            }
-            
-            var link = 'https://letterboxd.com/film/' + slug + '/';
-            var filmHtml = await proxyFetch(link).catch(function(){ return ''; });
-            if(!filmHtml) return null;
-            
-            var filmDoc = new DOMParser().parseFromString(filmHtml, 'text/html');
-            if (state.shortOnly) {
-              var footer = filmDoc.querySelector('.text-link.text-footer');
-              var durationMinutes = footer ? parseInt(footer.innerText.match(/\d+/)[0]) : 0;
-              var maxLimitMinutes = (state.maxTimeHr * 60) + state.maxTimeMin;
-              if (durationMinutes > maxLimitMinutes) return null;
-            }
-            
-            var imgSrc = imgNode ? (imgNode.getAttribute('src') || imgNode.getAttribute('data-image')) : '';
-            var jsonLd = filmDoc.querySelector('script[type="application/ld+json"]');
-            if (jsonLd) {
-              var data = JSON.parse(jsonLd.innerText.replace(/\/\*.*?\*\//g, ''));
-              if (Array.isArray(data)) {
-                var found = data.find(function(i) { return i.image; });
-                if (found) imgSrc = found.image;
-              } else if (data.image) {
-                imgSrc = data.image;
-              }
-            }
-            var synopsis = '';
-            var metaDesc = filmDoc.querySelector('meta[property="og:description"]');
-            if (metaDesc) synopsis = metaDesc.getAttribute('content');
-            if (!synopsis) {
-              var metaName = filmDoc.querySelector('meta[name="description"]');
-              if (metaName) synopsis = metaName.getAttribute('content');
-            }
-            if (synopsis) {
-              synopsis = synopsis.replace(/^.*? directed by .*?\.\s*/i, '');
-              if (synopsis.length > 600) synopsis = synopsis.substring(0, 600) + '...';
-            }
-
-            return { title: displayTitle, link: link, imgSrc: imgSrc, sourceName: currentSourceName, synopsis: synopsis };
-        }));
-        
-        for (var i = 0; i < results.length; i++) {
-           if(results[i] !== null && validMovies.length < drawCount) {
-               validMovies.push(results[i]);
-           }
-        }
+      if (!response.ok) {
+        var errData = await response.json().catch(function() { return {}; });
+        throw new Error(errData.error || 'Erro do servidor');
       }
 
-      if (!validMovies.length) throw new Error(window.t('err_empty'));
+      var data = await response.json();
+      var validMovies = data.movies;
+
+      if (!validMovies || !validMovies.length) throw new Error(window.t('err_empty'));
 
       window.currentDrawData = validMovies;
       var resultHtml = '';
@@ -564,7 +487,10 @@ function bindEvents() {
         }
         gridHtml += '</div>';
         
-        var sourceLabel = sources.length > 1 ? window.t('lbl_multi_source') : validMovies[0].sourceName;
+        var drawnSourcesObj = {};
+        for (var j = 0; j < validMovies.length; j++) drawnSourcesObj[validMovies[j].sourceName] = true;
+        var drawnSources = Object.keys(drawnSourcesObj);
+        var sourceLabel = drawnSources.length > 1 ? window.t('lbl_multi_source') : drawnSources[0];
         
         resultHtml = 
           '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; justify-content:flex-start;">' +
@@ -597,8 +523,13 @@ function bindEvents() {
       btn.disabled = false;
 
     } catch (err) {
+      clearTimeout(timeoutId);
       console.error('Roulette error:', err);
-      btn.innerText = window.t('btn_error_retry');
+      if (err.name === 'AbortError') {
+        btn.innerText = window.t('btn_error_retry');
+      } else {
+        btn.innerText = window.t('btn_error_retry');
+      }
       btn.disabled = false;
       var emptyEl = document.getElementById('roulette-empty-state');
       if (emptyEl) emptyEl.style.display = 'flex';
