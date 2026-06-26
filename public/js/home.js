@@ -579,7 +579,7 @@ function startApp() {
         });
         
       // Fetch avatar in background (DEBUG MODE)
-      fetch('/api/scrape?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
+      fetch('/api/proxy?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
         .then(function(res) { 
            if (!res.ok) throw new Error('HTTP ' + res.status);
            return res.text(); 
@@ -616,7 +616,7 @@ window.runDebugScrape = function() {
   out.innerText = 'Fetching https://letterboxd.com/' + window.appUser + '/ ...';
   img.style.display = 'none';
   
-  fetch('/api/scrape?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
+  fetch('/api/proxy?url=' + encodeURIComponent('https://letterboxd.com/' + window.appUser + '/'))
     .then(function(res) {
        out.innerText += '\nStatus: ' + res.status;
        if (!res.ok) throw new Error('HTTP ' + res.status);
