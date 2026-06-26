@@ -406,6 +406,19 @@ function bindEvents() {
 
     var drawCount = parseInt(localStorage.getItem('lbxd_draw_count')) || 1;
 
+    // Timer Estimado (~1.2s por filme)
+    var estimatedTotalSeconds = Math.max(3, Math.ceil(drawCount * 1.2));
+    var elapsedSeconds = 0;
+    var progressInterval = setInterval(function() {
+      elapsedSeconds++;
+      var remaining = Math.max(1, estimatedTotalSeconds - elapsedSeconds);
+      if (remaining > 1) {
+        btn.innerText = window.t('msg_shuffling') + ' (~' + remaining + 's)';
+      } else {
+        btn.innerText = window.t('msg_shuffling') + ' (quase lá...)';
+      }
+    }, 1000);
+
     // AbortController com timeout de 45 segundos
     var controller = new AbortController();
     var timeoutId = setTimeout(function() { controller.abort(); }, 45000);
@@ -527,10 +540,12 @@ function bindEvents() {
         });
       }
 
+      clearInterval(progressInterval);
       btn.innerText = window.t('btn_roulette');
       btn.disabled = false;
 
     } catch (err) {
+      clearInterval(progressInterval);
       clearTimeout(timeoutId);
       console.error('Roulette error:', err);
       if (err.name === 'AbortError') {
