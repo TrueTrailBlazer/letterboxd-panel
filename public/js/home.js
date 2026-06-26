@@ -208,11 +208,33 @@ function bindEvents() {
     var state = loadState(); state.maxTimeMin = val; saveState(state);
   };
   
+  function updateSliderValue(val) {
+    if (val < 1) val = 1;
+    if (val > 20) val = 20;
+    var drawSlider = document.getElementById('draw-count-slider');
+    if (drawSlider) {
+      drawSlider.value = val;
+      document.getElementById('draw-count-label').innerText = val;
+      localStorage.setItem('lbxd_draw_count', val);
+    }
+  }
+
   var drawSlider = document.getElementById('draw-count-slider');
   if (drawSlider) {
-    drawSlider.oninput = function(e) {
-      document.getElementById('draw-count-label').innerText = e.target.value;
-      localStorage.setItem('lbxd_draw_count', e.target.value);
+    drawSlider.oninput = function(e) { updateSliderValue(parseInt(e.target.value) || 1); };
+  }
+  var drawMinus = document.getElementById('draw-count-minus');
+  if (drawMinus) {
+    drawMinus.onclick = function() {
+      var current = parseInt(document.getElementById('draw-count-slider').value) || 1;
+      updateSliderValue(current - 1);
+    };
+  }
+  var drawPlus = document.getElementById('draw-count-plus');
+  if (drawPlus) {
+    drawPlus.onclick = function() {
+      var current = parseInt(document.getElementById('draw-count-slider').value) || 1;
+      updateSliderValue(current + 1);
     };
   }
 
@@ -393,6 +415,27 @@ function bindEvents() {
             '</div>' +
             '<a id="roulette-link" class="roulette-link-text" href="' + m.link + '" target="_blank">' + m.title + '</a>' +
           '</div>';
+      } else if (validMovies.length >= 2 && validMovies.length <= 5) {
+        var sourceLabel = sources.length > 1 ? 'MÚLTIPLAS FONTES' : validMovies[0].sourceName;
+        var swiperHtml = '<div class="swiper"><div class="swiper-wrapper">';
+        
+        for (var i = 0; i < validMovies.length; i++) {
+          var m = validMovies[i];
+          var safeTitle = m.title.replace(/"/g, '&quot;').replace(/'/g, '\\\'');
+          var clickJs = "openPosterModal('" + m.imgSrc + "', '" + safeTitle + "', '" + m.link + "', '" + m.sourceName + "')";
+          swiperHtml += 
+            '<div class="swiper-slide" onclick="' + clickJs + '">' +
+              '<img src="' + m.imgSrc + '">' +
+            '</div>';
+        }
+        swiperHtml += '</div></div>';
+        
+        resultHtml = 
+          '<div style="width: 100%; height: 100%; display:flex; flex-direction:column; align-items:center; justify-content:center;">' +
+            '<span class="roulette-source-text" style="margin-bottom: 0; text-align: center;">' + sourceLabel + '</span>' +
+            swiperHtml +
+            '<span class="roulette-source-text" style="margin-top: 10px; font-size: 10px; color:#567;">Toque para + detalhes</span>' +
+          '</div>';
       } else {
         var gridHtml = '<div class="roulette-grid">';
         for (var i = 0; i < validMovies.length; i++) {
@@ -414,6 +457,23 @@ function bindEvents() {
       
       document.getElementById('roulette-result').innerHTML = resultHtml;
       document.getElementById('roulette-result').style.display = 'flex';
+
+      if (validMovies.length >= 2 && validMovies.length <= 5 && typeof Swiper !== 'undefined') {
+        new Swiper('.swiper', {
+          effect: 'coverflow',
+          grabCursor: true,
+          centeredSlides: true,
+          slidesPerView: 'auto',
+          coverflowEffect: {
+            rotate: 20,
+            stretch: 0,
+            depth: 150,
+            modifier: 1,
+            slideShadows: true,
+          },
+          initialSlide: Math.floor(validMovies.length / 2)
+        });
+      }
 
       btn.innerText = 'O QUE ASSISTIR HOJE?';
       btn.disabled = false;
