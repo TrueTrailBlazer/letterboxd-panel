@@ -227,11 +227,25 @@ app.post('/api/roulette', async function(req, res) {
             try {
               var jsonText = jsonLdScript.html().replace(/\/\*.*?\*\//g, '');
               var data = JSON.parse(jsonText);
-              if (Array.isArray(data)) {
-                var found = data.find(function(item) { return item.image; });
-                if (found) poster.imgSrc = found.image;
-              } else if (data && data.image) {
-                poster.imgSrc = data.image;
+              var movieData = Array.isArray(data) ? data.find(function(item) { return item['@type'] === 'Movie' || item.image; }) : data;
+              if (movieData) {
+                if (movieData.image) poster.imgSrc = movieData.image;
+                
+                // Get Year
+                if (movieData.dateCreated) poster.year = movieData.dateCreated.substring(0, 4);
+                else if (movieData.datePublished) poster.year = movieData.datePublished.substring(0, 4);
+                
+                // Get Director
+                if (movieData.director && Array.isArray(movieData.director) && movieData.director.length > 0) {
+                  poster.director = movieData.director[0].name;
+                } else if (movieData.director && movieData.director.name) {
+                  poster.director = movieData.director.name;
+                }
+                
+                // Get Genres
+                if (movieData.genre) {
+                  poster.genres = Array.isArray(movieData.genre) ? movieData.genre.slice(0, 2) : [movieData.genre];
+                }
               }
             } catch (parseErr) { /* ignore JSON parse errors */ }
           }
@@ -248,10 +262,13 @@ app.post('/api/roulette', async function(req, res) {
 
           return {
             title: poster.title,
-            link: filmUrl,
+            slug: poster.slug,
             imgSrc: poster.imgSrc,
             sourceName: poster.sourceName,
             synopsis: synopsis,
+            year: poster.year || '',
+            director: poster.director || '',
+            genres: poster.genres || []
           };
         } catch (e) {
           console.error('Film detail error:', poster.slug, e.message);

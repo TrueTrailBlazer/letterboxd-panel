@@ -231,12 +231,27 @@
   </div>
 
   <!-- MODAL DE PÔSTER (ZOOM) -->
-  <div id="poster-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; background:rgba(0,0,0,0.85); flex-direction:column; align-items:center; justify-content:flex-start; padding: max(env(safe-area-inset-top) + 40px, 50px) 20px 20px 20px; backdrop-filter: blur(5px);" onclick="closePosterModal(event)">
-    <div id="poster-modal-content" style="width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; text-align: center; transform: scale(0.9); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-      <span id="modal-source" style="color:#89a; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);"></span>
-      <a id="modal-img-link" href="#" style="display: block; width: 100%; max-width: 260px; margin: 0 auto; -webkit-tap-highlight-color: transparent;"><img id="modal-poster-img" src="" alt="Poster" style="width:100%; border-radius:8px; box-shadow:0 12px 30px rgba(0,0,0,0.8); display: block;"></a>
-      <a id="modal-link" href="#" style="color:#fff; font-weight:bold; font-size:24px; text-decoration:none; margin-top:16px; line-height:1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.8); -webkit-tap-highlight-color: transparent;"></a>
-      <p id="modal-synopsis" style="color: #9ab; font-size: 14px; line-height: 1.5; margin-top: 12px; max-height: 200px; overflow-y: auto; width: 100%; text-align: justify; padding-right: 4px; display: none;"></p>
+  <div id="poster-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; background:#14181c; flex-direction:column; align-items:center; justify-content:flex-start; padding: 0; overflow:hidden;" onclick="closePosterModal(event)">
+    <div id="modal-bg-wrap" style="position:absolute; top:0; left:0; right:0; height:50%; z-index:1; overflow:hidden; opacity: 0.4;">
+      <img id="modal-bg-img" src="" alt="Background" style="width:100%; height:100%; object-fit:cover; filter: blur(30px) brightness(0.7); transform: scale(1.2);">
+      <div style="position:absolute; bottom:0; left:0; right:0; height:100%; background: linear-gradient(to bottom, rgba(20,24,28,0) 0%, #14181c 100%);"></div>
+    </div>
+    
+    <div id="poster-modal-content" style="position:relative; z-index:2; width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; text-align: center; padding: max(env(safe-area-inset-top) + 20px, 40px) 20px 20px 20px; height:100%; overflow-y:auto; transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+      <span id="modal-source" style="color:#89a; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:20px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);"></span>
+      <a id="modal-img-link" href="#" style="display: block; width: 100%; max-width: 220px; margin: 0 auto; -webkit-tap-highlight-color: transparent;"><img id="modal-poster-img" src="" alt="Poster" style="width:100%; border-radius:8px; box-shadow:0 12px 30px rgba(0,0,0,0.8); display: block;"></a>
+      
+      <a id="modal-link" href="#" style="color:#fff; font-weight:bold; font-size:26px; text-decoration:none; margin-top:24px; line-height:1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.8); -webkit-tap-highlight-color: transparent; font-family: Inter, Roboto, sans-serif; letter-spacing: -0.02em;"></a>
+      
+      <div id="modal-meta" style="color: #c9a45c; font-size: 13px; font-weight: 500; margin-top: 8px; letter-spacing: 0.02em;">
+        <span id="modal-year"></span><span id="modal-dot" style="margin:0 6px; color:#678;">&bull;</span><span id="modal-director"></span>
+      </div>
+      
+      <div id="modal-genres" style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:16px;"></div>
+      
+      <div id="modal-synopsis-box" style="background: rgba(30, 36, 42, 0.8); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-top: 24px; width: 100%; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.4); display: none;">
+        <p id="modal-synopsis" style="color: #aebfd1; font-size: 14px; line-height: 1.6; margin: 0; font-family: Inter, Roboto, sans-serif;"></p>
+      </div>
     </div>
   </div>
 
@@ -337,7 +352,7 @@
   <script src="js/quotes.js"></script>
   <script src="js/onboarding.js"></script>
   <script src="js/config.js?v=20"></script>
-  <script src="js/home.js?v=20"></script>
+  <script src="js/home.js?v=23"></script>
   <script>
     // Register Service Worker
     if ('serviceWorker' in navigator) {

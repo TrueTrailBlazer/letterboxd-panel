@@ -626,26 +626,80 @@ window.onload = function() {
 window.openPosterModal = function(index) {
   var m = window.currentDrawData ? window.currentDrawData[index] : null;
   if (!m) return;
+  
   document.getElementById('modal-poster-img').src = m.imgSrc;
+  document.getElementById('modal-bg-img').src = m.imgSrc;
   document.getElementById('modal-link').innerText = m.title;
   document.getElementById('modal-link').href = m.link;
   document.getElementById('modal-img-link').href = m.link;
   document.getElementById('modal-source').innerText = m.sourceName;
   
-  var synEl = document.getElementById('modal-synopsis');
-  if (m.synopsis) {
-    synEl.innerText = m.synopsis;
-    synEl.style.display = 'block';
+  // Meta data (Year & Director)
+  var yearEl = document.getElementById('modal-year');
+  var dirEl = document.getElementById('modal-director');
+  var dotEl = document.getElementById('modal-dot');
+  var metaEl = document.getElementById('modal-meta');
+  
+  var hasYear = m.year ? true : false;
+  var hasDir = m.director ? true : false;
+  
+  if (hasYear || hasDir) {
+    metaEl.style.display = 'block';
+    yearEl.innerText = m.year || '';
+    dirEl.innerText = m.director ? 'Dir. ' + m.director : '';
+    dotEl.style.display = (hasYear && hasDir) ? 'inline' : 'none';
   } else {
-    synEl.style.display = 'none';
+    metaEl.style.display = 'none';
   }
   
-  document.getElementById('poster-modal').classList.add('active');
+  // Genres
+  var genresEl = document.getElementById('modal-genres');
+  genresEl.innerHTML = '';
+  if (m.genres && m.genres.length > 0) {
+    m.genres.forEach(function(g) {
+      var span = document.createElement('span');
+      span.innerText = g;
+      span.style.cssText = 'border: 1px solid rgba(64, 188, 244, 0.4); color: #40bcf4; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; background: rgba(64, 188, 244, 0.05);';
+      genresEl.appendChild(span);
+    });
+  }
+  
+  // Synopsis
+  var synEl = document.getElementById('modal-synopsis');
+  var synBox = document.getElementById('modal-synopsis-box');
+  if (m.synopsis) {
+    synEl.innerText = m.synopsis;
+    synBox.style.display = 'block';
+  } else {
+    synBox.style.display = 'none';
+  }
+  
+  // Animation reset
+  var content = document.getElementById('poster-modal-content');
+  content.style.transform = 'translateY(20px)';
+  content.style.opacity = '0';
+  
+  var modal = document.getElementById('poster-modal');
+  modal.classList.add('active');
+  modal.style.display = 'flex';
+  
+  setTimeout(function() {
+    content.style.transform = 'translateY(0)';
+    content.style.opacity = '1';
+  }, 10);
 };
 
 window.closePosterModal = function(e) {
   if (e && e.target.id !== 'poster-modal') return;
-  document.getElementById('poster-modal').classList.remove('active');
+  var content = document.getElementById('poster-modal-content');
+  if (content) {
+    content.style.transform = 'translateY(20px)';
+    content.style.opacity = '0';
+  }
+  setTimeout(function() {
+    document.getElementById('poster-modal').classList.remove('active');
+    document.getElementById('poster-modal').style.display = 'none';
+  }, 300);
 };
 
 // ==========================================
