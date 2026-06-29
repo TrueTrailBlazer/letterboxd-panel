@@ -282,10 +282,6 @@ app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, '0.0.0.0', function() {
-    console.log('Letterboxd Panel rodando na porta ' + PORT);
-  });
-}
-
-module.exports = app;
+app.listen(PORT, '0.0.0.0', function() {
+  console.log('Letterboxd Panel rodando na porta ' + PORT);
+});
