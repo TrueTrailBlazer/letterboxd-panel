@@ -1,7 +1,7 @@
 // Service Worker - Letterboxd Panel
 // Estratégia: Cache-First para recursos estáticos, Network-First para APIs
 
-var CACHE_NAME = 'lbxd-panel-v1';
+var CACHE_NAME = 'lbxd-panel-v2';
 var STATIC_ASSETS = [
   '/',
   '/css/style.css',
