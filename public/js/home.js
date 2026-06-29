@@ -676,29 +676,38 @@ window.openPosterModal = function(index) {
   
   // Animation reset
   var content = document.getElementById('poster-modal-content');
+  var modal = document.getElementById('poster-modal');
+  
   content.style.transform = 'translateY(20px)';
   content.style.opacity = '0';
-  
-  var modal = document.getElementById('poster-modal');
-  modal.classList.add('active');
+  modal.style.opacity = '0';
   modal.style.display = 'flex';
   
-  setTimeout(function() {
-    content.style.transform = 'translateY(0)';
-    content.style.opacity = '1';
-  }, 10);
+  // Trigger reflow
+  void modal.offsetWidth;
+  
+  modal.classList.add('active');
+  modal.style.opacity = '1';
+  content.style.transform = 'translateY(0)';
+  content.style.opacity = '1';
 };
 
 window.closePosterModal = function(e) {
   if (e && e.target.id !== 'poster-modal' && e.target.id !== 'modal-close-btn') return;
   var content = document.getElementById('poster-modal-content');
+  var modal = document.getElementById('poster-modal');
+  
   if (content) {
     content.style.transform = 'translateY(20px)';
     content.style.opacity = '0';
   }
+  if (modal) {
+    modal.style.opacity = '0';
+  }
+  
   setTimeout(function() {
-    document.getElementById('poster-modal').classList.remove('active');
-    document.getElementById('poster-modal').style.display = 'none';
+    modal.classList.remove('active');
+    modal.style.display = 'none';
   }, 300);
 };
 
