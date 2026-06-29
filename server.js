@@ -262,6 +262,7 @@ app.post('/api/roulette', async function(req, res) {
 
           return {
             title: poster.title,
+            link: 'https://letterboxd.com/film/' + poster.slug + '/',
             slug: poster.slug,
             imgSrc: poster.imgSrc,
             sourceName: poster.sourceName,
