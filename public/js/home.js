@@ -250,7 +250,7 @@ function loadState() {
   }
   return {
     watchlist: true,
-    customLists: [],
+    lists: [],
     shortOnly: false,
     maxTimeHr: 1,
     maxTimeMin: 40
