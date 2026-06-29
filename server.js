@@ -151,9 +151,9 @@ app.post('/api/roulette', async function(req, res) {
           var displayTitle = imgNode.attr('alt') || 'Filme sorteado';
           displayTitle = displayTitle.replace(/^Poster for /i, '').trim();
 
-          var slug = el.attr('data-film-slug') || '';
+          var slug = el.attr('data-film-slug') || el.attr('data-item-slug') || '';
           if (!slug || slug === 'null') {
-            var targetLink = el.attr('data-target-link') || '';
+            var targetLink = el.attr('data-target-link') || el.attr('data-item-link') || '';
             if (targetLink) slug = targetLink.replace(/\/film\/|\//g, '');
           }
           if (!slug || slug === 'null') {
