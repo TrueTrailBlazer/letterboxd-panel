@@ -2,7 +2,7 @@
 
 Um painel pessoal definitivo para usuários do Letterboxd, desenhado com foco em uma experiência premium de uso móvel (PWA). Ele combina um **Acompanhamento de Metas de Filmes** super inteligente com uma poderosa **Roleta de Sorteios** a partir de múltiplas listas.
 
-🔗 **Acesse ao vivo:** [https://letterboxd-panel.onrender.com](https://letterboxd-panel.onrender.com)
+🔗 **Acesse ao vivo:** [https://letterboxd-panel-g9zk.onrender.com](https://letterboxd-panel-g9zk.onrender.com)
 
 ## Funcionalidades Principais
 
