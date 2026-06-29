@@ -237,6 +237,8 @@
       <div style="position:absolute; bottom:0; left:0; right:0; height:100%; background: linear-gradient(to bottom, rgba(20,24,28,0) 0%, #14181c 100%);"></div>
     </div>
     
+    <button id="modal-close-btn" onclick="closePosterModal(event)" style="position:absolute; top: max(env(safe-area-inset-top) + 16px, 24px); right: 16px; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 20px; font-weight: bold; z-index: 10; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">&times;</button>
+    
     <div id="poster-modal-content" style="position:relative; z-index:2; width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; text-align: center; padding: max(env(safe-area-inset-top) + 20px, 40px) 20px 20px 20px; height:100%; overflow-y:auto; transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
       <span id="modal-source" style="color:#89a; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:20px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);"></span>
       <a id="modal-img-link" href="#" style="display: block; width: 100%; max-width: 220px; margin: 0 auto; -webkit-tap-highlight-color: transparent;"><img id="modal-poster-img" src="" alt="Poster" style="width:100%; border-radius:8px; box-shadow:0 12px 30px rgba(0,0,0,0.8); display: block;"></a>
@@ -352,7 +354,7 @@
   <script src="js/quotes.js"></script>
   <script src="js/onboarding.js"></script>
   <script src="js/config.js?v=20"></script>
-  <script src="js/home.js?v=23"></script>
+  <script src="js/home.js?v=24"></script>
   <script>
     // Register Service Worker
     if ('serviceWorker' in navigator) {

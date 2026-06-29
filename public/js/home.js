@@ -690,7 +690,7 @@ window.openPosterModal = function(index) {
 };
 
 window.closePosterModal = function(e) {
-  if (e && e.target.id !== 'poster-modal') return;
+  if (e && e.target.id !== 'poster-modal' && e.target.id !== 'modal-close-btn') return;
   var content = document.getElementById('poster-modal-content');
   if (content) {
     content.style.transform = 'translateY(20px)';
