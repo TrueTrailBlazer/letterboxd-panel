@@ -134,52 +134,63 @@ app.post('/api/roulette', async function(req, res) {
           if (!isNaN(num) && num > maxPage) maxPage = num;
         });
 
-        // Sortear página aleatória
-        var randomPage = Math.floor(Math.random() * maxPage) + 1;
-        if (randomPage > 1) {
-          var targetUrl = source.url.replace(/\/$/, '') + '/page/' + randomPage + '/';
-          html = await cachedFetch(targetUrl);
-          $ = cheerio.load(html);
+        // Calcular quantas páginas precisamos (Letterboxd tem ~28 por grid)
+        var neededPages = Math.max(1, Math.ceil((drawCount * 1.5) / 28));
+        if (neededPages > maxPage) neededPages = maxPage;
+        if (sources.length > 2) neededPages = 1; // Se tiver muitas listas, 1 página por lista já dá bastante volume
+
+        var pagesToFetch = [];
+        while (pagesToFetch.length < neededPages) {
+          var r = Math.floor(Math.random() * maxPage) + 1;
+          if (pagesToFetch.indexOf(r) === -1) pagesToFetch.push(r);
         }
 
-        // Extrair posters via Cheerio
-        $('.film-poster').each(function() {
-          var el = $(this);
-          var container = el.closest('li').length ? el.closest('li') : el.parent();
+        await Promise.all(pagesToFetch.map(async function(pageNum) {
+          try {
+            var targetUrl = pageNum === 1 ? source.url : source.url.replace(/\/$/, '') + '/page/' + pageNum + '/';
+            var pageHtml = await cachedFetch(targetUrl);
+            var $p = cheerio.load(pageHtml);
 
-          var imgNode = el.find('img').first();
-          var displayTitle = imgNode.attr('alt') || 'Filme sorteado';
-          displayTitle = displayTitle.replace(/^Poster for /i, '').trim();
+            $p('.film-poster').each(function() {
+              var el = $p(this);
+              var container = el.closest('li').length ? el.closest('li') : el.parent();
 
-          var slug = el.attr('data-film-slug') || el.attr('data-item-slug') || '';
-          if (!slug || slug === 'null') {
-            var targetLink = el.attr('data-target-link') || el.attr('data-item-link') || '';
-            if (targetLink) slug = targetLink.replace(/\/film\/|\//g, '');
-          }
-          if (!slug || slug === 'null') {
-            var aTag = container.find('a[href*="/film/"]').first();
-            if (aTag.length) {
-              slug = aTag.attr('href').replace(/\/film\/|\//g, '');
-            }
-          }
-          if (!slug || slug === 'null') {
-            slug = displayTitle.replace(/\s*\(\d{4}\)$/, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s-]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
-          }
+              var imgNode = el.find('img').first();
+              var displayTitle = imgNode.attr('alt') || 'Filme sorteado';
+              displayTitle = displayTitle.replace(/^Poster for /i, '').trim();
 
-          var imgSrc = el.attr('data-image-url') || el.attr('data-poster-url') || imgNode.attr('data-image') || imgNode.attr('data-src') || imgNode.attr('src') || '';
-          
-          // Prevenção contra lazy load pixels
-          if (imgSrc && (imgSrc.includes('empty-poster') || imgSrc.includes('transparent') || imgSrc.startsWith('data:image'))) {
-            imgSrc = imgNode.attr('data-image') || el.attr('data-image-url') || '';
-          }
+              var slug = el.attr('data-film-slug') || el.attr('data-item-slug') || '';
+              if (!slug || slug === 'null') {
+                var targetLink = el.attr('data-target-link') || el.attr('data-item-link') || '';
+                if (targetLink) slug = targetLink.replace(/\/film\/|\//g, '');
+              }
+              if (!slug || slug === 'null') {
+                var aTag = container.find('a[href*="/film/"]').first();
+                if (aTag.length) {
+                  slug = aTag.attr('href').replace(/\/film\/|\//g, '');
+                }
+              }
+              if (!slug || slug === 'null') {
+                slug = displayTitle.replace(/\s*\(\d{4}\)$/, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s-]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
+              }
 
-          allPosters.push({
-            title: displayTitle,
-            slug: slug,
-            imgSrc: imgSrc,
-            sourceName: source.name || source.type,
-          });
-        });
+              var imgSrc = el.attr('data-image-url') || el.attr('data-poster-url') || imgNode.attr('data-image') || imgNode.attr('data-src') || imgNode.attr('src') || '';
+              
+              if (imgSrc && (imgSrc.includes('empty-poster') || imgSrc.includes('transparent') || imgSrc.startsWith('data:image'))) {
+                imgSrc = imgNode.attr('data-image') || el.attr('data-image-url') || '';
+              }
+
+              allPosters.push({
+                title: displayTitle,
+                slug: slug,
+                imgSrc: imgSrc,
+                sourceName: source.name || source.type,
+              });
+            });
+          } catch (err) {
+            console.error('Erro na página', pageNum, source.url, err.message);
+          }
+        }));
       } catch (e) {
         console.error('Erro ao puxar fonte', source.url, e.message);
       }
